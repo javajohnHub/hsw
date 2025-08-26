@@ -1,0 +1,108 @@
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', monospace;
+  /* Dark page background to match app chrome and avoid white gutters */
+  background: #0f1111;
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Global tooltip helper for any programmatic tooltip elements */
+.app-help-tooltip {
+  position: absolute;
+  min-width: 160px;
+  max-width: 380px;
+  background: linear-gradient(180deg, #0f1111 0%, #181a1b 100%);
+  color: #53fc19;
+  border: 1px solid #53fc19;
+  padding: 8px 10px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  /* Increase z-index so tooltips appear above other overlays (modals, menus) */
+  z-index: 2147483647;
+  font-size: 0.95rem;
+}
+
+/* Global overrides to ensure project cards and TV overlay are visible regardless of component scoping */
+/* Force project cards full-width on small screens */
+@media (max-width: 768px) {
+  .project-card, .projects-grid, .project-section, .project-item, .project-card.card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 8px 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure hover effects are visible on touch by adding active styles and pointer fallback */
+  .matchup-card:active, .matchup-card.touch-active, .nav-tab:active {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 16px rgba(83,252,25,0.3) !important;
+  }
+}
+
+/* TV overlay frame applied only inside the public page to avoid leaking to admin */
+.public-page .project-image, .public-page .project-card .project-image, .public-page .projects-grid .project-image {
+  position: relative;
+}
+.public-page .project-image::before, .public-page .project-card::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 260px;
+  height: 260px;
+  background-image: url('/assets/TV2.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 500 !important;
+  opacity: 1 !important;
+}
+
+/* Make sure the inner image sits above the TV frame */
+.public-page .project-image img, .public-page .project-card img {
+  position: relative !important;
+  z-index: 600 !important;
+  display: block !important;
+  margin: 0 auto !important;
+  width: 60% !important;
+}
+
+/* ensure card containers do not clip the TV overlay pseudo-element */
+.public-page .project-card, .public-page .project-section, .public-page .projects-grid {
+  overflow: visible !important;
+}
+
+/* ensure small icons (standings/info) are visible */
+.public-page .rnd-title .rnd-img, .public-page .section-title img, .public-page .standings-icon, .public-page img[alt*="Info"] {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+}
+/* High-specificity safeguard: prevent global .rnd-img or .logo-frame from forcing circular cropping
+   for header/logo images outside the public page. Admin/header should remain rectangular. */
+.header-logo img, header .logo img, .admin-header .logo, .top-header .logo, .nav .logo {
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain !important;
+}
+  .project-card, .projects-card, .project-item {
+    position: relative !important;
+  }
+
+/* Standings tooltip/right placement fallback for small screens (public page only) */
+.public-page .standings-tooltip {
+  right: 12px !important;
+  left: auto !important;
+}

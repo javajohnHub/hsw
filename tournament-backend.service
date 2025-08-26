@@ -1,0 +1,15 @@
+[Unit]
+Description=Tournament Backend
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/tournament/backend
+ExecStart=/usr/bin/node index.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production PORT=4000
+
+[Install]
+WantedBy=multi-user.target

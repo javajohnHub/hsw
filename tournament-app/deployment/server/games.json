@@ -1,0 +1,564 @@
+[
+  {
+    "id": 1,
+    "name": "Adventure Island",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/267/26710db91b49bcc7eeca37777a182337.jpg",
+    "assignedWeek": null,
+    "assignedSeason": null
+  },
+  {
+    "id": 2,
+    "name": "Adventures of Lolo 3",
+    "category": "Puzzle",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/77c/77c2b8c993467c91e99c87ce6ed241c5.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Astyanax",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/721/721775d3342503bac06971584710569a.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Batman Returns",
+    "category": "Beat 'em Up",
+    "isChosen": true,
+    "image": "https://media.rawg.io/media/screenshots/cd3/cd36bfe86ce2231387d997c693d78700.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Batman: The Video Game",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/64c/64c447edd726b87d91f6518393bc695a.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Battletoads",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/7f5/7f55a84cc921e35d0538437021f6a48b.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Battletoads & Double Dragon 2",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/4c8/4c8dc0de39a33de0d5d181156f83d9b3.jpg"
+  },
+  {
+    "id": 8,
+    "name": "Bionic Commando",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/df7/df72d15f23c57d393787a5ca2fba93e7.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Blaster Master",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/c66/c66c59d71bd9d7770dd871561e8b85be.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Bubble Bobble",
+    "category": "Arcade",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/cce/cce7179196651c0684291334b7598279.jpg"
+  },
+  {
+    "id": 11,
+    "name": "BurgerTime",
+    "category": "Arcade",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/5ed/5edb7774082cb900d7b0a6fcdd32adf4.jpg"
+  },
+  {
+    "id": 12,
+    "name": "Castlevania",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/e43/e434e71bd6b39b73e970904fe6f22f9e.jpg"
+  },
+  {
+    "id": 13,
+    "name": "Castlevania II: Simon's Quest",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/76c/76cdce0c002fbee66834875cd57322d9.jpg"
+  },
+  {
+    "id": 14,
+    "name": "Castlevania III: Dracula's Curse",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/7c9/7c95d1332a5cb14f16bb0c8c5cfef50f.jpg"
+  },
+  {
+    "id": 15,
+    "name": "Chip 'N Dale: Rescue Ranger",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/5fd/5fd91d37d923c45874ead0db969f5eec.jpg"
+  },
+  {
+    "id": 16,
+    "name": "Cobra Triangle",
+    "category": "Racing",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/bb7/bb7b2cca410e17bc90b8c73a5bdc8593.jpg"
+  },
+  {
+    "id": 17,
+    "name": "Contra",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/a98/a989eaf178c1180a2d8d538dc6297ede.jpg"
+  },
+  {
+    "id": 18,
+    "name": "Donkey Kong",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/d0b/d0b3ba4564d9d27c1d7a48c6ffc728af.jpg"
+  },
+  {
+    "id": 19,
+    "name": "Double Dragon II",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/d90/d9029634b78b3fa72475dca98bfac246.jpg"
+  },
+  {
+    "id": 20,
+    "name": "Double Dragon III",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/d90/d9029634b78b3fa72475dca98bfac246.jpg"
+  },
+  {
+    "id": 21,
+    "name": "Dr. Mario",
+    "category": "Puzzle",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/7de/7dec546de33d51e532cadeda6d5185eb.jpg"
+  },
+  {
+    "id": 22,
+    "name": "Duck Tales",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/8f4/8f40b31fe6f1b6e667d262285ff7f383.jpg"
+  },
+  {
+    "id": 23,
+    "name": "Excite Bike",
+    "category": "Racing",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/e02/e02da9d13cce1cb86f18d84cd0016e09.jpg"
+  },
+  {
+    "id": 24,
+    "name": "Fester's Quest",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/6e5/6e59ddca314cec0550689d6f68739bfb.jpg"
+  },
+  {
+    "id": 25,
+    "name": "Gargoyle's Quest II",
+    "category": "Action RPG",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/a65/a65651a75dba5147ec39255ae2374551.jpg"
+  },
+  {
+    "id": 26,
+    "name": "Ghosts 'N Goblins",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/3c7/3c770b56f143373c241be3682e2620c5.jpg"
+  },
+  {
+    "id": 27,
+    "name": "Gradius",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/1e7/1e785c9f482e4d0a4346319d42e9976f.jpg"
+  },
+  {
+    "id": 28,
+    "name": "Ice Climber",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/833/8333020a1a7ee41a32d1fa6995cfe550.jpg"
+  },
+  {
+    "id": 29,
+    "name": "Ikari Warriors",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/f78/f782c656407c6261f497fc3b8b188594.jpg"
+  },
+  {
+    "id": 30,
+    "name": "Jackal",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/7a2/7a2a966c815541bb676c5cf682a53c81.jpg"
+  },
+  {
+    "id": 31,
+    "name": "Journey to Silius",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/41e/41e75655c836b79e65e30d2bae4be323.jpg"
+  },
+  {
+    "id": 32,
+    "name": "Kickle Cubicle",
+    "category": "Puzzle",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/586/5869b027e44dbb9fac662e24c3c315fa.jpg"
+  },
+  {
+    "id": 33,
+    "name": "Kid Icarus",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/4d6/4d634fb4ad4122cfed942f100ec608bf.jpg"
+  },
+  {
+    "id": 34,
+    "name": "Kid Niki: Radical Ninja",
+    "category": "Platformer",
+    "isChosen": true,
+    "image": "https://media.rawg.io/media/screenshots/c88/c886a286470e098fb89e48ed0269a8c1.jpg"
+  },
+  {
+    "id": 35,
+    "name": "Kirby's Adventure",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/06e/06e5a0fb6a0b6464f9b7d5e33a9e3cbb.jpg"
+  },
+  {
+    "id": 36,
+    "name": "Klax",
+    "category": "Puzzle",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/076/076d1f3b602eaaf271bed68eb254e204.jpg"
+  },
+  {
+    "id": 37,
+    "name": "Kung Fu",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/849/8495cf4cd1888366c0454958a641fc5a.jpg"
+  },
+  {
+    "id": 38,
+    "name": "Legendary Wings",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/e90/e90f874ccaf732f6efdbdfcdd7429abb.jpg"
+  },
+  {
+    "id": 39,
+    "name": "Life Force",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/94d/94d4ba762f57af90eddc773eb8938d78.jpg"
+  },
+  {
+    "id": 40,
+    "name": "Lode Runner",
+    "category": "Puzzle",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/8d2/8d29eca67764299a3af0b00f0b2f96eb.jpg"
+  },
+  {
+    "id": 41,
+    "name": "Mario Bros.",
+    "category": "Arcade",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/0de/0debc92c5f2970218537b04dc543fc9a.jpg"
+  },
+  {
+    "id": 42,
+    "name": "Mega Man",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/3fc/3fc9ed8957d398fa12f20053a709793b.jpg"
+  },
+  {
+    "id": 43,
+    "name": "Mega Man 2",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/5b5/5b57ddc1470a4a594e99665b893d55ae.jpg"
+  },
+  {
+    "id": 44,
+    "name": "Mega Man 3",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/778/7789e4229bd1bdcacf668af722acbce8.jpg"
+  },
+  {
+    "id": 45,
+    "name": "Mega Man 4",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/abb/abb0bdab55375ce806a8c5ff62f72332.jpg"
+  },
+  {
+    "id": 46,
+    "name": "Mega Man 5",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/ea0/ea0a4788737c5ba5fa16605983cced70.jpg"
+  },
+  {
+    "id": 47,
+    "name": "Mega Man 6",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/d13/d1370933c6fc8806cb9c32f8c879483b.jpg"
+  },
+  {
+    "id": 48,
+    "name": "Metal Gear",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/b16/b16752aea14090c92968cb71d7f00057.jpg"
+  },
+  {
+    "id": 49,
+    "name": "Metal Storm",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/2f5/2f5b26783bfc220aed8f89de631452c5.jpg"
+  },
+  {
+    "id": 50,
+    "name": "Metroid",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/230/2303b90b3009a705235f392e61550929.jpg"
+  },
+  {
+    "id": 51,
+    "name": "Mickey Mousecapade",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/e88/e88ad823a7bcecaf34c88267c0afebc9.jpg"
+  },
+  {
+    "id": 52,
+    "name": "Micro Machines",
+    "category": "Racing",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/cb4/cb421b4b5fc4142d8ffe2f745ed8edf0.jpg"
+  },
+  {
+    "id": 53,
+    "name": "Mike Tyson's Punch-Out!!",
+    "category": "Sports",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/d74/d74fb80ea1bde98409962acd800049b9.jpg"
+  },
+  {
+    "id": 54,
+    "name": "Ninja Gaiden",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/f16/f16f971c3cc10e90cccb0d1331e087d5.jpg"
+  },
+  {
+    "id": 55,
+    "name": "Ninja Gaiden II",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/dac/dacd4754e22cd9f70da225d76cccd328.jpg"
+  },
+  {
+    "id": 56,
+    "name": "Power Blade",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/7b2/7b254c460fc9126fdcf9449e83c073fb.jpg"
+  },
+  {
+    "id": 57,
+    "name": "R.C. Pro-Am",
+    "category": "Racing",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/146/146cd21360ce539b46654ea447aaca0c.jpg"
+  },
+  {
+    "id": 58,
+    "name": "Rad Racer",
+    "category": "Racing",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/8a7/8a79afa0e93efc3ad232671270216814.jpg"
+  },
+  {
+    "id": 59,
+    "name": "Ring King",
+    "category": "Sports",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/1d2/1d2cd8fc6a221ffde30186f1c3b85471.jpg"
+  },
+  {
+    "id": 60,
+    "name": "River City Ransom",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/84c/84c9024c47c3a3f93ab6ee49decbaaf6.jpg"
+  },
+  {
+    "id": 61,
+    "name": "Rush'n Attack",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/c2e/c2e7e88cb091d83f9d067225ca9c908c.jpg"
+  },
+  {
+    "id": 62,
+    "name": "Rygar",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/dc6/dc6b218f4b7c33ee32db8a63e27557f2.jpg"
+  },
+  {
+    "id": 63,
+    "name": "Section Z",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/82a/82a586a7b49fa542f8917c5353e002b3.jpg"
+  },
+  {
+    "id": 64,
+    "name": "Skate or Die",
+    "category": "Sports",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/213/213a438e97f0cc7d0882e8ba141fb446.jpg"
+  },
+  {
+    "id": 65,
+    "name": "Skate or Die 2",
+    "category": "Sports",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/1f2/1f28aaa0a858a8fa74c74d935e9a92ed.jpg"
+  },
+  {
+    "id": 66,
+    "name": "Snake Rattle 'n' Roll",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/b7f/b7f69bbecefdbaf2e43e0a282006d809.jpg"
+  },
+  {
+    "id": 67,
+    "name": "Spy Hunter",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/2bc/2bc0274d2087efc6dfdd133f9156764e.jpg"
+  },
+  {
+    "id": 68,
+    "name": "Stinger",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/44b/44b762f1214545eda5ea298fdf634a00.jpg"
+  },
+  {
+    "id": 69,
+    "name": "Street Fighter 2010",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/bd2/bd207b16a09e68873ed6eb8ac72249ff.jpg"
+  },
+  {
+    "id": 70,
+    "name": "Super C",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/c25/c250e3077d08c2bbc1e6f7244ce6a370.jpg"
+  },
+  {
+    "id": 71,
+    "name": "Super Mario Bros.",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/746/7469759c81be6fe5cc5288e59ecf09fa.jpg"
+  },
+  {
+    "id": 72,
+    "name": "Super Mario Bros. 2",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/d7e/d7e9ca7cc9cdcf462d2d2cd7324206b5.jpg"
+  },
+  {
+    "id": 73,
+    "name": "Super Mario Bros. 3",
+    "category": "Platformer",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/fb7/fb7585d13f295683c3226e6192fb5f60.jpg"
+  },
+  {
+    "id": 74,
+    "name": "Teenage Mutant Ninja Turtles",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/9bc/9bc0407dc2b37096f14b489d743d310a.jpg"
+  },
+  {
+    "id": 75,
+    "name": "Teenage Mutant Ninja Turtles II",
+    "category": "Beat 'em Up",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/d0a/d0a582b876a3535a76f41d2fae4428d4.jpg"
+  },
+  {
+    "id": 76,
+    "name": "Tetris (Tengen)",
+    "category": "Puzzle",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/435/4352fd1ab67ffdb58bea2f69f42580d7.jpg"
+  },
+  {
+    "id": 77,
+    "name": "The Guardian Legend",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/944/944ee204754fc05d1dea4a884aeadf5a.jpg"
+  },
+  {
+    "id": 78,
+    "name": "Totally Rad",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/346/3466d0bc585015c211b3780df1098be4.jpg"
+  },
+  {
+    "id": 79,
+    "name": "Vice: Project Doom",
+    "category": "Action",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/6ae/6aeccc762d11ba1a0d58a5191e31d285.jpg"
+  },
+  {
+    "id": 80,
+    "name": "Zombie Nation",
+    "category": "Shooter",
+    "isChosen": false,
+    "image": "https://media.rawg.io/media/screenshots/652/65295856d6bdd7652016ec63d1e9c812.jpg"
+  }
+]

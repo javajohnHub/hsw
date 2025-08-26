@@ -1,0 +1,237 @@
+<main class="contact">
+  <div class="contact__container">
+    <!-- Hero Section -->
+    <section class="contact__hero">
+      <h1 class="contact__title">Contact {{ businessName }}</h1>
+      <p class="contact__subtitle">
+        Ready to bring your web development project to life? Let's discuss your vision and create something exceptional together.
+      </p>
+    </section>
+
+    <div class="contact__grid">
+      <!-- Contact Form -->
+      <section class="contact__form-section">
+        <h2 class="contact__section-title">Get Your Free Consultation</h2>
+        
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact__form" novalidate>
+          <!-- Name Field -->
+          <div class="form-group">
+            <label for="name" class="form-group__label">Full Name *</label>
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              class="form-group__input"
+              [class.form-group__input--error]="hasFieldError('name')"
+              placeholder="Enter your full name"
+              aria-describedby="name-error"
+              autocomplete="name">
+            <div 
+              id="name-error" 
+              class="form-group__error" 
+              *ngIf="hasFieldError('name')"
+              role="alert"
+              aria-live="polite">
+              {{ getFieldError('name') }}
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email" class="form-group__label">Email Address *</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="form-group__input"
+              [class.form-group__input--error]="hasFieldError('email')"
+              placeholder="your@email.com"
+              aria-describedby="email-error"
+              autocomplete="email">
+            <div 
+              id="email-error" 
+              class="form-group__error" 
+              *ngIf="hasFieldError('email')"
+              role="alert"
+              aria-live="polite">
+              {{ getFieldError('email') }}
+            </div>
+          </div>
+
+          <!-- Phone Field -->
+          <div class="form-group">
+            <label for="phone" class="form-group__label">Phone Number</label>
+            <input
+              id="phone"
+              type="tel"
+              formControlName="phone"
+              class="form-group__input"
+              [class.form-group__input--error]="hasFieldError('phone')"
+              placeholder="(555) 123-4567"
+              aria-describedby="phone-error"
+              autocomplete="tel">
+            <div 
+              id="phone-error" 
+              class="form-group__error" 
+              *ngIf="hasFieldError('phone')"
+              role="alert"
+              aria-live="polite">
+              {{ getFieldError('phone') }}
+            </div>
+          </div>
+
+          <!-- Company Field -->
+          <div class="form-group">
+            <label for="company" class="form-group__label">Company</label>
+            <input
+              id="company"
+              type="text"
+              formControlName="company"
+              class="form-group__input"
+              [class.form-group__input--error]="hasFieldError('company')"
+              placeholder="Your company name"
+              aria-describedby="company-error"
+              autocomplete="organization">
+            <div 
+              id="company-error" 
+              class="form-group__error" 
+              *ngIf="hasFieldError('company')"
+              role="alert"
+              aria-live="polite">
+              {{ getFieldError('company') }}
+            </div>
+          </div>
+
+          <!-- Service Selection -->
+          <div class="form-group">
+            <label for="service" class="form-group__label">Service Needed *</label>
+            <select
+              id="service"
+              formControlName="service"
+              class="form-group__select"
+              [class.form-group__select--error]="hasFieldError('service')"
+              aria-describedby="service-error"
+              (change)="onServiceChange()">
+              <option value="">Select a service</option>
+              <option 
+                *ngFor="let service of serviceOptions" 
+                [value]="service.id">
+                {{ service.name }}
+              </option>
+            </select>
+            <div 
+              id="service-error" 
+              class="form-group__error" 
+              *ngIf="hasFieldError('service')"
+              role="alert"
+              aria-live="polite">
+              {{ getFieldError('service') }}
+            </div>
+          </div>
+
+          <!-- Budget Selection -->
+          <div class="form-group">
+            <label for="budget" class="form-group__label">Project Budget</label>
+            <select
+              id="budget"
+              formControlName="budget"
+              class="form-group__select"
+              aria-describedby="budget-help"
+              (change)="onBudgetChange()">
+              <option value="">Select budget range</option>
+              <option 
+                *ngFor="let budget of budgetOptions" 
+                [value]="budget.id">
+                {{ budget.name }}
+              </option>
+            </select>
+            <small id="budget-help" class="form-group__help">
+              This helps us provide the most accurate proposal for your project.
+            </small>
+          </div>
+
+          <!-- Message Field -->
+          <div class="form-group">
+            <label for="message" class="form-group__label">Project Details *</label>
+            <textarea
+              id="message"
+              formControlName="message"
+              class="form-group__textarea"
+              [class.form-group__textarea--error]="hasFieldError('message')"
+              placeholder="Tell us about your project goals, timeline, and any specific requirements..."
+              rows="6"
+              aria-describedby="message-error message-help"></textarea>
+            <small id="message-help" class="form-group__help">
+              Please provide as much detail as possible to help us understand your vision.
+            </small>
+            <div 
+              id="message-error" 
+              class="form-group__error" 
+              *ngIf="hasFieldError('message')"
+              role="alert"
+              aria-live="polite">
+              {{ getFieldError('message') }}
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="contact__submit-btn"
+            [disabled]="isSubmitting || contactForm.invalid"
+            [attr.aria-describedby]="submitMessage ? 'submit-message' : null">
+            <span *ngIf="!isSubmitting">Send Message</span>
+            <span *ngIf="isSubmitting">Sending...</span>
+          </button>
+
+          <!-- Submit Message -->
+          <div 
+            id="submit-message"
+            class="contact__message"
+            [class.contact__message--success]="submitSuccess"
+            [class.contact__message--error]="!submitSuccess"
+            *ngIf="submitMessage"
+            role="alert"
+            aria-live="polite">
+            {{ submitMessage }}
+          </div>
+        </form>
+      </section>
+
+      <!-- Contact Information -->
+      <aside class="contact__info-section">
+        <h2 class="contact__section-title">Get in Touch</h2>
+        
+        <div class="contact__info">
+          <div class="contact__info-item">
+            <h3 class="contact__info-title">Email Us</h3>
+            <a href="mailto:{{ contactEmail }}" class="contact__info-link">
+              {{ contactEmail }}
+            </a>
+            <p class="contact__info-desc">
+              We typically respond within 24 hours during business days.
+            </p>
+          </div>
+
+          <div class="contact__info-item">
+            <h3 class="contact__info-title">Business Hours</h3>
+            <p class="contact__info-text">{{ businessHours }}</p>
+            <p class="contact__info-desc">
+              Available for consultations and project discussions.
+            </p>
+          </div>
+
+          <div class="contact__info-item">
+            <h3 class="contact__info-title">What to Expect</h3>
+            <ul class="contact__process-list">
+              <li>Free initial consultation call</li>
+              <li>Detailed project proposal within 48 hours</li>
+              <li>Transparent pricing and timeline</li>
+              <li>Regular progress updates throughout development</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>

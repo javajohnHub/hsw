@@ -1,0 +1,15 @@
+[Unit]
+Description=Edwards Web Development Backend
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/edwards/backend
+ExecStart=/usr/bin/node dist/server.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production PORT=3000
+
+[Install]
+WantedBy=multi-user.target

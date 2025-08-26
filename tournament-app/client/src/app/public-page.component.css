@@ -1,0 +1,1880 @@
+.rnd-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #181a1b 0%, #53fc19 100%);
+  padding: 20px;
+  font-family: 'Orbitron', 'Arial Black', Arial, sans-serif;
+  color: #fff;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* Enforce grid-only layout for This Week and Full Schedule views to avoid flex overrides
+   Ensures 1 column on small phones, 2 on portrait/small tablet, 3 on larger screens. */
+/* Targets many selector combinations to beat earlier flexbox rules */
+@media (max-width: 480px) {
+  .tab-content .this-week .schedule-grid,
+  .tab-content .full-schedule .schedule-grid,
+  .this-week .schedule-grid,
+  .full-schedule .schedule-grid,
+  .tab-content .this-week .matchup-list,
+  .tab-content .full-schedule .matchup-list,
+  .this-week .matchup-list,
+  .full-schedule .matchup-list,
+  .tab-content .this-week .matchup-cards,
+  .tab-content .full-schedule .matchup-cards,
+  .this-week .matchup-cards,
+  .full-schedule .matchup-cards {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: start !important;
+    justify-items: stretch !important;
+  }
+  .this-week .week-block,
+  .full-schedule .week-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .tab-content .this-week .schedule-grid,
+  .tab-content .full-schedule .schedule-grid,
+  .this-week .schedule-grid,
+  .full-schedule .schedule-grid,
+  .tab-content .this-week .matchup-list,
+  .tab-content .full-schedule .matchup-list,
+  .this-week .matchup-list,
+  .full-schedule .matchup-list,
+  .tab-content .this-week .matchup-cards,
+  .tab-content .full-schedule .matchup-cards,
+  .this-week .matchup-cards,
+  .full-schedule .matchup-cards {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 8px !important;
+    margin: 0 auto !important;
+    align-items: start !important;
+    justify-items: stretch !important;
+  }
+  .this-week .week-block,
+  .full-schedule .week-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .tab-content .this-week .schedule-grid,
+  .tab-content .full-schedule .schedule-grid,
+  .this-week .schedule-grid,
+  .full-schedule .schedule-grid,
+  .tab-content .this-week .matchup-list,
+  .tab-content .full-schedule .matchup-list,
+  .this-week .matchup-list,
+  .full-schedule .matchup-list,
+  .tab-content .this-week .matchup-cards,
+  .tab-content .full-schedule .matchup-cards,
+  .this-week .matchup-cards,
+  .full-schedule .matchup-cards {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 0 12px !important;
+    align-items: start !important;
+    justify-items: stretch !important;
+  }
+  .this-week .week-block,
+  .full-schedule .week-block {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}
+
+.rnd-title-card {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Reduce excessive vertical gap around the title area: pull title and surrounding content up/down */
+.rnd-title-card {
+  margin-top: -200px !important;
+  margin-bottom: -200px !important;
+}
+
+@media (max-width: 768px) {
+  /* less aggressive on smaller screens to avoid overlapping controls */
+  .rnd-title-card {
+    margin-top: -80px !important;
+    margin-bottom: -80px !important;
+  }
+}
+
+.rnd-img {
+  max-height: 140px;
+  border-radius: 18px;
+  box-shadow: 0 0 16px #53fc19, 0 0 32px #181a1b inset;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.rnd-img:hover {
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 0 32px #fff, 0 0 48px #53fc19;
+}
+
+/* Desktop / large screens: pull banner image up and down to reduce vertical gap
+   Applied only for non-mobile/tablet (>=769px) as requested */
+@media (min-width: 769px) {
+  .rnd-img {
+    margin-top: -400px !important;
+    margin-bottom: -400px !important;
+  }
+}
+
+/* Tablet breakpoint: use -300px top/bottom to reduce vertical gap on tablets */
+@media (min-width: 481px) and (max-width: 768px) {
+  .rnd-img {
+    margin-top: -300px !important;
+    margin-bottom: -300px !important;
+  }
+}
+
+.animate {
+  animation: popIn 0.8s cubic-bezier(.68,-0.55,.27,1.55) both;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.7) rotate(-10deg); opacity: 0; }
+  80% { transform: scale(1.1) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.rnd-title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #53fc19;
+  text-shadow: 2px 2px 0 #181a1b, 0 0 12px #53fc19;
+  margin-bottom: 0.2em;
+}
+
+.rnd-date {
+  font-size: 1.1rem;
+  color: #fff;
+  text-shadow: 0 0 8px #53fc19;
+}
+
+/* Tab Styles */
+.tab-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: rgba(24,26,27,0.95);
+  border-radius: 18px;
+  box-shadow: 0 0 24px #53fc19, 0 0 32px #181a1b inset;
+  overflow: hidden;
+}
+
+.tab-nav {
+  display: flex;
+  background: rgba(83,252,25,0.1);
+  border-bottom: 2px solid #53fc19;
+  margin: 0;
+  padding: 0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 16px 24px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  font-family: 'Orbitron', Arial, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  margin: 0;
+}
+
+.tab-btn:hover {
+  background: rgba(83,252,25,0.2);
+  color: #53fc19;
+}
+
+.tab-btn.active {
+  background: rgba(83,252,25,0.3);
+  color: #53fc19;
+  border-bottom-color: #53fc19;
+  text-shadow: 0 0 8px #53fc19;
+}
+
+.tab-content {
+  padding: 32px;
+  min-height: 500px;
+}
+
+.tab-panel {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Week Header */
+.week-header {
+  margin-bottom: 24px;
+}
+
+.week-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.week-title {
+  font-size: 1.8rem;
+  color: #53fc19;
+  margin: 0;
+  text-shadow: 0 0 8px #181a1b;
+}
+
+.week-navigation button {
+  background: #53fc19;
+  color: #181a1b;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.week-navigation button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(83,252,25,0.3);
+}
+
+.week-navigation button:disabled {
+  background: #666;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 1.8rem;
+  color: #53fc19;
+  margin-bottom: 24px;
+  text-align: center;
+  text-shadow: 0 0 8px #181a1b;
+}
+.matchup-card {
+  background: rgba(83,252,25,0.1);
+  border: 2px solid #53fc19;
+  border-radius: 12px;
+  padding: 24px;
+  min-height: 100px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.matchup-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(83,252,25,0.3);
+}
+
+.player-slot {
+  flex: 1 1 200px !important;
+  text-align: center;
+  padding: 16px;
+  min-width: 180px !important;
+  max-width: 300px !important;
+  overflow: visible !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.player-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #53fc19;
+  text-shadow: 0 0 4px #181a1b;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 1.2;
+  display: block !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  hyphens: none !important;
+  text-align: center !important;
+  min-width: 0 !important;
+}
+
+.vs-divider {
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: #53fc19;
+  color: #181a1b;
+  padding: 14px 20px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #53fc19;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  margin: 0 20px;
+  white-space: nowrap !important;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Table Styles */
+.table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.rnd-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.rnd-table th, .rnd-table td {
+  padding: 16px 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(83,252,25,0.3);
+}
+
+.rnd-table th {
+  background: #53fc19;
+  color: #181a1b;
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.rnd-table tr:hover {
+  background: rgba(83,252,25,0.1);
+}
+
+.rank {
+  font-weight: bold;
+  color: #53fc19;
+  font-size: 1.2rem;
+}
+
+.player-name-cell {
+  font-weight: bold;
+  color: #53fc19;
+  text-align: left;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  cursor: help;
+  transition: all 0.3s ease;
+}
+
+.player-name-cell:hover {
+  color: #6bff33;
+  text-shadow: 0 0 8px #53fc19;
+  transform: scale(1.05);
+}
+
+.points {
+  font-weight: bold;
+  color: #53fc19;
+  font-size: 1.1rem;
+}
+
+/* Schedule Grid */
+.schedule-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.week-block {
+  background: rgba(83,252,25,0.1);
+  border: 1px solid #53fc19;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s ease;
+}
+
+.week-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(83,252,25,0.3);
+}
+
+.week-block-title {
+  color: #53fc19;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.week-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-match {
+  background: rgba(255,255,255,0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  border-left: 3px solid #53fc19;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+}
+
+.match-players {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.player1, .player2 {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  flex: 1;
+  min-width: 0;
+}
+
+.vs {
+  flex-shrink: 0;
+  font-weight: bold;
+  color: #53fc19;
+}
+
+.no-matches-week {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 16px;
+}
+
+@media (max-width: 480px) {
+  .rnd-bg {
+    padding: 16px;
+  }
+  .tab-container {
+    max-width: 100%;
+    margin: 0;
+  }
+  .tab-nav {
+    flex-direction: column;
+  }
+  .tab-content {
+    padding: 20px;
+  }
+  .week-navigation {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .player-name {
+    font-size: 1rem;
+  }
+  /* Header: center logo/title, responsive banner, better button spacing */
+  header, .header-bar, .top-header {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px 0 8px 0 !important;
+    width: 100% !important;
+    gap: 6px !important;
+    min-height: unset !important;
+  }
+  .header-logo, .logo {
+    display: block !important;
+    margin: 0 auto 4px auto !important;
+    max-width: 60px !important;
+    height: auto !important;
+  }
+  .header-title, .main-title, .rnd-title {
+    text-align: center !important;
+    font-size: 1.1rem !important;
+    margin: 0 0 2px 0 !important;
+    padding: 0 !important;
+    letter-spacing: 1px !important;
+  }
+  .public-btn, .header-btn, .top-header button {
+    position: static !important;
+    margin: 6px auto 0 auto !important;
+    display: block !important;
+    width: 90% !important;
+    max-width: 180px !important;
+    font-size: 1rem !important;
+    padding: 8px 0 !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+  }
+  .banner-img, .header-banner, .rnd-img {
+    display: block !important;
+    margin: 0 auto 8px auto !important;
+    max-width: 98vw !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 10px !important;
+    object-fit: contain !important;
+  }
+  .current-mode-bar {
+    font-size: 0.9rem !important;
+    text-align: center !important;
+    margin: 2px 0 4px 0 !important;
+    padding: 2px 0 !important;
+  }
+
+  /* Table: prevent awkward wrapping, allow horizontal scroll */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rnd-table {
+    min-width: 480px;
+    font-size: 0.92rem;
+  }
+  .rnd-table th, .rnd-table td {
+    white-space: nowrap !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 120px;
+    padding: 8px 6px;
+  }
+  .player-name-cell {
+    max-width: 90px;
+    font-size: 0.95rem;
+  }
+
+  /* Tooltip/popover: keep inside viewport */
+  .player-name-cell[title], .player-name-cell .tooltip {
+    position: relative;
+    max-width: 90vw;
+    word-break: break-all;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000;
+  }
+
+  /* Cards/grid: stack vertically, reduce spacing */
+  .schedule-grid, .week-matches {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .matchup-card, .week-block {
+    margin: 0 0 8px 0 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 0.95rem;
+    padding: 10px 6px;
+    }
+
+    /* Tournament schedule: stack cards, fill width, center content, improve spacing */
+    .schedule-grid {
+      flex-direction: column !important;
+      gap: 12px !important;
+      align-items: stretch !important;
+    }
+    .week-block {
+      width: 100% !important;
+      min-width: 0 !important;
+      margin: 0 0 12px 0 !important;
+      border-width: 1.5px !important;
+      border-radius: 10px !important;
+      padding: 10px 4px !important;
+      box-sizing: border-box !important;
+    }
+    .week-block-title {
+      font-size: 1.05rem !important;
+      margin-bottom: 8px !important;
+      text-align: center !important;
+    }
+    .week-matches {
+      flex-direction: column !important;
+      gap: 6px !important;
+    }
+    .matchup-card {
+      width: 100% !important;
+      min-width: 0 !important;
+      margin: 0 0 8px 0 !important;
+      border-width: 1.5px !important;
+      border-radius: 8px !important;
+      padding: 8px 2px !important;
+      font-size: 0.98rem !important;
+      text-align: center !important;
+      box-sizing: border-box !important;
+    }
+    .matchup-card > * {
+      justify-content: center !important;
+      text-align: center !important;
+      margin: 0 auto !important;
+    }
+    .vs-divider {
+      margin: 6px auto !important;
+      display: inline-block !important;
+    }
+    .no-matches-week {
+      font-size: 0.98rem !important;
+      padding: 10px 0 !important;
+  }
+
+  /* General: reduce font sizes and paddings */
+  .rnd-title {
+    font-size: 1.5rem;
+  }
+  .section-title, .week-title {
+    font-size: 1.1rem;
+  }
+  .tab-btn {
+    font-size: 0.95rem;
+    padding: 8px 4px;
+  }
+  .vs-divider {
+    font-size: 0.92rem;
+    padding: 6px 8px;
+    min-width: 28px;
+  }
+  .rnd-img {
+    max-height: 48px;
+  }
+  /* Force schedule grid and week blocks to single column and full viewport width */
+  .schedule-grid {
+    display: block !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
+  .week-block {
+    display: block !important;
+    width: 98vw !important;
+    max-width: 98vw !important;
+    min-width: 0 !important;
+    margin: 0 auto 12px auto !important;
+    box-sizing: border-box !important;
+  }
+  .matchup-card {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    margin: 0 auto 8px auto !important;
+    box-sizing: border-box !important;
+  }
+  /* Force each match card to be a single row on mobile */
+  .week-matches, .matchup-row, .matchup-cards, .matchup-list {
+    display: block !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .matchup-card {
+    display: block !important;
+    width: 96vw !important;
+    max-width: 96vw !important;
+    min-width: 0 !important;
+    margin: 0 auto 12px auto !important;
+    box-sizing: border-box !important;
+  }
+  /* Force each week block to be a single full-width row on mobile */
+  .schedule-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+  }
+  .week-block {
+    display: block !important;
+    width: 95vw !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin: 0 auto 20px auto !important;
+    box-sizing: border-box !important;
+    background: rgba(83,252,25,0.08) !important;
+    border-radius: 12px !important;
+    border-width: 1.5px !important;
+    padding: 10px 4px !important;
+  }
+  .week-block-title {
+    text-align: center !important;
+    margin-bottom: 8px !important;
+    font-size: 1.1rem !important;
+  }
+  .week-matches {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  .matchup-card {
+    display: block !important;
+    width: 92vw !important;
+    max-width: 380px !important;
+    min-width: 0 !important;
+    margin: 0 auto 8px auto !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+    border-width: 1.5px !important;
+    padding: 8px 2px !important;
+    font-size: 0.98rem !important;
+  }
+  /* Guarantee single column for matchups on mobile */
+  .week-matches, .matchup-list, .matchup-cards, .matchups-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .matchup-card {
+    display: block !important;
+    width: 98% !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin: 0 auto 10px auto !important;
+    box-sizing: border-box !important;
+  }
+  /* Player standings table: horizontal scroll and ellipsis for player names */
+  .table-container, .standings-table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  .rnd-table, .standings-table {
+    min-width: 500px !important;
+    font-size: 0.95rem !important;
+  }
+  .player-name-cell {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 90px !important;
+    font-size: 0.95rem !important;
+  }
+  /* Full Schedule polish: card look, spacing, modern typography */
+  .schedule-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 18px !important;
+    background: none !important;
+  }
+  .week-block {
+    display: block !important;
+    width: 95vw !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin: 0 auto 0 auto !important;
+    box-sizing: border-box !important;
+    background: rgba(24,26,27,0.98) !important;
+    border-radius: 16px !important;
+    border: 2px solid #53fc19 !important;
+    box-shadow: 0 2px 16px #181a1b33 !important;
+    padding: 18px 8px 14px 8px !important;
+    transition: box-shadow 0.2s;
+  }
+  .week-block-title {
+    text-align: center !important;
+    margin-bottom: 10px !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    color: #53fc19 !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 1px 8px #181a1b99 !important;
+  }
+  .week-matches {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  .matchup-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 92vw !important;
+    max-width: 380px !important;
+    min-width: 0 !important;
+    margin: 0 auto 8px auto !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+    border: 1.5px solid #53fc19 !important;
+    background: rgba(83,252,25,0.07) !important;
+    box-shadow: 0 1px 8px #181a1b22 !important;
+    padding: 10px 2px !important;
+    font-size: 1.02rem !important;
+    font-family: 'Orbitron', Arial, sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    transition: box-shadow 0.2s;
+  }
+  .matchup-card > * {
+    margin: 2px 0 !important;
+  }
+  .vs-divider {
+    margin: 8px auto !important;
+    display: inline-block !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    background: #53fc19 !important;
+    color: #181a1b !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 8px #53fc19 !important;
+    padding: 8px 16px !important;
+    min-width: 36px !important;
+  }
+  .no-matches-week {
+    font-size: 1.01rem !important;
+    padding: 12px 0 !important;
+    color: #aaa !important;
+    font-style: italic !important;
+    text-align: center !important;
+  }
+}
+
+/* Strong grid overrides for "This Week" and "Full Schedule" containers
+   Targets many common matchup container selectors to ensure consistent 1/2/3 column behavior
+   Uses high specificity and !important to override earlier flex/width rules. */
+.tab-content .schedule-grid,
+.tab-content .matchup-list,
+.tab-content .matchup-cards,
+.tab-content .matchup-row,
+.tab-content .matchups-container,
+.this-week .schedule-grid,
+.this-week .matchup-list,
+.this-week .matchup-cards,
+.full-schedule .schedule-grid,
+.full-schedule .matchup-list,
+.full-schedule .matchup-cards,
+.matchup-list,
+.matchup-cards,
+.matchup-row,
+.matchups-container,
+.matchup-grid,
+.week-matches {
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 480px) {
+  .tab-content .schedule-grid,
+  .tab-content .matchup-list,
+  .tab-content .matchup-cards,
+  .matchup-list,
+  .matchup-cards,
+  .matchup-row,
+  .matchups-container,
+  .matchup-grid,
+  .week-matches {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: start !important;
+  }
+  .tab-content .matchup-card,
+  .matchup-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .tab-content .schedule-grid,
+  .tab-content .matchup-list,
+  .tab-content .matchup-cards,
+  .matchup-list,
+  .matchup-cards,
+  .matchup-row,
+  .matchups-container,
+  .matchup-grid,
+  .week-matches {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 8px !important;
+    margin: 0 auto !important;
+    align-items: start !important;
+    justify-items: stretch !important;
+  }
+  .tab-content .matchup-card,
+  .matchup-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .tab-content .schedule-grid,
+  .tab-content .matchup-list,
+  .tab-content .matchup-cards,
+  .matchup-list,
+  .matchup-cards,
+  .matchup-row,
+  .matchups-container,
+  .matchup-grid,
+  .week-matches {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 0 12px !important;
+    align-items: start !important;
+  }
+  .tab-content .matchup-card,
+  .matchup-card {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* Explicit overrides for the template's .schedule-container to guarantee vertical cards */
+@media (max-width: 480px) {
+  .schedule-container .week-block .week-matches .schedule-match {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 92vw !important;
+    max-width: 420px !important;
+    margin: 0 auto 12px auto !important;
+    padding: 12px 14px !important;
+    box-sizing: border-box !important;
+    background: rgba(83,252,25,0.07) !important;
+    border: 2px solid #53fc19 !important;
+    border-radius: 10px !important;
+    text-align: center !important;
+  }
+
+  .schedule-container .week-block .week-matches .schedule-match .match-players {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .schedule-container .week-block .week-matches .schedule-match .player1,
+  .schedule-container .week-block .week-matches .schedule-match .player2 {
+    width: 100% !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    text-align: center !important;
+    padding: 6px 0 !important;
+    background: rgba(24,26,27,0.25) !important;
+    border-radius: 8px !important;
+    color: #ddd !important;
+    font-weight: 700 !important;
+  }
+
+  .schedule-container .week-block .week-matches .schedule-match .vs {
+    margin: 8px 0 !important;
+    display: inline-block !important;
+  }
+}
+
+/* Stronger override: make .schedule-match look and behave exactly like .matchup-card on phones */
+@media (max-width: 480px) {
+  /* apply matchup-card visual style to schedule entries */
+  .schedule-grid .week-block .week-matches .schedule-match {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 92vw !important;
+    max-width: 420px !important;
+    margin: 0 auto 12px auto !important;
+    padding: 12px 14px !important;
+    box-sizing: border-box !important;
+    background: rgba(83,252,25,0.07) !important;
+    border: 2px solid #53fc19 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 8px #181a1b22 !important;
+    text-align: center !important;
+    font-family: 'Orbitron', Arial, sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6px !important;
+    color: #53fc19 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+  }
+
+  /* ensure inner players stack vertically and center */
+  .schedule-grid .week-block .week-matches .schedule-match .match-players,
+  .schedule-grid .week-block .week-matches .schedule-match .matchup-players {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  /* player name blocks full width, wrapping allowed */
+  .schedule-grid .week-block .week-matches .schedule-match .player1,
+  .schedule-grid .week-block .week-matches .schedule-match .player2,
+  .schedule-grid .week-block .week-matches .schedule-match .player-slot {
+    width: 100% !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    text-align: center !important;
+    font-size: 1.02rem !important;
+    padding: 4px 0 !important;
+    color: #ffffff !important;
+  }
+
+  /* prominent VS pill centered between names */
+  .schedule-grid .week-block .week-matches .schedule-match .vs,
+  .schedule-grid .week-block .week-matches .schedule-match .vs-divider {
+    display: inline-block !important;
+    margin: 8px 0 !important;
+    padding: 8px 14px !important;
+    border-radius: 999px !important;
+    background: #53fc19 !important;
+    color: #181a1b !important;
+    box-shadow: 0 0 12px #53fc19 !important;
+    font-weight: 800 !important;
+  }
+
+  /* make sure long names don't push layout horizontally */
+  .schedule-grid .week-block .week-matches .schedule-match .player1 .player-name,
+  .schedule-grid .week-block .week-matches .schedule-match .player2 .player-name {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+  }
+}
+
+/* Tablet and small desktop breakpoint */
+@media (max-width: 768px) {
+  .rnd-bg {
+    padding: 10px;
+  }
+  .tab-container {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 10px;
+  }
+  .tab-content {
+    padding: 14px;
+    min-height: 300px;
+  }
+  .rnd-title {
+    font-size: 2rem;
+  }
+  .week-title {
+    font-size: 1.2rem;
+  }
+  .section-title {
+    font-size: 1.2rem;
+  }
+  .matchup-card {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+  .player-slot {
+    padding: 8px;
+    min-width: 100px !important;
+    max-width: 180px !important;
+    font-size: 0.95rem;
+  }
+  .vs-divider {
+    font-size: 1rem;
+    padding: 10px 12px;
+    min-width: 36px;
+      /* Tooltip/popover: keep inside viewport, wrap, and position below cell */
+      .player-name-cell[title], .player-name-cell .tooltip {
+        position: absolute !important;
+        left: 50% !important;
+        top: 100% !important;
+        transform: translateX(-50%) !important;
+        min-width: 80px !important;
+        max-width: 180px !important;
+        width: max-content !important;
+        word-break: break-all !important;
+        white-space: pre-line !important;
+        background: #181a1b !important;
+        color: #53fc19 !important;
+        border: 2px solid #53fc19 !important;
+        border-radius: 10px !important;
+        padding: 8px 10px !important;
+        z-index: 1000 !important;
+        box-shadow: 0 2px 12px #181a1b99 !important;
+        font-size: 0.98rem !important;
+        pointer-events: none;
+      }
+      .player-name-cell {
+        position: relative !important;
+        overflow: visible !important;
+      }
+    font-size: 0.95rem;
+  }
+}
+
+/* Ensure schedule becomes a vertical column on phones and small tablets */
+@media (max-width: 900px) {
+  .schedule-container {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+    margin: 0 auto !important;
+  }
+
+  .schedule-container .week-block {
+    display: block !important;
+    width: 95% !important;
+    max-width: 520px !important;
+    margin: 0 auto 18px auto !important;
+    box-sizing: border-box !important;
+  }
+
+  .schedule-container .week-block .week-matches {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .schedule-container .week-block .week-matches .schedule-match {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Prevent tooltip clipping: make common parents allow overflow and remove clip-paths */
+@media (max-width: 900px) {
+  .tab-container,
+  .tab-content,
+  .tab-panel,
+  .table-container,
+  .standings-table-container,
+  .schedule-grid,
+  .week-block,
+  .week-matches,
+  .matchup-list,
+  .matchup-cards,
+  .matchup-row,
+  .matchup-grid,
+  .matchups-container,
+  .rnd-bg {
+    overflow: visible !important;
+    -webkit-overflow-scrolling: auto !important;
+    clip-path: none !important;
+  }
+
+  /* anchor should allow tooltip to overflow */
+  .player-name-cell,
+  .player-name-cell[title],
+  .match-stats,
+  .match-stats-anchor,
+  .match-stat-toggle {
+    overflow: visible !important;
+    z-index: 1200 !important;
+  }
+
+  /* reinforce tooltip position to the right and ensure it's not transformed off-screen */
+  .player-name-cell[title] .tooltip,
+  .player-name-cell .tooltip,
+  .match-stats .tooltip,
+  .match-stats-tooltip,
+  .match-stat-popup,
+  .match-stats-anchor > .tooltip {
+    left: calc(100% + 8px) !important;
+    right: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    max-width: 46vw !important;
+    min-width: 120px !important;
+    box-sizing: border-box !important;
+    pointer-events: auto !important;
+    z-index: 1400 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* slightly tighter widths on smaller screens */
+  .schedule-container .week-block { max-width: 420px !important; }
+  .schedule-container { padding: 0 6px !important; }
+}
+
+/* Extra: Make tables and grids scrollable on small screens */
+@media (max-width: 900px) {
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .rnd-table {
+    min-width: 500px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra: Stack flex layouts vertically on mobile */
+@media (max-width: 600px) {
+  .match-players {
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+  }
+  .player-slot {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 6px;
+    font-size: 0.92rem;
+  }
+  .vs-divider {
+    margin: 8px 0;
+    min-width: 32px;
+    font-size: 0.95rem;
+    padding: 8px 10px;
+  }
+  .rnd-img {
+    max-width: 100%;
+    height: auto;
+    max-height: 60px;
+  }
+  .tab-btn {
+    font-size: 1rem;
+    padding: 10px 8px;
+  }
+}
+
+/* Mobile-friendly stats popup/modal, table scroll, and stacked card layout */
+@media (max-width: 480px) {
+  .stats-popup, .player-stats-modal, .player-name-cell[title], .player-name-cell .tooltip {
+    max-width: 96vw !important;
+    width: auto !important;
+    left: 2vw !important;
+    right: 2vw !important;
+    top: 10vh !important;
+    max-height: 80vh !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    word-break: break-word !important;
+    white-space: pre-line !important;
+    z-index: 1000 !important;
+    font-size: 1rem !important;
+    padding: 10px 8px !important;
+    box-sizing: border-box !important;
+  }
+  .table-container, .stats-table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  .rnd-table, .stats-table {
+    min-width: 500px !important;
+    font-size: 0.95rem !important;
+  }
+}
+@media (max-width: 400px) {
+  .rnd-table, .stats-table {
+    display: none !important;
+  }
+  .player-stats-card-list {
+    display: block !important;
+    width: 100vw !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .player-stats-card {
+    background: rgba(83,252,25,0.08);
+    border: 1px solid #53fc19;
+    border-radius: 10px;
+    margin: 0 0 12px 0;
+    padding: 10px 8px;
+    font-size: 0.98rem;
+    color: #fff;
+    box-shadow: 0 2px 8px #181a1b33;
+  }
+  .player-stats-card .player-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #53fc19;
+    margin-bottom: 4px;
+  }
+  .player-stats-card .stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+  .player-stats-card .stat-label {
+    color: #53fc19;
+    font-weight: 600;
+  }
+  .player-stats-card .stat-value {
+    color: #fff;
+    font-weight: 400;
+  }
+}
+
+/* Strong mobile override: force schedule matches to be stacked (column) like matchup cards
+   This ensures Full Schedule entries are vertical on small phones even if other rules collide. */
+@media (max-width: 480px) {
+  /* target nested structure with higher specificity */
+  .schedule-grid .week-block .week-matches .schedule-match,
+  .schedule-grid .week-block .week-matches .matchup-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    margin: 0 0 10px 0 !important;
+    padding: 10px 12px !important;
+  }
+
+  .schedule-grid .week-block .week-matches .schedule-match .match-players,
+  .schedule-grid .week-block .week-matches .schedule-match .matchup-players {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  .schedule-grid .week-block .week-matches .schedule-match .player1,
+  .schedule-grid .week-block .week-matches .schedule-match .player2,
+  .schedule-grid .week-block .week-matches .schedule-match .player-slot {
+    width: 100% !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    text-align: center !important;
+    padding: 4px 0 !important;
+  }
+
+  .schedule-grid .week-block .week-matches .schedule-match .vs,
+  .schedule-grid .week-block .week-matches .schedule-match .vs-divider {
+    display: inline-block !important;
+    margin: 6px 0 !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    background: #53fc19 !important;
+    color: #181a1b !important;
+    box-shadow: 0 0 8px #53fc19 !important;
+  }
+
+  /* ensure week-matches container is column and full width */
+  .schedule-grid .week-block .week-matches {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+  }
+}
+
+/* Mobile: force matchup-card to be a single horizontal row (player1 | VS | player2) */
+@media (max-width: 480px) {
+  .matchup-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    width: 96vw !important;
+    max-width: 420px !important;
+    padding: 8px 12px !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+  }
+
+  .matchup-card > .player-slot {
+    flex: 0 0 42% !important;
+    max-width: 42% !important;
+    min-width: 0 !important;
+    padding: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* VS pill centered and doesn't wrap the layout */
+  .matchup-card .vs-divider, .matchup-card .vs {
+    flex: 0 0 auto !important;
+    margin: 0 6px !important;
+    padding: 6px 10px !important;
+    min-width: 48px !important;
+    text-align: center !important;
+  }
+
+  /* Ensure names truncate instead of breaking layout */
+  .matchup-card .player-name {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Final mobile polish: center matchup cards and make banner image full-width */
+@media (max-width: 480px) {
+  /* center the card horizontally in the viewport */
+  .matchup-card {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-content: space-between !important; /* keep players left/right */
+    align-items: center !important;
+  }
+
+  /* ensure the title/banner image fills the card/container */
+  .rnd-title-card {
+    padding: 0 8px !important;
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+  }
+  .rnd-title-card .rnd-img,
+  .rnd-img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: cover !important;
+    margin: 0 auto 12px auto !important;
+    border-radius: 12px !important;
+    display: block !important;
+  }
+
+  /* reduce banner vertical overflow on very small screens */
+  .rnd-img { margin-top: 0 !important; margin-bottom: 8px !important; }
+}
+
+/* Final, high-specificity mobile override: force each week and match to be a single full-width entry */
+@media (max-width: 480px) {
+  /* Make containers stack and stretch to viewport width */
+  .schedule-grid, .schedule-container, .matchup-list, .matchup-cards, .matchup-row, .matchups-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Week blocks fill full width and stack vertically */
+  .week-block {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 12px 0 !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure the list of matches in a week is a vertical list */
+  .week-matches {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Each matchup becomes a full-width, stacked card */
+  .week-matches > .matchup-card,
+  .week-matches > .schedule-match,
+  .matchup-card,
+  .schedule-match {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 0 10px 0 !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+  }
+
+  /* Stack player slots vertically inside each matchup so long names don't force horizontal scroll */
+  .matchup-card .match-players,
+  .schedule-match .match-players,
+  .matchup-card .matchup-players,
+  .schedule-match .matchup-players {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .matchup-card .player-slot,
+  .schedule-match .player-slot,
+  .matchup-card .player1,
+  .matchup-card .player2,
+  .schedule-match .player1,
+  .schedule-match .player2 {
+    width: 100% !important;
+    min-width: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    padding: 6px 0 !important;
+  }
+
+  /* Keep VS pill centered and not forcing layout width */
+  .vs-divider, .vs {
+    display: inline-block !important;
+    margin: 8px auto !important;
+  }
+
+  /* Small polish: reduce excessive horizontal paddings on nested elements */
+  .matchup-card > *, .schedule-match > * { margin: 4px 0 !important; }
+}
+
+/* Responsive schedule grid: 1 column (small phones), 2 columns (mobile portrait / small tablets), 3 columns (larger screens) */
+/* These rules are placed after the mobile overrides to take precedence where appropriate. */
+@media (max-width: 480px) {
+  .schedule-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    align-items: start !important;
+  }
+  .schedule-grid .week-block {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .schedule-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 8px !important;
+    margin: 0 auto !important;
+    align-items: start !important;
+    justify-items: stretch !important;
+  }
+  .schedule-grid .week-block {
+    width: 100% !important;
+    max-width: 420px !important;
+    margin: 0 auto !important;
+  }
+  /* Ensure nested match cards fill the grid cell */
+  .schedule-grid .week-block .week-matches,
+  .schedule-grid .week-block .week-matches .matchup-card,
+  .schedule-grid .week-block .week-matches .schedule-match {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .schedule-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 18px !important;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 0 12px !important;
+    align-items: start !important;
+  }
+  .schedule-grid .week-block {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}
+/* Projects page: ensure project cards are centered and their images fill the card on small screens */
+@media (max-width: 480px) {
+  /* common project card selectors used in the app; be permissive so this applies even if class names vary slightly */
+  .project-card, .projects-card, .project-item {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 92vw !important;
+    max-width: 420px !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    padding: 10px 12px !important;
+    background-clip: padding-box !important;
+  }
+
+  /* Make any image inside a project card span the full width of the card */
+  .project-card img,
+  .project-card .project-img,
+  .project-thumbnail,
+  .project-banner,
+  .projects-card img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+    display: block !important;
+    margin: 0 auto 10px auto !important;
+    border-radius: 10px !important;
+  }
+
+  /* Tidy titles and action buttons inside the card */
+  .project-card .project-title,
+  .project-card .project-name,
+  .projects-card .project-title {
+    text-align: center !important;
+    margin: 6px 0 8px 0 !important;
+    font-size: 1.05rem !important;
+  }
+
+  .project-card .project-actions,
+  .projects-card .project-actions {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    margin-top: 6px !important;
+  }
+
+  /* TV frame overlay: use TV2.webp as decorative frame and center project image inside the TV */
+  .project-card {
+  position: relative !important;
+  overflow: visible !important; /* allow image to overflow frame if needed */
+  padding-top: 18px !important; /* create breathing room for overlay */
+  /* make project cards span full row on mobile */
+  width: 100% !important;
+  max-width: none !important;
+  }
+
+  /* TV frame background placed via pseudo element so it doesn't alter DOM */
+  .project-card::before {
+    content: '';
+    position: absolute !important;
+    left: 50% !important;
+    top: 8px !important;
+    transform: translateX(-50%) !important;
+    /* use a fixed-ish frame height so the frame is visible even if parents clip */
+    width: 100% !important;
+    height: 240px !important;
+    background-image: url('/assets/TV2.webp') !important;
+    background-repeat: no-repeat !important;
+    background-position: center top !important;
+    background-size: 240px auto !important; /* keep aspect and ensure visible size */
+    pointer-events: none !important;
+    z-index: 1000 !important; /* frame must sit above the image */
+    display: block !important;
+  }
+
+  /* Place the project image above the TV frame and center it within the TV screen area */
+  .project-card img,
+  .project-card .project-img,
+  .project-card .project-img img,
+  .project-item img {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important; /* vertically center in the TV */
+    transform: translate(-50%, -50%) !important;
+    width: 60% !important; /* tuned to fit inside TV screen */
+    height: auto !important;
+    max-height: 60% !important;
+    object-fit: contain !important;
+    z-index: 900 !important; /* image should sit below the TV frame */
+    border-radius: 6px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  /* If the project card contains an inner wrapper, allow it to expand vertically so the absolute image has space */
+  .project-card .card-content, .project-card .project-body {
+    min-height: 280px !important; /* ensure absolute image has vertical space */
+  }
+
+  /* Slightly larger image on very small screens */
+  @media (max-width: 360px) {
+    .project-card img,
+    .project-card .project-img,
+    .project-card .project-img img,
+    .project-item img {
+      width: 68% !important;
+      max-height: 62% !important;
+      top: 50% !important;
+    }
+  }
+
+  /* Mobile: position player standings tooltip/popover to the right of the cell instead of left */
+  @media (max-width: 480px) {
+    .player-name-cell, .player-name-cell[title] {
+      position: relative !important; /* ensure anchor for absolute tooltip */
+    }
+
+    .player-name-cell[title] .tooltip,
+    .player-name-cell .tooltip,
+    .player-name-cell[title] > .tooltip {
+      position: absolute !important;
+      left: auto !important;
+      right: 6px !important; /* place popup towards the right side of the viewport */
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      max-width: 46vw !important;
+      width: auto !important;
+      background: #181a1b !important;
+      color: #53fc19 !important;
+      border: 1px solid #53fc19 !important;
+      border-radius: 8px !important;
+      padding: 8px 10px !important;
+      box-sizing: border-box !important;
+      z-index: 1200 !important;
+      white-space: normal !important;
+      word-break: break-word !important;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.6) !important;
+    }
+
+    /* If the tooltip library adds inline centering transforms, override them */
+    .player-name-cell[title] .tooltip[style],
+    .player-name-cell .tooltip[style] {
+      transform: translateY(-50%) !important;
+      left: auto !important;
+      right: 6px !important;
+    }
+  }
+}
+
+/* Force match stats / player-name tooltips to always appear to the RIGHT on mobile/tablet
+   and never to the left (prevents cutoff). Applied up to 900px to cover small tablets. */
+@media (max-width: 900px) {
+  /* anchor must be relative so absolute tooltip sits beside it */
+  .player-name-cell, .player-name-cell[title], .match-stats, .match-stats-anchor, .match-stat-toggle {
+    position: relative !important;
+    z-index: 1100 !important;
+  }
+
+  /* tooltip box forced to the right of the anchor */
+  .player-name-cell[title] .tooltip,
+  .player-name-cell .tooltip,
+  .match-stats .tooltip,
+  .match-stats-tooltip,
+  .match-stat-popup,
+  .match-stats-anchor > .tooltip {
+    position: absolute !important;
+    left: calc(100% + 8px) !important; /* attach just right of the name */
+    right: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    max-width: 46vw !important; /* keep it inside viewport */
+    min-width: 120px !important;
+    width: auto !important;
+    background: #181a1b !important;
+    color: #53fc19 !important;
+    border: 1px solid #53fc19 !important;
+    border-radius: 8px !important;
+    padding: 8px 10px !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6) !important;
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    z-index: 1300 !important;
+    pointer-events: auto !important;
+  }
+
+  /* If there are inline style transforms/positions applied by the tooltip library, override them */
+  .player-name-cell[title] .tooltip[style],
+  .player-name-cell .tooltip[style],
+  .match-stats .tooltip[style] {
+    left: calc(100% + 8px) !important;
+    right: auto !important;
+    transform: translateY(-50%) !important;
+    top: 50% !important;
+  }
+}

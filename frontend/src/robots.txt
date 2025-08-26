@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://edwardswebdevelopment.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Disallow sensitive directories
+Disallow: /admin/
+Disallow: /api/
+Disallow: /logs/
+Disallow: /.well-known/
+Disallow: /node_modules/

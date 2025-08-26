@@ -1,0 +1,26 @@
+import { Injectable } from '@angular/core';
+import { CanActivate, Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { AuthService } from './auth.service';
+
+@Injectable({ providedIn: 'root' })
+export class AdminGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    const attemptedRoute = state.url || '/';
+    this.authService.logAccessAttempt(attemptedRoute);
+
+    console.log('Checking admin mode in AdminGuard:', this.authService.isAdminMode, 'for', attemptedRoute);
+
+    if (this.authService.isAdminMode) {
+      return true;
+    }
+
+    if (this.authService.isAdminRoute(attemptedRoute)) {
+      console.warn(`Unauthorized access attempt to admin route: ${attemptedRoute}`);
+    }
+
+    this.authService.redirectToPublic();
+    return false;
+  }
+}

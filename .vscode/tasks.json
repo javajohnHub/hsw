@@ -1,0 +1,259 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Development Servers",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev"
+			],
+			"group": "build",
+			"isBackground": true,
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Install All Dependencies",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"install:all"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build All",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Frontend Only",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"start:frontend"
+			],
+			"group": "build",
+			"isBackground": true,
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Backend Only",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"start:backend"
+			],
+			"group": "build",
+			"isBackground": true,
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "PM2 Start Production",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"start"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "PM2 Stop",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"stop"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "PM2 Restart",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"restart"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "PM2 Status",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"status"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "PM2 Logs",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"logs"
+			],
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Deploy to Production",
+			"type": "shell",
+			"command": "deploy.bat",
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Open SSH Terminal",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/k"
+			],
+			"isBackground": false,
+			"group": "none"
+		},
+		{
+			"label": "Open Git Bash Terminal",
+			"type": "shell",
+			"command": "C:\\Program Files\\Git\\git-bash.exe",
+			"args": [],
+			"isBackground": false,
+			"group": "none"
+		},
+		{
+			"label": "Local Build CI",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build:ci"
+			],
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Install All Deps (root+subpackages)",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/d",
+				"/c",
+				"npm install && cd backend && npm install && cd .. && cd frontend && npm install && cd .. && cd tournament-app && npm run install:all"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Full Production Build (All)",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/d",
+				"/c",
+				"npm run build:backend && npm run build:frontend && npm run build:tournament && npm run copy"
+			],
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Preview Both Servers",
+			"type": "shell",
+			"command": "cmd.exe",
+			"args": [
+				"/d",
+				"/c",
+				"start cmd /k \"cd backend && npm start\" & timeout /t 2 >nul & start cmd /k \"cd tournament-app/server && npm start\""
+			],
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}

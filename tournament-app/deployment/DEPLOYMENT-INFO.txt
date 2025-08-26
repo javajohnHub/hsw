@@ -1,0 +1,11 @@
+Deployment Package Created: Mon 08/18/2025 20:47:40.63 
+Angular Build: Production 
+Server: Node.js with Express 
+Process Manager: PM2 
+ 
+Instructions: 
+1. Extract this package on your server 
+2. Install Node.js 18+ if not already installed 
+3. Run: npm install 
+4. Run: pm2-control.cmd prod (Windows) or ./pm2-control.sh prod (Linux) 
+5. Access application at http://your-server:4000 

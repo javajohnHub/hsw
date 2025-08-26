@@ -1,0 +1,443 @@
+/* Global Styles */
+
+/* Color Palette */
+:root {
+  --primary-color: #799B78;        /* Mineral Green */
+  --primary-dark: #5a7759;         /* Darker mineral green */
+  --primary-light: #9bb69a;        /* Lighter mineral green */
+  --primary-lightest: #e8f0e8;     /* Very light mineral green */
+  --cream-color: #FEFBEA;          /* Cream for text and accents */
+  --cream-dark: #F5F2E0;          /* Slightly darker cream */
+  --cream-muted: #E8E5D3;         /* Muted cream */
+  --secondary-color: #6b7280;      /* Neutral gray */
+  --accent-color: #8b5a3c;         /* Complementary brown */
+  --success-color: #10b981;        /* Green for success */
+  --warning-color: #f59e0b;        /* Orange for warnings */
+  --error-color: #ef4444;          /* Red for errors */
+  --text-primary: var(--cream-color);    /* Cream text */
+  --text-secondary: var(--cream-dark);   /* Darker cream text */
+  --text-muted: var(--cream-muted);      /* Muted cream text */
+  --background-primary: #2a2a2a;         /* Dark background */
+  --background-secondary: #1f1f1f;       /* Darker background */
+  --background-tertiary: #3a3a3a;        /* Medium dark background */
+  --border-color: var(--cream-muted);    /* Cream borders */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  background-color: var(--background-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Responsive containers */
+@media (max-width: 576px) {
+  .container {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 10px;
+  }
+}
+
+/* Section spacing */
+.section {
+  padding: 80px 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .section {
+    padding: 40px 0;
+  }
+}
+
+/* Cards */
+.card {
+  background: var(--background-tertiary);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(121, 155, 120, 0.1);
+  padding: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--cream-muted);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(121, 155, 120, 0.15);
+  border-color: var(--cream-color);
+}
+
+/* Cream Underlines and Borders */
+.cream-underline {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--cream-color);
+    transition: all 0.3s ease;
+  }
+  
+  &:hover::after {
+    background-color: var(--cream-dark);
+  }
+}
+
+.cream-border {
+  border: 1px solid var(--cream-color);
+  transition: border-color 0.3s ease;
+  
+  &:hover {
+    border-color: var(--cream-dark);
+  }
+}
+
+.cream-border-bottom {
+  border-bottom: 1px solid var(--cream-color);
+  transition: border-color 0.3s ease;
+  
+  &:hover {
+    border-color: var(--cream-dark);
+  }
+}
+
+/* Section titles with cream underlines */
+.section-title {
+  position: relative;
+  margin-bottom: 3rem;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: var(--cream-color);
+    border-radius: 2px;
+  }
+}
+
+/* Navigation underlines */
+.nav-underline {
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--cream-color);
+    transition: width 0.3s ease;
+  }
+  
+  &:hover::after,
+  &.active::after {
+    width: 100%;
+  }
+}
+
+/* Form styles for dark theme */
+.form-group {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--cream-color);
+    font-weight: 500;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--cream-muted);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: var(--background-tertiary);
+    color: var(--cream-color);
+    
+    &:focus {
+      outline: none;
+      border-color: var(--cream-color);
+      box-shadow: 0 0 0 2px rgba(254, 251, 234, 0.2);
+    }
+    
+    &::placeholder {
+      color: var(--cream-muted);
+    }
+  }
+  
+  .error-message {
+    color: var(--error-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+}
+
+/* Form button styles */
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  
+  @media (max-width: 600px) {
+    flex-direction: column;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+/* Section backgrounds for album aesthetic */
+.hero, .hero-about, .hero-services, .hero-contact {
+  background: linear-gradient(135deg, var(--background-primary) 0%, var(--background-secondary) 100%);
+  color: var(--cream-color);
+  
+  .hero-subtitle {
+    color: var(--cream-dark);
+  }
+}
+
+.section {
+  &:nth-child(even) {
+    background: var(--background-secondary);
+  }
+  
+  &:nth-child(odd) {
+    background: var(--background-primary);
+  }
+}
+
+.cta {
+  background: var(--background-tertiary);
+  color: var(--cream-color);
+  
+  h2 {
+    color: var(--cream-color);
+  }
+  
+  p {
+    color: var(--cream-dark);
+  }
+}
+
+/* Angular icon styling */
+.angular-icon {
+  color: var(--primary-color);
+  font-size: 1.1em;
+  margin-right: 0.5rem;
+  display: inline-block;
+  text-shadow: 0 0 10px rgba(121, 155, 120, 0.3);
+}
+
+/* Responsive Typography and Layout */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  .container {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+    line-height: 1.3;
+  }
+  
+  p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+  
+  h2 {
+    font-size: 1.4rem;
+  }
+  
+  h3 {
+    font-size: 1.2rem;
+  }
+  
+  .card {
+    padding: 20px;
+    margin-bottom: 1rem;
+  }
+}
+.project-image-container {
+  overflow: visible; /* allow image to grow outside container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-image {
+  transition: transform 0.3s ease;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.project-image:hover {
+  transform: scale(1.1);
+  z-index: 2;
+}
+
+/* Responsive project section/card layout */
+.projects-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.project-card {
+  flex: 1 1 300px;
+  max-width: 350px;
+  min-width: 250px;
+  margin: 1rem;
+}
+
+@media (max-width: 768px) {
+  .projects-section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .project-card {
+    max-width: 100%;
+    margin: 0 auto 1rem auto;
+  }
+}
