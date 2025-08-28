@@ -45,7 +45,8 @@ export interface Game {
   providedIn: 'root'
 })
 export class DataService {
-  private readonly baseUrl = 'http://localhost:4000';
+  // Determine base URL dynamically so the app can run under a subpath like /tournaments
+  private readonly baseUrl: string;
   
   // BehaviorSubjects for reactive data
   private playersSubject = new BehaviorSubject<Player[]>([]);
@@ -60,16 +61,19 @@ export class DataService {
   public games$ = this.gamesSubject.asObservable();
   
   constructor(private http: HttpClient) {
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    // Always hit the backend API namespace; served same-origin by Express
+    this.baseUrl = `${origin}/api/tournaments`;
     this.loadAllData();
   }
   
   // Load all data on service initialization
   loadAllData(): Observable<any> {
     return forkJoin({
-      players: this.http.get<Player[]>(`${this.baseUrl}/players`),
-      matches: this.http.get<Match[]>(`${this.baseUrl}/matches`),
-      seasons: this.http.get<Season[]>(`${this.baseUrl}/seasons`),
-      games: this.http.get<Game[]>(`${this.baseUrl}/games`)
+  players: this.http.get<Player[]>(`${this.baseUrl}/players`, { withCredentials: true }),
+  matches: this.http.get<Match[]>(`${this.baseUrl}/matches`, { withCredentials: true }),
+  seasons: this.http.get<Season[]>(`${this.baseUrl}/seasons`, { withCredentials: true }),
+  games: this.http.get<Game[]>(`${this.baseUrl}/games`, { withCredentials: true })
     }).pipe(
       tap(data => {
         this.playersSubject.next(data.players || []);
@@ -86,7 +90,7 @@ export class DataService {
   }
   
   updatePlayer(player: Player): Observable<Player> {
-    return this.http.put<Player>(`${this.baseUrl}/players/${player.id}`, player).pipe(
+  return this.http.put<Player>(`${this.baseUrl}/players/${player.id}`, player, { withCredentials: true }).pipe(
       tap(() => {
         const players = this.playersSubject.value;
         const index = players.findIndex(p => p.id === player.id);
@@ -99,7 +103,7 @@ export class DataService {
   }
   
   addPlayer(player: Omit<Player, 'id'>): Observable<Player> {
-    return this.http.post<Player>(`${this.baseUrl}/players`, player).pipe(
+  return this.http.post<Player>(`${this.baseUrl}/players`, player, { withCredentials: true }).pipe(
       tap(newPlayer => {
         const players = this.playersSubject.value;
         this.playersSubject.next([...players, newPlayer]);
@@ -108,7 +112,7 @@ export class DataService {
   }
   
   deletePlayer(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/players/${id}`).pipe(
+  return this.http.delete(`${this.baseUrl}/players/${id}`, { withCredentials: true }).pipe(
       tap(() => {
         const players = this.playersSubject.value.filter(p => p.id !== id);
         this.playersSubject.next(players);
@@ -122,7 +126,7 @@ export class DataService {
   }
   
   saveMatches(matches: Match[]): Observable<any> {
-    return this.http.post(`${this.baseUrl}/matches`, matches).pipe(
+  return this.http.post(`${this.baseUrl}/matches`, matches, { withCredentials: true }).pipe(
       tap(() => {
         this.matchesSubject.next([...matches]);
       })
@@ -130,7 +134,7 @@ export class DataService {
   }
   
   updateMatch(match: Match): Observable<any> {
-    return this.http.put(`${this.baseUrl}/matches/${match.id}`, match).pipe(
+  return this.http.put(`${this.baseUrl}/matches/${match.id}`, match, { withCredentials: true }).pipe(
       tap(() => {
         const matches = this.matchesSubject.value;
         const index = matches.findIndex(m => m.id === match.id);
@@ -143,7 +147,7 @@ export class DataService {
   }
   
   addMatch(match: Match): Observable<any> {
-    return this.http.post(`${this.baseUrl}/matches`, [match]).pipe(
+  return this.http.post(`${this.baseUrl}/matches`, [match], { withCredentials: true }).pipe(
       tap(() => {
         // Reload matches from server to get the updated list with proper IDs
         this.loadMatches();
@@ -152,13 +156,13 @@ export class DataService {
   }
   
   private loadMatches(): void {
-    this.http.get<Match[]>(`${this.baseUrl}/matches`).subscribe(matches => {
+  this.http.get<Match[]>(`${this.baseUrl}/matches`, { withCredentials: true }).subscribe(matches => {
       this.matchesSubject.next(matches || []);
     });
   }
   
   clearMatches(): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/matches/all`).pipe(
+  return this.http.delete(`${this.baseUrl}/matches/all`, { withCredentials: true }).pipe(
       tap(() => {
         this.matchesSubject.next([]);
       })
@@ -175,7 +179,7 @@ export class DataService {
   }
   
   addSeason(season: Omit<Season, 'id'>): Observable<Season> {
-    return this.http.post<Season>(`${this.baseUrl}/seasons`, season).pipe(
+  return this.http.post<Season>(`${this.baseUrl}/seasons`, season, { withCredentials: true }).pipe(
       tap(newSeason => {
         const seasons = this.seasonsSubject.value;
         this.seasonsSubject.next([...seasons, newSeason]);
@@ -184,7 +188,7 @@ export class DataService {
   }
   
   updateSeason(season: Season): Observable<Season> {
-    return this.http.put<Season>(`${this.baseUrl}/seasons/${season.id}`, season).pipe(
+  return this.http.put<Season>(`${this.baseUrl}/seasons/${season.id}`, season, { withCredentials: true }).pipe(
       tap(() => {
         const seasons = this.seasonsSubject.value;
         const index = seasons.findIndex(s => s.id === season.id);
@@ -197,7 +201,7 @@ export class DataService {
   }
   
   deleteSeason(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/seasons/${id}`).pipe(
+  return this.http.delete(`${this.baseUrl}/seasons/${id}`, { withCredentials: true }).pipe(
       tap(() => {
         const seasons = this.seasonsSubject.value.filter(s => s.id !== id);
         this.seasonsSubject.next(seasons);
@@ -211,7 +215,7 @@ export class DataService {
   }
   
   updateGame(game: Game): Observable<Game> {
-    return this.http.put<Game>(`${this.baseUrl}/games/${game.id}`, game).pipe(
+  return this.http.put<Game>(`${this.baseUrl}/games/${game.id}`, game, { withCredentials: true }).pipe(
       tap(() => {
         const games = this.gamesSubject.value;
         const index = games.findIndex(g => g.id === game.id);
@@ -224,7 +228,7 @@ export class DataService {
   }
   
   addGame(game: Omit<Game, 'id'>): Observable<Game> {
-    return this.http.post<Game>(`${this.baseUrl}/games`, game).pipe(
+  return this.http.post<Game>(`${this.baseUrl}/games`, game, { withCredentials: true }).pipe(
       tap(newGame => {
         const games = this.gamesSubject.value;
         this.gamesSubject.next([...games, newGame]);
@@ -233,7 +237,7 @@ export class DataService {
   }
   
   deleteGame(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/games/${id}`).pipe(
+  return this.http.delete(`${this.baseUrl}/games/${id}`, { withCredentials: true }).pipe(
       tap(() => {
         const games = this.gamesSubject.value.filter(g => g.id !== id);
         this.gamesSubject.next(games);
@@ -242,7 +246,7 @@ export class DataService {
   }
   
   resetGames(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/games/reset`, {}).pipe(
+  return this.http.post(`${this.baseUrl}/games/reset`, {}, { withCredentials: true }).pipe(
       tap(() => {
         const games = this.gamesSubject.value.map(g => ({ ...g, isChosen: false }));
         this.gamesSubject.next(games);

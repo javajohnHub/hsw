@@ -4,17 +4,22 @@ import rateLimit from 'express-rate-limit';
 
 const router = Router();
 
-// Rate limiting for auth endpoints
+// Rate limiting for auth endpoints (configurable)
+const AUTH_WINDOW_MS = parseInt(process.env.AUTH_RATE_WINDOW_MS || '', 10);
+const AUTH_MAX = parseInt(process.env.AUTH_RATE_MAX || '', 10);
+const AUTH_SKIP_SUCCESS = (process.env.AUTH_RATE_SKIP_SUCCESSFUL || 'true').toLowerCase() === 'true';
+
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5,
+  windowMs: Number.isFinite(AUTH_WINDOW_MS) && AUTH_WINDOW_MS > 0 ? AUTH_WINDOW_MS : 5 * 60 * 1000, // default 5 minutes
+  max: Number.isFinite(AUTH_MAX) && AUTH_MAX > 0 ? AUTH_MAX : 20, // default 20 attempts per window per IP
   message: {
     error: 'Too many authentication attempts from this IP',
     service: 'Edwards Web Development Auth',
-    retryAfter: '15 minutes'
+    hint: 'Please wait and try again shortly.'
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
+  skipSuccessfulRequests: AUTH_SKIP_SUCCESS
 });
 
 /**
@@ -44,17 +49,35 @@ router.post('/login',
         return;
       }
 
-      const { username, password } = req.body;
+      const { username, password } = req.body as { username: string; password: string };
 
-      // Edwards Web Development admin credentials from .env
+      // Normalize env values to avoid CRLF/whitespace issues from .env
+      const clean = (v: string | undefined) => (v ?? '').replace(/\r/g, '').trim();
+      const envUser = clean(process.env.ADMIN_USERNAME);
+      const envPass = clean(process.env.ADMIN_PASSWORD);
+
+      // Compare with trimmed username; do not trim password input to preserve exactness
       const isValidCredentials = (
-        username === process.env.ADMIN_USERNAME && 
-        password === process.env.ADMIN_PASSWORD
+        (username || '').trim() === envUser &&
+        (password || '') === envPass
       );
 
       if (isValidCredentials) {
         const authToken = `edwards_auth_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
+        // Set httpOnly auth cookie for same-origin requests
+        try {
+          const isProd = (process.env.NODE_ENV === 'production');
+          res.cookie('ed_auth', authToken, {
+            httpOnly: true,
+            secure: isProd, // secure in prod
+            sameSite: 'lax',
+            maxAge: 1000 * 60 * 60 * 4 // 4 hours
+          });
+        } catch (cookieErr) {
+          // If cookie setting fails, still return token in body for fallback
+          console.warn('Auth cookie could not be set:', cookieErr);
+        }
+
         res.status(200).json({
           success: true,
           message: 'Authentication successful',
@@ -90,6 +113,9 @@ router.post('/login',
  * Edwards Web Development admin logout
  */
 router.post('/logout', (req: Request, res: Response): void => {
+  try {
+    res.clearCookie('ed_auth', { httpOnly: true, sameSite: 'lax' });
+  } catch {}
   res.status(200).json({
     success: true,
     message: 'Logout successful',
@@ -103,7 +129,12 @@ router.post('/logout', (req: Request, res: Response): void => {
  */
 router.get('/status', (req: Request, res: Response): void => {
   const authHeader = req.headers.authorization;
-  const isAuthenticated = authHeader?.startsWith('Bearer edwards_auth_') || false;
+  // Prefer httpOnly cookie, fall back to Authorization header
+  const cookieVal = (req as any).cookies?.['ed_auth'] as string | undefined;
+  const isAuthenticated = Boolean(
+    (cookieVal && cookieVal.startsWith('edwards_auth_')) ||
+    (authHeader && authHeader.startsWith('Bearer edwards_auth_'))
+  );
   
   res.status(200).json({
     success: isAuthenticated,

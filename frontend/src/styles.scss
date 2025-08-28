@@ -71,7 +71,9 @@ p {
 }
 
 /* Buttons */
-.btn {
+.btn,
+.btn:link,
+.btn:visited {
   display: inline-block;
   padding: 12px 24px;
   border: none;
@@ -84,7 +86,9 @@ p {
   font-size: 1rem;
 }
 
-.btn-primary {
+.btn-primary,
+.btn-primary:link,
+.btn-primary:visited {
   background-color: var(--primary-color);
   color: white;
 }
@@ -94,7 +98,9 @@ p {
   transform: translateY(-2px);
 }
 
-.btn-secondary {
+.btn-secondary,
+.btn-secondary:link,
+.btn-secondary:visited {
   background-color: transparent;
   color: var(--primary-color);
   border: 2px solid var(--primary-color);

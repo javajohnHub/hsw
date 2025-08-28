@@ -1,33 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-rnd',
   standalone: true,
-  styles: [
-    `
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    iframe {
-      border: none;
-      width: 100%;
-      height: calc(90vh);
-    }`
-  ],
   template: `
-    <!-- Correct iframe URL for Edwards Web Development sub-app -->
-    <iframe 
-      src="http://localhost:4000" 
-      width="100%" 
-      height="600px"
-      frameborder="0"
-      title="Edwards Web Development Application">
-    </iframe>
+    <div style="padding:2rem;text-align:center;">
+      <h2>Retro Never Dies Tournament</h2>
+      <p>Open the tournaments app served from this site.</p>
+  <a href="/tournaments" style="display:inline-block;padding:.75rem 1.25rem;background:#0d6efd;color:#fff;border-radius:.5rem;text-decoration:none;">Go to /tournaments</a>
+    </div>
   `
 })
 export class RNDComponent {}

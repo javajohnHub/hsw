@@ -1,6 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
+import { environment } from '../environments/environment';
+import { RouterModule } from '@angular/router';
+import { AuthService } from './auth.service';
+import { Subscription, interval } from 'rxjs';
 
 interface Match {
   week: number;
@@ -28,13 +32,18 @@ interface Game {
 @Component({
   selector: "app-public-page",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   template: `
   <div class="rnd-bg public-page">
+      <div *ngIf="isAdmin" class="admin-banner">
+        <span class="admin-pill">Admin</span>
+        You are logged in. <a routerLink="/admin">Go to Admin</a>
+        <button class="banner-logout" (click)="logout()">Logout</button>
+      </div>
   <!-- Debug overlay removed for mobile styles -->
       <div class="rnd-title-card" [class.empty-wheel]="players.length === 0">
         <div class="banner-frame">
-          <img src="/assets/AddText_08-12-04.51.33.png" alt="Tournament Banner" class="rnd-img animate" />
+          <img src="assets/AddText_08-12-04.51.33.png" alt="Tournament Banner" class="rnd-img animate" />
         </div>
       </div>
       <div class="tab-container">
@@ -46,11 +55,7 @@ interface Game {
 
         <!-- Tab Content -->
         <div class="tab-content">
-        <!-- DEBUG PANEL: shows layout metrics and quick toggles -->
-        <div class="debug-panel" *ngIf="showLayoutDebug" (click)="collectLayoutDebug()">
-          <div class="debug-header">Layout Debug (click to refresh)</div>
-          <pre class="debug-metrics">{{ layoutDebugText || 'no metrics yet' }}</pre>
-        </div>
+        
       <!-- Current Week Matchups Tab -->
       <div *ngIf="activeTab === 'matchups'" class="tab-panel">
         <div class="week-header">
@@ -98,7 +103,7 @@ interface Game {
         >
           Player Standings
           <span class="standings-info-icon" tabindex="0">
-            <img src="/assets/info.svg" alt="Info" width="22" height="22" />
+            <img src="assets/info.svg" alt="Info" width="22" height="22" />
             <span class="standings-tooltip app-help-tooltip">
               Standings are ranked by points. Hover over a player name for
               detailed stats.
@@ -203,6 +208,34 @@ interface Game {
   `,
   styles: [
     `
+      .admin-banner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(83,252,25,0.12);
+        border: 1px solid #53fc19;
+        border-radius: 12px;
+        padding: 10px 14px;
+        margin: 8px auto 16px;
+        max-width: 980px;
+      }
+      .admin-banner a { color: #a8fca1; font-weight: 700; }
+      .admin-pill {
+        background: #53fc19;
+        color: #181a1b;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-weight: 800;
+      }
+      .banner-logout {
+        margin-left: auto;
+        background: #8b0000;
+        color: #fff;
+        border: 1px solid #a40000;
+        padding: 6px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
       /* Global box-sizing to avoid unexpected overflow from padding/margins */
       *, *::before, *::after { box-sizing: border-box; }
       /* Flattened .rnd-bg styles to avoid nested CSS (browsers ignore nested rules) */
@@ -298,6 +331,9 @@ interface Game {
         z-index: 2147483647;
         white-space: pre-line;
         line-height: 1.35;
+  font-size: 12px;
+  max-width: min(90vw, 340px);
+  padding: 6px 8px;
       }
       .rnd-bg .standings-info-icon:hover .standings-tooltip,
       .rnd-bg .standings-info-icon:focus .standings-tooltip,
@@ -325,23 +361,27 @@ interface Game {
       /* Scope the circular title banner to only the public page title card so other headers aren't affected */
       /* Template uses .banner-frame; keep selectors aligned to avoid leaking .logo-frame globally */
       .rnd-title-card .banner-frame {
-        width: min(92vw, 920px);
+        width: min(96vw, 1100px);
         /* rectangular, no circular cropping */
         margin: 16px auto 16px auto;
         border-radius: 12px;
         overflow: hidden;
         display: block;
-        box-shadow: 0 0 16px rgba(83,252,25,0.18), inset 0 0 4px rgba(0,0,0,0.3);
-        border: 2px solid rgba(83,252,25,0.18);
-        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+        /* Remove green glow/border for a cleaner edge */
+        box-shadow: none;
+        border: none;
+        background: transparent;
       }
       .rnd-title-card .banner-frame .rnd-img {
         width: 100%;
         height: auto;
-        max-height: 320px;
+        /* Make the title text image larger on desktop */
+        max-height: 560px;
         object-fit: contain;
         display: block;
         margin: 0 auto;
+        margin-top: -200px;
+        margin-bottom: -200px;
         border-radius: 0;
         pointer-events: none;
         transform: none !important;
@@ -366,7 +406,7 @@ interface Game {
         transform: translateX(-50%);
         width: 240px;
         height: 240px;
-        background-image: url('/assets/TV2.webp');
+  background-image: url('../assets/TV2.webp');
         background-size: contain;
         background-repeat: no-repeat;
         z-index: 1; /* sit behind the project image */
@@ -697,11 +737,12 @@ interface Game {
         z-index: 2147483647;
         pointer-events: auto;
         min-width: 220px;
-        max-width: 420px;
+  max-width: 340px;
         /* Preserve newline characters returned by getPlayerMatchStats() so each stat appears on its own line */
         white-space: pre-line;
         line-height: 1.35;
-        padding: 8px 10px; /* reinforce spacing in case global doesn't apply */
+  padding: 6px 8px; /* smaller tooltip padding */
+  font-size: 12px; /* smaller tooltip text */
         box-sizing: border-box;
       }
       .player-tooltip::after {
@@ -867,6 +908,10 @@ interface Game {
           grid-template-columns: 1fr;
           gap: 16px;
         }
+        /* Also collapse the full schedule to one column on mobile */
+        .schedule-container {
+          grid-template-columns: 1fr !important;
+        }
         .matchup-card {
           padding: 12px;
           min-height: 80px;
@@ -952,27 +997,27 @@ interface Game {
       }
       /* Runtime override: when component sets .force-schedule-column (isMobile true)
          force the schedule to stack vertically and make week blocks full-width cards. */
-      .force-schedule-column .schedule-container {
+      .schedule-container.force-schedule-column {
         display: block !important;
         width: 100% !important;
         padding: 0 8px !important;
         box-sizing: border-box !important;
       }
-      .force-schedule-column .schedule-container .week-block {
+      .schedule-container.force-schedule-column .week-block {
         display: block !important;
         width: 95% !important;
         max-width: 520px !important;
         margin: 0 auto 18px auto !important;
         box-sizing: border-box !important;
       }
-      .force-schedule-column .schedule-container .week-block .week-matches {
+      .schedule-container.force-schedule-column .week-block .week-matches {
         display: flex !important;
         flex-direction: column !important;
         gap: 10px !important;
         align-items: stretch !important;
         width: 100% !important;
       }
-      .force-schedule-column .schedule-container .week-block .week-matches .schedule-match {
+      .schedule-container.force-schedule-column .week-block .week-matches .schedule-match {
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
@@ -1130,19 +1175,12 @@ interface Game {
           min-width: auto !important;
         }
 
-        /* Banner image cleanup (component had large negative margins) - scoped to title card */
-        .rnd-title-card .banner-frame .rnd-img {
-          /* Remove negative offsets that caused overlap */
-          margin-top: 0 !important;
-          margin-bottom: 0 !important;
-          max-width: 92% !important;
-          height: auto !important;
-          width: 100% !important;
-        }
-
-        /* Slightly smaller banner frame on very small screens - scoped to title card */
+        /* Allow a wider banner on small screens and remove any border/shadow */
         .rnd-title-card .banner-frame {
-          width: min(72vw, 380px) !important;
+          width: min(96vw, 560px) !important;
+          box-shadow: none !important;
+          border: none !important;
+          background: transparent !important;
         }
 
         /* Mobile stacked standings cards: convert table rows into vertical cards */
@@ -1242,9 +1280,11 @@ interface Game {
       }
       .public-page .rnd-title-card .banner-frame .rnd-img {
         margin: 0 auto !important;
+        margin-top: -200px !important;
+        margin-bottom:-200px !important;
         width: 100% !important;
         height: auto !important;
-        max-height: 320px !important;
+        max-height: 600px !important;
         object-fit: contain !important;
         transform: none !important;
         border-radius: 0 !important;
@@ -1252,7 +1292,8 @@ interface Game {
     `,
   ],
 })
-export class PublicPageComponent implements OnInit {
+export class PublicPageComponent implements OnInit, OnDestroy {
+  isAdmin = false;
   players: Player[] = [];
   matches: Match[] = [];
   games: Game[] = [];
@@ -1266,11 +1307,11 @@ export class PublicPageComponent implements OnInit {
 
   showStatsModal = false;
   selectedPlayerStats = "";
-  // Debug helpers
-  showLayoutDebug = true;
-  layoutDebugText = '';
+  // Debug helpers removed for production
   isMobile = false;
   private resizeHandler: any = null;
+  private fastPollSub: Subscription | null = null;
+  private slowPollSub: Subscription | null = null;
   openStatsModal(playerName: string) {
     this.selectedPlayerStats = this.getPlayerMatchStats(playerName);
     this.showStatsModal = true;
@@ -1281,7 +1322,7 @@ export class PublicPageComponent implements OnInit {
     this.selectedPlayerStats = "";
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private auth: AuthService) {}
 
   // Tooltip portal node used to escape clipping/stacking contexts
   private tooltipNode: HTMLElement | null = null;
@@ -1308,8 +1349,9 @@ export class PublicPageComponent implements OnInit {
     node.style.zIndex = '2147483647';
     node.style.pointerEvents = 'auto';
     node.style.whiteSpace = 'pre-line';
-    node.style.lineHeight = '1.35';
-    node.style.padding = '8px 10px';
+  node.style.lineHeight = '1.35';
+  node.style.padding = '6px 8px';
+  node.style.fontSize = '12px';
     node.style.background = 'linear-gradient(180deg, #0f1111 0%, #181a1b 100%)';
     node.style.border = '1px solid #53fc19';
     node.style.color = '#53fc19';
@@ -1387,6 +1429,9 @@ export class PublicPageComponent implements OnInit {
   }
 
   ngOnInit() {
+  // Reflect current admin status for banner
+  this.isAdmin = this.auth.isAdminUser();
+  this.auth.admin$.subscribe(v => this.isAdmin = v);
     this.loadPlayers();
     this.loadMatches();
     this.loadGames();
@@ -1396,42 +1441,42 @@ export class PublicPageComponent implements OnInit {
     this.detectMobile();
     this.resizeHandler = () => {
       this.detectMobile();
-      // layout debug collection disabled by default for mobile performance
     };
     window.addEventListener('resize', this.resizeHandler);
+
+    // Lightweight polling: keep matchup grid fresh
+    // - Fast: matches + active week every 5s
+    this.fastPollSub = interval(5000).subscribe(() => {
+      this.loadMatches();
+      this.loadActiveWeek();
+    });
+    // - Slow: players/games/seasons every 60s
+    this.slowPollSub = interval(60000).subscribe(() => {
+      this.loadPlayers();
+      this.loadGames();
+      this.loadCurrentSeason();
+    });
   }
 
   ngOnDestroy() {
     if (this.resizeHandler) window.removeEventListener('resize', this.resizeHandler);
+    if (this.fastPollSub) { this.fastPollSub.unsubscribe(); this.fastPollSub = null; }
+    if (this.slowPollSub) { this.slowPollSub.unsubscribe(); this.slowPollSub = null; }
     this.removeTooltipPortal();
   }
+
+  logout() { this.auth.logout(); }
 
   detectMobile() {
     const w = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
     this.isMobile = w <= 480;
   }
 
-  collectLayoutDebug() {
-    try {
-      const matchupGrid = document.querySelector('.matchup-grid') as HTMLElement | null;
-      const scheduleContainer = document.querySelector('.schedule-container') as HTMLElement | null;
-      const tableContainer = document.querySelector('.table-container') as HTMLElement | null;
-      const metrics: any = {
-        viewport: { w: window.innerWidth, h: window.innerHeight },
-        isMobile: this.isMobile,
-      };
-      if (matchupGrid) metrics.matchupGrid = { w: matchupGrid.offsetWidth, h: matchupGrid.offsetHeight, display: getComputedStyle(matchupGrid).display };
-      if (scheduleContainer) metrics.schedule = { w: scheduleContainer.offsetWidth, h: scheduleContainer.offsetHeight, display: getComputedStyle(scheduleContainer).display };
-      if (tableContainer) metrics.table = { w: tableContainer.offsetWidth, h: tableContainer.offsetHeight, overflowX: getComputedStyle(tableContainer).overflowX };
-      this.layoutDebugText = JSON.stringify(metrics, null, 2);
-    } catch (e) {
-      this.layoutDebugText = 'error collecting metrics: ' + e;
-    }
-  }
+  // layout debug collection removed
 
   loadPlayers() {
     this.http
-      .get<Player[]>("http://localhost:4000/players")
+      .get<Player[]>(`${environment.apiBaseUrl}/players`)
       .subscribe({
         next: (data) => {
           this.players = data || [];
@@ -1447,7 +1492,7 @@ export class PublicPageComponent implements OnInit {
 
   loadMatches() {
     this.http
-      .get<Match[]>("http://localhost:4000/matches")
+      .get<Match[]>(`${environment.apiBaseUrl}/matches`)
       .subscribe({
         next: (data) => {
           this.matches = data || [];
@@ -1463,7 +1508,7 @@ export class PublicPageComponent implements OnInit {
 
   loadGames() {
     this.http
-      .get<Game[]>("http://localhost:4000/games")
+      .get<Game[]>(`${environment.apiBaseUrl}/games`)
       .subscribe((data) => {
         this.games = data || [];
       });
@@ -1471,7 +1516,7 @@ export class PublicPageComponent implements OnInit {
 
   loadCurrentSeason() {
     this.http
-      .get<any[]>("http://localhost:4000/seasons")
+      .get<any[]>(`${environment.apiBaseUrl}/seasons`)
       .subscribe((seasons) => {
         const activeSeason = seasons.find((s) => s.status === "active");
         if (activeSeason) {
@@ -1485,7 +1530,7 @@ export class PublicPageComponent implements OnInit {
   loadActiveWeek() {
     // Try server first, fall back to localStorage
     this.http
-      .get<{ week: number }>("http://localhost:4000/active-week")
+      .get<{ week: number }>(`${environment.apiBaseUrl}/active-week`)
       .subscribe({
         next: (data) => {
           if (data && typeof data.week === "number") {

@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 import compression from 'compression';
 import path from 'path';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 console.log('--- PM2 .env DEBUG ---');
 console.log('Attempting to load .env from:', path.resolve(__dirname, '../.env'));
@@ -16,31 +17,42 @@ console.log('--- END DEBUG CODE ---');
 import authRoutes from './routes/auth';
 import contactRoutes from './routes/contact';
 import contentRoutes from './routes/content';
+import tournamentsApi from './routes/tournaments';
 
 const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || '3000', 10);
+const NODE_ENV_RAW = (process.env.NODE_ENV || '').trim().toLowerCase();
+const isProd = NODE_ENV_RAW === 'production';
 
 // Trust proxy for Edwards Web Development
 app.set('trust proxy', '127.0.0.1');
 
 // Security middleware for Edwards Web Development
+// Configure CSP explicitly. Do NOT force upgrade-insecure-requests unless enabled via env.
+const enableHttpsUpgrade = process.env.FORCE_HTTPS === 'true';
 app.use(helmet({
-  frameguard: false, // Allow iframe embedding
-  contentSecurityPolicy: false // We'll set CSP manually via headers
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      defaultSrc: ["'self'"],
+      baseUri: ["'self'"],
+      fontSrc: ["'self'", 'https:', 'data:'],
+      formAction: ["'self'"],
+      frameAncestors: ["'self'"],
+      imgSrc: ["'self'", 'data:'],
+      objectSrc: ["'none'"],
+      scriptSrc: ["'self'"],
+      scriptSrcAttr: ["'none'"],
+      styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+      // Only add upgrade-insecure-requests when explicitly enabled (i.e., after TLS is working)
+      ...(enableHttpsUpgrade ? { upgradeInsecureRequests: [] } : {})
+    }
+  },
+  // Keep HSTS; browsers only apply it over HTTPS
+  hsts: { maxAge: 15552000, includeSubDomains: true },
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: { policy: 'same-origin' }
 }));
-
-// Manual CSP headers for Edwards Web Development iframe support
-app.use((req: Request, res: Response, next: NextFunction): void => {
-  // Set CSP via HTTP headers (not meta tags)
-  res.setHeader('Content-Security-Policy', [
-    
-  ].join('; '));
-  
-  // Additional iframe headers
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  
-  next();
-});
 
 // CORS configuration for Edwards Web Development
 app.use(cors({
@@ -72,22 +84,32 @@ app.use('/api/', limiter);
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser());
 
 // Compression middleware
 app.use(compression());
 
 // Static file serving for Edwards Web Development
 const publicPath = path.join(__dirname, '../public');
+const tournamentsPath = path.join(publicPath, 'tournaments');
 import fs from 'fs';
 const rawFrontendUrl = process.env.FRONTEND_URL;
 console.log('FRONTEND_URL env value:', rawFrontendUrl);
-if (process.env.NODE_ENV === 'production') {
+if (isProd) {
   if (fs.existsSync(publicPath)) {
-    // Always mount at root to avoid path-to-regexp errors
+    // Serve the main site at root
     app.use('/', express.static(publicPath));
     console.log('📁 Serving Edwards Web Development frontend from:', publicPath, 'mounted at /');
   } else {
     console.error('❌ publicPath does not exist:', publicPath, '\nStatic frontend will NOT be served.');
+  }
+
+  // Serve Tournament SPA under /tournaments
+  if (fs.existsSync(tournamentsPath)) {
+    app.use('/tournaments', express.static(tournamentsPath));
+    console.log('🎮 Serving Tournament app from:', tournamentsPath, 'mounted at /tournaments');
+  } else {
+    console.warn('⚠️ tournamentsPath does not exist yet:', tournamentsPath);
   }
 }
 
@@ -109,6 +131,23 @@ app.get('/health', (req: Request, res: Response): void => {
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/content', contentRoutes);
+// Lightweight write-guard for tournaments API using auth cookie/header
+const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+  // Allow GETs without auth
+  if (req.method === 'GET') return next();
+  const cookieVal = (req as any).cookies?.['ed_auth'] as string | undefined;
+  const authHeader = req.headers.authorization;
+  const ok = Boolean(
+    (cookieVal && cookieVal.startsWith('edwards_auth_')) ||
+    (authHeader && authHeader.startsWith('Bearer edwards_auth_'))
+  );
+  if (!ok) {
+    return res.status(401).json({ success: false, message: 'Unauthorized' });
+  }
+  next();
+};
+
+app.use('/api/tournaments', requireAdmin, tournamentsApi);
 
 // 404 handler for Edwards Web Development API
 app.use('/api/*', (req: Request, res: Response): void => {
@@ -128,7 +167,13 @@ app.use('/api/*', (req: Request, res: Response): void => {
 });
 
 // Serve Angular app for all non-API routes (SPA routing)
-if (process.env.NODE_ENV === 'production') {
+if (isProd) {
+  // Tournament SPA fallback for its client-side routes
+  app.get('/tournaments/*', (req: Request, res: Response): void => {
+    res.sendFile(path.join(tournamentsPath, 'index.html'));
+  });
+
+  // Main site fallback
   app.get('*', (req: Request, res: Response): void => {
     res.sendFile(path.join(publicPath, 'index.html'));
   });
@@ -163,8 +208,6 @@ app.listen(PORT, '0.0.0.0', (): void => {
   console.log('   - /health (health check endpoint)');
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// Note: In development we don't serve static SPA files here; Angular runs separately.
 
 export default app;

@@ -2,6 +2,7 @@ import { Component, AfterViewInit, OnInit, ViewChild, ElementRef, HostListener }
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
+import { environment } from '../environments/environment';
 
 interface Game {
   id: number;
@@ -403,11 +404,11 @@ export class GamesWheelComponent implements AfterViewInit, OnInit {
     this.faviconImg.onload = () => {
       this.drawGamesWheel(); // Redraw once favicon is loaded
     };
-    this.faviconImg.src = 'favicon.ico';
+  this.faviconImg.src = 'favicon.ico';
   }
 
   loadGames() {
-    this.http.get<Game[]>('http://localhost:4000/games').subscribe({
+  this.http.get<Game[]>(`${environment.apiBaseUrl}/games`).subscribe({
       next: (data) => {
         console.log('Games loaded:', data);
         if (Array.isArray(data)) {
@@ -643,8 +644,8 @@ export class GamesWheelComponent implements AfterViewInit, OnInit {
         selectedGame.isChosen = true;
         this.updateGameLists();
         
-        // Save to backend
-        this.http.put(`http://localhost:4000/games/${selectedGame.id}`, selectedGame).subscribe({
+    // Save to backend (ensure cookies are sent for auth)
+  this.http.put(`${environment.apiBaseUrl}/games/${selectedGame.id}`, selectedGame, { withCredentials: true }).subscribe({
           next: () => {
             this.gamesFeedback = `${selectedGame.name} has been chosen!`;
             this.drawGamesWheel(); // Redraw without the chosen game
@@ -664,8 +665,8 @@ export class GamesWheelComponent implements AfterViewInit, OnInit {
     game.isChosen = false;
     this.updateGameLists();
     
-    // Save to backend
-    this.http.put(`http://localhost:4000/games/${game.id}`, game).subscribe({
+    // Save to backend (ensure cookies are sent for auth)
+  this.http.put(`${environment.apiBaseUrl}/games/${game.id}`, game, { withCredentials: true }).subscribe({
       next: () => {
         this.drawGamesWheel();
         this.gamesFeedback = `${game.name} returned to wheel`;
@@ -682,8 +683,8 @@ export class GamesWheelComponent implements AfterViewInit, OnInit {
       this.games.forEach(game => game.isChosen = false);
       this.updateGameLists();
       
-      // Save all games to backend
-      this.http.post('http://localhost:4000/games/reset', {}).subscribe({
+    // Save all games to backend (ensure cookies are sent for auth)
+  this.http.post(`${environment.apiBaseUrl}/games/reset`, {}, { withCredentials: true }).subscribe({
         next: () => {
           this.drawGamesWheel();
           this.gamesFeedback = 'All games reset to wheel';

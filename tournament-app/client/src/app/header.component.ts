@@ -30,12 +30,7 @@ import { AuthService } from './auth.service';
             Admin
           </a>
         </nav>
-        <!-- Debug: quick admin toggle for local testing -->
-        <div class="header-debug">
-          <button class="debug-admin-btn" (click)="authService.setAdminMode(!authService.isAdminMode)">
-            Toggle Admin
-          </button>
-        </div>
+        
       </div>
     </header>
   `,
@@ -47,32 +42,38 @@ import { AuthService } from './auth.service';
       position: sticky;
       top: 0;
       z-index: 1000;
-      height: 70px; /* Fixed header height */
+  height: 70px; /* Fixed header height */
     }
     
     .header-container {
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1200px; /* keep content width readable */
+      margin: 0 auto;     /* center the whole header block horizontally */
       display: flex;
-      justify-content: space-between;
+      flex-direction: row; /* single-row layout */
+      justify-content: space-between; /* logo left, nav right */
       align-items: center;
+      gap: 16px;
       padding: 12px 24px;
       height: 100%;
+      width: 100%;
+      box-sizing: border-box;
     }
     
     .logo {
       display: flex;
       align-items: center;
-      gap: 8px;
+  gap: 8px;
       flex-shrink: 0;
+  min-width: 0;
     }
     
     .header-logo {
       height: 45px; /* Much smaller, appropriate for header */
       width: auto;
       max-width: 120px; /* Prevent extreme widths */
-      border-radius: 8px;
-      box-shadow: 0 0 8px #53fc19;
+  border-radius: 8px;
+  box-shadow: none; /* remove glow/border */
+  border: none;      /* ensure no border is shown */
       object-fit: contain; /* Maintain aspect ratio */
     }
     
@@ -80,14 +81,17 @@ import { AuthService } from './auth.service';
       color: #fff;
       font-size: 0.9rem;
       opacity: 0.8;
-      margin-left: 8px;
+  margin-left: 8px;
       white-space: nowrap;
     }
     
     .nav-tabs {
       display: flex;
-      gap: 0;
+      gap: 10px;
       flex-shrink: 0;
+      justify-content: flex-end; /* align pills to the right */
+      width: auto;
+      margin-left: auto; /* push nav to far right in case of extra middle content */
     }
     
     .nav-tab {
@@ -95,28 +99,20 @@ import { AuthService } from './auth.service';
       color: #fff;
       text-decoration: none;
       padding: 8px 16px; /* Reduced padding for compact header */
-      border: 2px solid #444;
-      border-right: none;
+      border: none; /* Remove borders from text header tabs */
       font-weight: bold;
       font-size: 0.9rem; /* Slightly smaller text */
       transition: all 0.3s ease;
       position: relative;
       white-space: nowrap;
+      border-radius: 9999px; /* Pill shape */
     }
     
-    .nav-tab:first-child {
-      border-radius: 8px 0 0 8px;
-    }
-    
-    .nav-tab:last-child {
-      border-radius: 0 8px 8px 0;
-      border-right: 2px solid #444;
-    }
+    /* No special first/last styling needed with pill tabs */
     
     .nav-tab:hover {
       background: #53fc19;
       color: #181a1b;
-      border-color: #53fc19;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(83, 252, 25, 0.4);
     }
@@ -124,7 +120,6 @@ import { AuthService } from './auth.service';
     .nav-tab.active {
       background: #53fc19;
       color: #181a1b;
-      border-color: #53fc19;
       box-shadow: 0 0 12px rgba(83, 252, 25, 0.6);
     }
     
@@ -132,34 +127,15 @@ import { AuthService } from './auth.service';
       transform: none;
     }
     
-    .header-debug {
-      flex-shrink: 0;
-    }
     
-    .debug-admin-btn {
-      background: #444;
-      color: #fff;
-      border: 1px solid #666;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    
-    .debug-admin-btn:hover {
-      background: #53fc19;
-      color: #181a1b;
-      border-color: #53fc19;
-    }
     
     @media (max-width: 768px) {
       .app-header {
-        height: auto; /* Allow flexible height on mobile */
+  height: auto; /* Allow flexible height on mobile */
       }
       
       .header-container {
-        flex-direction: column;
+  flex-direction: column; /* stack on small screens */
         gap: 12px;
         padding: 12px 16px;
       }
@@ -174,7 +150,7 @@ import { AuthService } from './auth.service';
       }
       
       .nav-tabs {
-        width: 100%;
+  width: 100%;
         overflow-x: auto; /* Allow scrolling if needed */
       }
       
@@ -186,10 +162,7 @@ import { AuthService } from './auth.service';
         min-width: 60px;
       }
       
-      .debug-admin-btn {
-        font-size: 0.7rem;
-        padding: 4px 8px;
-      }
+      
     }
     
     @media (max-width: 480px) {

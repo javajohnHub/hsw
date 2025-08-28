@@ -1,38 +1,35 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, timer } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private isAdmin: boolean = false;
+  private isAdmin = false;
   private adminSubject = new BehaviorSubject<boolean>(false);
   public admin$ = this.adminSubject.asObservable();
 
   constructor(private router: Router) {
-    // Determine admin mode synchronously so route guards work during navigation
-    this.checkAccessLevel();
+    // Initial auth check and periodic refresh (lightweight)
+    this.refreshAuthStatus();
+    // Re-check periodically in case cookie expires or logout occurs in another tab
+    timer(0, 60_000).subscribe(() => this.refreshAuthStatus());
   }
-
-  private checkAccessLevel(): void {
-    const params = new URLSearchParams(window.location.search);
-    const adminParam = params.get('admin');
-    const ls = localStorage.getItem('isAdmin');
-
-    // Allow admin mode via query param or localStorage (useful for iframe/dev flows)
-    this.isAdmin = adminParam === '1' || ls === '1' || ls === 'true';
-
-  // update observable
-  this.adminSubject.next(this.isAdmin);
-
-    console.log('AuthService: adminParam=', adminParam, 'localStorage.isAdmin=', ls, '=> isAdmin=', this.isAdmin);
-  }
-
-  // Helper to toggle admin mode for debugging (persists to localStorage)
-  public setAdminMode(value: boolean) {
-    this.isAdmin = !!value;
-    try { localStorage.setItem('isAdmin', this.isAdmin ? '1' : '0'); } catch (e) {}
-  this.adminSubject.next(this.isAdmin);
-    console.log('AuthService.setAdminMode ->', this.isAdmin);
+  private async refreshAuthStatus(): Promise<void> {
+    try {
+      const resp = await fetch('/api/auth/status', { credentials: 'include' });
+      if (!resp.ok) throw new Error('status not ok');
+      const json = await resp.json();
+      const next = !!json?.success;
+      if (this.isAdmin !== next) {
+        this.isAdmin = next;
+        this.adminSubject.next(this.isAdmin);
+      }
+    } catch (e) {
+      if (this.isAdmin !== false) {
+        this.isAdmin = false;
+        this.adminSubject.next(false);
+      }
+    }
   }
 
   public canAccess(route: string): boolean {
@@ -66,5 +63,13 @@ export class AuthService {
 
   public isAdminUser(): boolean {
     return this.isAdmin;
+  }
+
+  // Optional: call logout endpoint and update state
+  public async logout(): Promise<void> {
+    try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }); } catch {}
+    this.isAdmin = false;
+    this.adminSubject.next(false);
+    this.redirectToPublic();
   }
 }

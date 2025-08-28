@@ -1746,7 +1746,7 @@
     /* use a fixed-ish frame height so the frame is visible even if parents clip */
     width: 100% !important;
     height: 240px !important;
-    background-image: url('/assets/TV2.webp') !important;
+  background-image: url('../assets/TV2.webp') !important;
     background-repeat: no-repeat !important;
     background-position: center top !important;
     background-size: 240px auto !important; /* keep aspect and ensure visible size */

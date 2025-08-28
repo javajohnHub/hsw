@@ -26,7 +26,7 @@ import { RouterLink } from '@angular/router';
             <p>
               I'm John Edwards, a seasoned full-stack developer with extensive experience in 
               Angular development, real-time web applications, and bot development. Currently 
-              working as a Software Engineer at Crown Equipment Corp, I specialize in Angular 
+              working as a Software Engineer 3, I specialize in Angular 
               migrations, performance optimization, and modern web technologies.
             </p>
             <p>

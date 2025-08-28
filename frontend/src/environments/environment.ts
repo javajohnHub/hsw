@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000', // Base URL without /api to prevent double /api
+  apiUrl: 'http://localhost:3000/api',
   name: 'development',
   devServerPort: 4200,
   contact: {

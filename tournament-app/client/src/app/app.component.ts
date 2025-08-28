@@ -9,20 +9,12 @@ import { AuthService } from './auth.service';
   imports: [RouterOutlet, HeaderComponent],
   template: `
     <app-header></app-header>
-    <div class="access-mode">
-      Current Mode: {{ authService.isAdminMode ? 'Admin' : 'Viewer' }}
-    </div>
     <router-outlet></router-outlet>
   `,
   styles: [`
     :host {
       display: block;
       min-height: 100vh;
-    }
-    .access-mode {
-      text-align: center;
-      margin: 10px 0;
-      font-weight: bold;
     }
   `]
 })

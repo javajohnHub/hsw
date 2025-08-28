@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-history-page',
@@ -57,7 +58,7 @@ export class HistoryPageComponent implements OnInit {
   seasons: any[] = [];
   constructor(private http: HttpClient) {}
   ngOnInit() {
-    this.http.get<any[]>('http://localhost:4000/seasons').subscribe(data => {
+    this.http.get<any[]>(`${environment.apiBaseUrl}/seasons`).subscribe(data => {
       this.seasons = data;
     });
   }

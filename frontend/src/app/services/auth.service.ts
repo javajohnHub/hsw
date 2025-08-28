@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -25,7 +26,7 @@ export interface LoginCredentials {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiBaseUrl = 'http://localhost:3000/api';
+  private readonly apiBaseUrl = environment.apiUrl;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 

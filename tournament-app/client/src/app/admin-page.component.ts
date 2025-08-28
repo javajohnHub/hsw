@@ -2110,7 +2110,7 @@ export class AdminPageComponent implements OnInit {
     };
 
     this.http
-      .post<Season>(`${environment.apiBaseUrl}/seasons`, newSeason)
+      .post<Season>(`${environment.apiBaseUrl}/seasons`, newSeason, { withCredentials: true })
       .subscribe(() => {
         this.loadSeasons();
         this.newSeasonName = "";
@@ -2171,7 +2171,7 @@ export class AdminPageComponent implements OnInit {
 
     // Send matches to backend
     this.generatingMatches = true;
-    this.http.post(`${environment.apiBaseUrl}/matches`, matches).subscribe(
+  this.http.post(`${environment.apiBaseUrl}/matches`, matches, { withCredentials: true }).subscribe(
       () => {
         this.loadMatches();
         // Update season status to active
@@ -2180,7 +2180,8 @@ export class AdminPageComponent implements OnInit {
           this.http
             .put(
               `${environment.apiBaseUrl}/seasons/${this.currentSeason.id}`,
-              this.currentSeason
+              this.currentSeason,
+              { withCredentials: true }
             )
             .subscribe();
         }
@@ -2195,7 +2196,7 @@ export class AdminPageComponent implements OnInit {
   savePlayer(player: Player) {
     player.points = player.wins * 2 + player.losses * 1;
     this.http
-      .put(`${environment.apiBaseUrl}/players/${player.id}`, player)
+      .put(`${environment.apiBaseUrl}/players/${player.id}`, player, { withCredentials: true })
       .subscribe(() => {
         this.loadPlayers();
       });
@@ -2208,7 +2209,7 @@ export class AdminPageComponent implements OnInit {
       `Delete player "${name}"? This will remove the player and their stats. This action cannot be undone.`
     ).then((confirmed) => {
       if (!confirmed) return;
-      this.http.delete(`${environment.apiBaseUrl}/players/${id}`).subscribe(() => {
+  this.http.delete(`${environment.apiBaseUrl}/players/${id}`, { withCredentials: true }).subscribe(() => {
         this.loadPlayers();
         // ensure Bye Week presence updated after deletion
         setTimeout(() => this.ensureByePlayer(), 150);
@@ -2226,7 +2227,7 @@ export class AdminPageComponent implements OnInit {
       points: 0,
     };
     this.http
-      .post<Player>(`${environment.apiBaseUrl}/players`, newPlayer)
+      .post<Player>(`${environment.apiBaseUrl}/players`, newPlayer, { withCredentials: true })
       .subscribe(() => {
         this.loadPlayers();
         this.newPlayerName = "";
@@ -2256,7 +2257,7 @@ export class AdminPageComponent implements OnInit {
       // Send update requests for all players
       const updatePromises = resetPlayers.map((player) =>
         this.http
-          .put(`http://localhost:4000/players/${player.id}`, player)
+          .put(`${environment.apiBaseUrl}/players/${player.id}`, player, { withCredentials: true })
           .toPromise()
       );
 
@@ -2274,7 +2275,7 @@ export class AdminPageComponent implements OnInit {
 
   saveMatch(match: Match) {
     this.http
-      .put(`http://localhost:4000/matches/${match.id}`, match)
+      .put(`${environment.apiBaseUrl}/matches/${match.id}`, match, { withCredentials: true })
       .subscribe(() => {
         this.loadMatches();
       });
@@ -2285,19 +2286,19 @@ export class AdminPageComponent implements OnInit {
   }
 
   startNewSeason() {
-    this.http.post("http://localhost:4000/season/start", {}).subscribe(() => {
+  this.http.post(`${environment.apiBaseUrl}/season/start`, {}, { withCredentials: true }).subscribe(() => {
       this.loadSeasons();
     });
   }
 
   saveCurrentSeason() {
     if (this.currentSeason) {
-      this.http
-        .post("http://localhost:4000/season/save", {
+  this.http
+  .post(`${environment.apiBaseUrl}/season/save`, {
           season: this.currentSeason.id,
           players: this.players,
           matches: this.matches,
-        })
+    }, { withCredentials: true })
         .subscribe({
           next: () => {
             console.log("Season saved successfully");
@@ -2319,7 +2320,7 @@ export class AdminPageComponent implements OnInit {
     ).then((confirmed) => {
       if (!confirmed) return;
       this.http
-        .delete(`http://localhost:4000/seasons/${seasonId}`)
+        .delete(`${environment.apiBaseUrl}/seasons/${seasonId}`, { withCredentials: true })
         .subscribe(() => {
           this.loadSeasons();
         });
@@ -2343,7 +2344,7 @@ export class AdminPageComponent implements OnInit {
       localStorage.removeItem("rnd_roundRobinMatches");
 
       // Clear matches from backend
-      this.http.delete("http://localhost:4000/matches/all").subscribe({
+  this.http.delete(`${environment.apiBaseUrl}/matches/all`, { withCredentials: true }).subscribe({
         next: () => {
           console.log("All matches cleared from server");
           this.loadMatches(); // Refresh the match list
@@ -2423,7 +2424,7 @@ export class AdminPageComponent implements OnInit {
 
       // Send to backend
       this.http
-        .post("http://localhost:4000/matches", this.matches)
+        .post(`${environment.apiBaseUrl}/matches`, this.matches)
         .subscribe(() => {
           this.loadMatches();
           // Reset form
@@ -2450,7 +2451,7 @@ export class AdminPageComponent implements OnInit {
 
       // Update backend
       this.http
-        .post("http://localhost:4000/matches", this.matches)
+        .post(`${environment.apiBaseUrl}/matches`, this.matches)
         .subscribe(() => {
           this.loadMatches();
         });
@@ -2639,7 +2640,7 @@ export class AdminPageComponent implements OnInit {
 
         console.log("Adding new game:", newGame);
 
-        this.http.post<Game>(`${environment.apiBaseUrl}/games`, newGame).subscribe({
+  this.http.post<Game>(`${environment.apiBaseUrl}/games`, newGame, { withCredentials: true }).subscribe({
           next: (response) => {
             console.log("Game added successfully:", response);
             this.loadGames();
@@ -2685,7 +2686,8 @@ export class AdminPageComponent implements OnInit {
       this.http
         .put(
           `${environment.apiBaseUrl}/games/${this.editingGame.id}`,
-          this.editingGame
+          this.editingGame,
+          { withCredentials: true }
         )
         .subscribe({
           next: () => {
@@ -2712,7 +2714,7 @@ export class AdminPageComponent implements OnInit {
       `Delete game "${name}"? This will remove it from the available games list.`
     ).then((confirmed) => {
       if (!confirmed) return;
-      this.http.delete(`http://localhost:4000/games/${id}`).subscribe({
+  this.http.delete(`${environment.apiBaseUrl}/games/${id}`, { withCredentials: true }).subscribe({
         next: () => {
           this.loadGames();
         },
@@ -2742,7 +2744,7 @@ export class AdminPageComponent implements OnInit {
     }
     
     const updated = { ...game, assignedWeek: selectedWeek, assignedSeason: this.currentSeason.id };
-    this.http.put(`http://localhost:4000/games/${game.id}`, updated).subscribe({
+  this.http.put(`${environment.apiBaseUrl}/games/${game.id}`, updated, { withCredentials: true }).subscribe({
       next: () => {
         this.loadGames();
         this.gameWeekSelections[game.id] = null; // Reset the dropdown
@@ -2760,7 +2762,7 @@ export class AdminPageComponent implements OnInit {
     }
     
     const updated = { ...game, assignedWeek: this.assignWeekNumber, assignedSeason: this.currentSeason?.id };
-    this.http.put(`http://localhost:4000/games/${game.id}`, updated).subscribe({
+  this.http.put(`${environment.apiBaseUrl}/games/${game.id}`, updated, { withCredentials: true }).subscribe({
       next: () => {
         this.loadGames();
         alert(`Assigned ${game.name} to Week ${this.assignWeekNumber}`);
@@ -2789,7 +2791,7 @@ export class AdminPageComponent implements OnInit {
       assignedWeek: null, 
       assignedSeason: null 
     };
-    this.http.put(`http://localhost:4000/games/${game.id}`, updated).subscribe({
+  this.http.put(`${environment.apiBaseUrl}/games/${game.id}`, updated, { withCredentials: true }).subscribe({
       next: () => {
         // Reset the dropdown selection for this game
         this.gameWeekSelections[game.id] = null;
@@ -3024,7 +3026,7 @@ export class AdminPageComponent implements OnInit {
 
     // Update on server
     this.http
-      .put<Season>(`http://localhost:4000/seasons/${season.id}`, season)
+  .put<Season>(`${environment.apiBaseUrl}/seasons/${season.id}`, season, { withCredentials: true })
       .subscribe({
         next: () => {
           this.loadSeasons(); // Reload to get updated data
@@ -3053,7 +3055,7 @@ export class AdminPageComponent implements OnInit {
     localStorage.setItem("currentActiveWeek", week.toString());
 
     // Also update the data service if it exists
-    this.http.post("http://localhost:4000/active-week", { week }).subscribe({
+  this.http.post(`${environment.apiBaseUrl}/active-week`, { week }, { withCredentials: true }).subscribe({
       next: () => {
         console.log("Active week updated to:", week);
       },
@@ -3073,7 +3075,7 @@ export class AdminPageComponent implements OnInit {
 
     // Then try to get from server
     this.http
-      .get<{ week: number }>("http://localhost:4000/active-week")
+      .get<{ week: number }>(`${environment.apiBaseUrl}/active-week`)
       .subscribe({
         next: (data) => {
           if (data && data.week) {

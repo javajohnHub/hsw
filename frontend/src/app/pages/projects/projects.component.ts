@@ -19,14 +19,14 @@ export class ProjectsComponent {
       image: "/assets/images/AddText_08-12-04.51.33.png",
       technologies: ["Angular", "TypeScript", "Node.js", "Express"],
       status: "Live",
-      demoUrl: "http://localhost:4000",
+  demoUrl: "/tournaments",
     },
   ];
 
   constructor(private router: Router) {}
   openProject(project: any) {
     if (project.id === 1) {
-      this.router.navigate(["/tournament"]);
+      window.location.assign('/tournaments');
     }
   }
 

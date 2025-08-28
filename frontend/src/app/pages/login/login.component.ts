@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { environment } from '../../../environments/environment';
 
 interface AuthRequest {
@@ -25,8 +24,8 @@ interface AuthResponse {
   template: `
     <div class="login">
       <div class="login__container">
-        <!-- Login Form -->
-        <div class="login__card" *ngIf="!iframeLoaded">
+  <!-- Login Form -->
+  <div class="login__card">
           <div class="login__header">
             <h1 class="login__title">Admin Access</h1>
             <p class="login__subtitle">
@@ -37,29 +36,29 @@ interface AuthResponse {
           <form class="login__form" (submit)="onSubmit($event)">
             <div class="login__field">
               <label for="username" class="login__label">Username</label>
-              <input 
+              <input
                 id="username"
-                name="username" 
+                name="username"
                 type="text"
                 class="login__input"
-                placeholder="Enter your username" 
-                [(ngModel)]="username" 
-                required 
+                placeholder="Enter your username"
+                [(ngModel)]="username"
+                required
                 [disabled]="isLoading"
                 autocomplete="username"
               />
             </div>
-            
+
             <div class="login__field">
               <label for="password" class="login__label">Password</label>
-              <input 
+              <input
                 id="password"
-                name="password" 
+                name="password"
                 type="password"
                 class="login__input"
                 placeholder="Enter your password"
-                [(ngModel)]="password" 
-                required 
+                [(ngModel)]="password"
+                required
                 [disabled]="isLoading"
                 autocomplete="current-password"
               />
@@ -97,29 +96,6 @@ interface AuthResponse {
               <li>Advanced configuration options</li>
             </ul>
           </div>
-        </div>
-
-        <!-- Admin Panel iframe -->
-        <div class="login__admin-panel" *ngIf="iframeLoaded">
-          <div class="login__admin-controls">
-            <div class="login__status-indicator">
-              🔐 Admin Access Active
-            </div>
-            
-            <button 
-              class="login__logout-button" 
-              (click)="logout()"
-              title="Sign Out">
-              🚪 Sign Out
-            </button>
-          </div>
-          
-          <iframe 
-            class="login__admin-iframe"
-            [src]="adminIframeUrl" 
-            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals allow-top-navigation"
-            title="Admin Project Management Panel">
-          </iframe>
         </div>
       </div>
     </div>
@@ -391,14 +367,10 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
-  iframeLoaded: boolean = false;
-  adminIframeUrl: SafeResourceUrl | null = null;
-
-  private readonly iframeHost: string = 'http://localhost:4000';
+  // No iframe; we navigate to the admin SPA on success
 
   constructor(
     private readonly router: Router,
-    private readonly sanitizer: DomSanitizer,
     private readonly cdr: ChangeDetectorRef
   ) {}
 
@@ -421,12 +393,14 @@ export class LoginComponent {
         password: this.password
       };
 
-      const response: Response = await fetch(`${environment.apiUrl}/api/auth/login`, {
+  const response: Response = await fetch(`${environment.apiUrl}/auth/login`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
+        // include credentials so httpOnly cookie is persisted
+        credentials: 'include',
         body: JSON.stringify(requestBody)
       });
       console.log("response", response)
@@ -449,7 +423,8 @@ export class LoginComponent {
       const body: AuthResponse = await response.json();
       console.log("body", body)
       if (body?.["success"]) {
-        this.loadAdminPanel();
+        // Force full navigation (and replace history) so tournaments SPA bootstraps
+        window.location.replace('/tournaments/admin');
       } else {
         this.errorMessage = body.error || 'Access denied. Admin privileges required.';
         this.cdr.markForCheck();
@@ -468,27 +443,7 @@ export class LoginComponent {
     }
   }
 
-  private loadAdminPanel(): void {
-    try {
-      const url = `${this.iframeHost}?admin=1`;
-      this.adminIframeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-      this.iframeLoaded = true;
-      this.cdr.markForCheck();
-    } catch (error) {
-      console.error('Error loading admin panel:', error);
-      this.errorMessage = 'Failed to load admin panel. Please try again.';
-      this.cdr.markForCheck();
-    }
-  }
-
-  logout(): void {
-    this.iframeLoaded = false;
-    this.adminIframeUrl = null;
-    this.username = '';
-    this.password = '';
-    this.errorMessage = '';
-    this.cdr.markForCheck();
-  }
+  // No iframe lifecycle methods needed
 
   goToProjects(): void {
     this.router.navigate(['/projects']);

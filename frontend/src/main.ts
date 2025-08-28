@@ -54,10 +54,8 @@ bootstrapApplication(AppComponent, {
         },
         {
           path: "tournament",
-          loadComponent: () =>
-            import("./app/pages/projects/tournament.component").then(
-              (m) => m.TournamentComponent
-            ),
+          redirectTo: "/tournaments",
+          pathMatch: "full",
         },
         {
           path: "**",

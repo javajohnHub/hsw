@@ -22,8 +22,8 @@ import { filter } from 'rxjs/operators';
             <a routerLink="/home" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Home</a>
             <a routerLink="/about" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">About</a>
             <a routerLink="/services" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Services</a>
-            <a routerLink="/projects" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Projects</a>
             <a routerLink="/contact" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Contact</a>
+            <a routerLink="/projects" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Projects</a>
           </div>
           
           <button class="menu-toggle" (click)="toggleMenu()">
