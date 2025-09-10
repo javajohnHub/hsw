@@ -2,10 +2,19 @@ import { Router, Request, Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 import type { NextFunction } from 'express';
+import archiver from 'archiver';
+import multer from 'multer';
+import unzipper from 'unzipper';
+import fs_extra from 'fs-extra';
 
 const router = Router();
 // Simple write-guard middleware: allow GETs; require auth cookie/header for others
 const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+  // Skip auth in development for tournaments API
+  if (process.env.NODE_ENV === 'development') {
+    return next();
+  }
+  
   if (req.method === 'GET') return next();
   const cookies = (req as any).cookies as Record<string, string> | undefined;
   const cookieVal = cookies?.['ed_auth'];
@@ -257,6 +266,107 @@ router.post('/active-week', (req: Request, res: Response) => {
   activeWeekObj.week = week;
   writeJson('active-week', activeWeekObj);
   return res.json({ success: true, week });
+});
+
+// Admin backup/restore functionality
+const UPLOAD_DIR = path.resolve(__dirname, '../../uploads');
+
+// Ensure upload dir exists
+fs_extra.ensureDirSync(UPLOAD_DIR);
+
+// Multer setup for zip uploads
+const upload = multer({ dest: UPLOAD_DIR });
+
+// GET /api/tournaments/admin/data/download - Download data folder as zip
+router.get('/admin/data/download', async (req: Request, res: Response) => {
+  const zipName = `tournaments-data-backup-${Date.now()}.zip`;
+  res.setHeader('Content-Type', 'application/zip');
+  res.setHeader('Content-Disposition', `attachment; filename=${zipName}`);
+
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  archive.directory(dataDir, false);
+  archive.finalize();
+  archive.pipe(res);
+
+  archive.on('error', err => {
+    res.status(500).send('Error creating zip');
+  });
+});
+
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+}
+
+router.post('/admin/data/restore', upload.single('zip'), async (req: Request, res: Response) => {
+  const file = req.file as MulterFile | undefined;
+  if (!file) return res.status(400).send('No zip file uploaded');
+  
+  const zipPath = file.path;
+  console.log('Restore attempt - File info:', {
+    originalName: file.originalname,
+    mimetype: file.mimetype,
+    size: file.size,
+    path: zipPath,
+    dataDir: dataDir
+  });
+  
+  try {
+    // Check if zip file exists and is readable
+    if (!fs.existsSync(zipPath)) {
+      throw new Error(`Uploaded file not found at ${zipPath}`);
+    }
+    
+    // Check if data directory is accessible
+    console.log('Checking data directory access:', dataDir);
+    
+    // Remove current data folder
+    console.log('Removing existing data directory...');
+    await fs_extra.remove(dataDir);
+    
+    console.log('Creating new data directory...');
+    await fs_extra.ensureDir(dataDir);
+    
+    // Extract zip to data folder
+    console.log('Extracting zip file...');
+    await new Promise<void>((resolve, reject) => {
+      const stream = fs.createReadStream(zipPath)
+        .pipe(unzipper.Extract({ path: dataDir }));
+      stream.on('close', () => {
+        console.log('Zip extraction completed');
+        resolve();
+      });
+      stream.on('error', (err) => {
+        console.error('Zip extraction error:', err);
+        reject(err);
+      });
+    });
+    
+    // Clean up uploaded file
+    console.log('Cleaning up uploaded file...');
+    await fs_extra.remove(zipPath);
+    
+    // Reload data from restored files
+    console.log('Reloading data from restored files...');
+    players = readJson<any[]>('players', []);
+    games = readJson<any[]>('games', []);
+    matches = readJson<any[]>('matches', []);
+    seasons = readJson<any[]>('seasons', []);
+    activeWeekObj = readJson<{ week: number }>('active-week', { week: 1 });
+    
+    console.log('Data restore completed successfully');
+    return res.json({ success: true, message: 'Data restored successfully' });
+  } catch (err) {
+    console.error('Data restore failed:', err);
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+    return res.status(500).json({ success: false, message: `Failed to restore data: ${errorMessage}` });
+  }
 });
 
 export default router;

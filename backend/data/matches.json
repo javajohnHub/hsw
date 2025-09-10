@@ -1,74 +1,122 @@
 [
   {
     "week": 1,
-    "player1": "p3",
-    "player2": "p1",
-    "status": "scheduled",
-    "played": false,
-    "id": 1
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "Crownjo",
+    "status": "completed",
+    "played": true,
+    "id": 1,
+    "winner": "Crownjo",
+    "loser": "HighScoreWins"
   },
   {
     "week": 1,
-    "player1": "p2",
-    "player2": "Bye",
-    "status": "scheduled",
-    "played": false,
-    "id": 2
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "BWhizzle817",
+    "status": "completed",
+    "played": true,
+    "id": 2,
+    "winner": "BWhizzle817",
+    "loser": "Apollofish_Games"
+  },
+  {
+    "week": 1,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "FOOCHcade",
+    "status": "completed",
+    "played": true,
+    "id": 3,
+    "winner": "EeyoreDad",
+    "loser": "FOOCHcade"
+  },
+  {
+    "week": 1,
+    "season": 1756477185284,
+    "player1": "Dab_a_dab0711",
+    "player2": "Fizikzbound",
+    "status": "completed",
+    "played": true,
+    "id": 4,
+    "winner": "Fizikzbound",
+    "loser": "Dab_a_dab0711"
+  },
+  {
+    "week": 1,
+    "season": 1756477185284,
+    "player1": "aztek138",
+    "player2": "Jammin247",
+    "status": "completed",
+    "played": true,
+    "id": 5,
+    "winner": "aztek138",
+    "loser": "Jammin247"
+  },
+  {
+    "week": 1,
+    "season": 1756477185284,
+    "player1": "MoMoneyGaming",
+    "player2": "Xtremepot420",
+    "status": "completed",
+    "played": true,
+    "id": 6,
+    "winner": "Xtremepot420",
+    "loser": "MoMoneyGaming"
   },
   {
     "week": 2,
-    "player1": "p3",
-    "player2": "p2",
-    "status": "scheduled",
-    "played": false,
-    "id": 3
-  },
-  {
-    "week": 3,
-    "player1": "p3",
-    "player2": "p1",
-    "status": "scheduled",
-    "played": false,
-    "id": 4
-  },
-  {
-    "week": 3,
-    "player1": "p2",
-    "player2": "TBD",
-    "status": "scheduled",
-    "played": false,
-    "id": 5
-  },
-  {
-    "week": 2,
-    "player1": "p1",
-    "player2": "Bye",
-    "status": "scheduled",
-    "played": false,
-    "id": 6
-  },
-  {
-    "week": 4,
-    "player1": "p2",
-    "player2": "p1",
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "MoMoneyGaming",
     "status": "scheduled",
     "played": false,
     "id": 7
   },
   {
-    "week": 4,
-    "player1": "p3",
-    "player2": "TBD",
+    "week": 2,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "aztek138",
     "status": "scheduled",
     "played": false,
     "id": 8
   },
   {
-    "week": 5,
-    "player1": "p2",
-    "player2": "p1",
+    "week": 2,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "Fizikzbound",
     "status": "scheduled",
     "played": false,
     "id": 9
+  },
+  {
+    "week": 2,
+    "season": 1756477185284,
+    "player1": "Dab_a_dab0711",
+    "player2": "EeyoreDad",
+    "status": "scheduled",
+    "played": false,
+    "id": 10
+  },
+  {
+    "week": 2,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "Crownjo",
+    "status": "scheduled",
+    "played": false,
+    "id": 11
+  },
+  {
+    "week": 2,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 12
   }
 ]

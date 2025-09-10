@@ -146,47 +146,6 @@ import { AuthService } from "./auth.service"; // Import AuthService
         color: #fff;
         padding: 16px;
       }
-      .wheel-title {
-        text-align: center;
-        font-size: 2rem;
-        font-weight: 900;
-        color: #ddd;
-        text-shadow: 2px 2px 0 #181a1b, 0 0 12px #53fc19;
-        margin: 0 0 12px 0;
-      }
-      .week-indicator {
-        text-align: center;
-        font-size: 1rem;
-        color: #ddd;
-        margin-bottom: 16px;
-      }
-      .wheel-main-layout {
-        display: flex;
-        gap: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-        align-items: flex-start;
-      }
-      /* Mobile responsive rules */
-      @media (max-width: 768px) {
-        .wheel-main-layout {
-          flex-direction: column !important;
-          gap: 12px !important;
-          align-items: stretch !important;
-        }
-        .wheel-left-section,
-        .wheel-right-section {
-          width: 100% !important;
-          max-width: 100% !important;
-          flex: none !important;
-        }
-        .wheel-container,
-        .wheel-canvas {
-          width: 90vw !important;
-          height: 90vw !important;
-          max-width: 520px !important;
-          max-height: 520px !important;
-        }
         .matchup-grid {
           display: grid !important;
           grid-template-columns: 1fr !important;
@@ -195,7 +154,6 @@ import { AuthService } from "./auth.service"; // Import AuthService
         .matchup-card {
           padding: 12px !important;
         }
-      }
       .wheel-left-section {
         display: flex;
         flex-direction: column;
@@ -762,6 +720,8 @@ export class SelectMatchesComponent
   players: string[] = [];
   playersData: Player[] = [];
   selectedPlayer: string | null = null;
+  selectedOpponent: string | null = null;
+  highlightTimeout: any = null;
   spinning: boolean = false;
   angle: number = 0;
   targetAngle: number = 0;
@@ -1074,22 +1034,42 @@ export class SelectMatchesComponent
     let selectedIdx = this.selectedPlayer
       ? playersToDraw.indexOf(this.selectedPlayer)
       : -1;
+    let opponentIdx = this.selectedOpponent
+      ? playersToDraw.indexOf(this.selectedOpponent)
+      : -1;
     for (let i = 0; i < n; i++) {
       const startAngle = this.angle + i * angleStep;
       const endAngle = startAngle + angleStep;
+      ctx.save();
       ctx.beginPath();
       ctx.moveTo(center, center);
       ctx.arc(center, center, radius, startAngle, endAngle);
       ctx.closePath();
-      // Highlight selected segment with bold border and background
-      if (i === selectedIdx) {
-        ctx.fillStyle = "#53fc19";
+      // Highlight selected and opponent segments in red with bounce
+      if (i === selectedIdx || i === opponentIdx) {
+        ctx.fillStyle = "#ff2d2d";
         ctx.globalAlpha = 0.95;
+        ctx.shadowColor = "#ff2d2d";
+        ctx.shadowBlur = 16;
         ctx.fill();
         ctx.globalAlpha = 1;
         ctx.strokeStyle = "#fff";
         ctx.lineWidth = 8;
         ctx.stroke();
+        // Bounce animation (scale effect based on time)
+        let bounceScale = 1.15;
+        if (this.selectedPlayer || this.selectedOpponent) {
+          // Animate bounce during highlight period
+          const now = performance.now();
+          const bounceDuration = 2000;
+          const bouncePhase = ((now % bounceDuration) / bounceDuration) * Math.PI * 2;
+          bounceScale = 1.15 + Math.sin(bouncePhase) * 0.08;
+        }
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(startAngle + angleStep / 2);
+        ctx.scale(bounceScale, bounceScale);
+        ctx.restore();
       } else {
         ctx.fillStyle = i % 2 === 0 ? "#53fc19" : "#181a1b";
         ctx.globalAlpha = 0.85;
@@ -1105,9 +1085,9 @@ export class SelectMatchesComponent
       ctx.rotate(startAngle + angleStep / 2);
       ctx.textAlign = "right";
       ctx.font = "bold 0.85rem Orbitron, Arial";
-      ctx.fillStyle = i === selectedIdx ? "#181a1b" : "#fff";
-      ctx.shadowColor = i === selectedIdx ? "#53fc19" : "#181a1b";
-      ctx.shadowBlur = i === selectedIdx ? 8 : 4;
+      ctx.fillStyle = (i === selectedIdx || i === opponentIdx) ? "#fff" : "#fff";
+      ctx.shadowColor = (i === selectedIdx || i === opponentIdx) ? "#000" : "#181a1b";
+      ctx.shadowBlur = (i === selectedIdx || i === opponentIdx) ? 12 : 4;
 
       const name = playersToDraw[i];
       const maxTextWidth = radius - 25; // Available space for text
@@ -1133,6 +1113,7 @@ export class SelectMatchesComponent
         const truncatedName = this.truncateText(ctx, name, maxTextWidth);
         ctx.fillText(truncatedName, radius - 18, 4);
       }
+      ctx.restore();
       ctx.restore();
     }
 
@@ -1224,61 +1205,29 @@ export class SelectMatchesComponent
         this.drawWheel(wheelPlayers);
         this.selectedPlayer = wheelPlayers[idx];
         this.spinning = false;
-        if (this.selectedPlayer === "Bye") {
-          // Use fair bye distribution to select the appropriate player
-          const availablePlayers = wheelPlayers.filter((p) => p !== "Bye");
-          const fairByePlayer = this.getFairByeFromAvailable(availablePlayers);
 
-          this.wheelFeedback = `Selected: ${fairByePlayer} gets bye week!`;
-          // Save bye week match with the fair selection
-          const match: Match = {
-            week: this.currentWeek,
-            player1: fairByePlayer,
-            player2: "Bye",
-            status: "scheduled",
-            played: false,
-          };
-          // Ensure UI updates under OnPush by running inside Angular zone
-          this.ngZone.run(() => {
-            this.lastMatch = match;
-            this.cdr.markForCheck();
-            // Send to backend using data service only
-            this.dataService.addMatch(match).subscribe({
-              next: () => {
-                this.wheelFeedback = `Bye week saved for ${fairByePlayer}.`;
-                this.cdr.markForCheck();
-                setTimeout(() => {
-                  this.wheelFeedback = "";
-                  this.cdr.markForCheck();
-                }, 2500);
-              },
-              error: () => {
-                this.wheelFeedback = "Error saving bye week to server.";
-                this.cdr.markForCheck();
-              },
-            });
-          });
+        // Find opponent if not a bye
+        let opponent: string | null = null;
+        if (this.selectedPlayer === "Bye") {
+          const availablePlayers = wheelPlayers.filter((p) => p !== "Bye");
+          opponent = null;
+          this.selectedOpponent = null;
+          this.wheelFeedback = `Selected: ${this.getFairByeFromAvailable(availablePlayers)} gets bye week!`;
         } else {
-          // Save selected player as a match (vs smart opponent selection)
           const availableOpponents = wheelPlayers.filter(
             (p) => p !== this.selectedPlayer && p !== "Bye"
           );
-          let opponent: string;
-
           // Use smart opponent selection
           const unplayedOpponents = this.getUnplayedOpponents(
             this.selectedPlayer!,
             availableOpponents
           );
-
           if (unplayedOpponents.length > 0) {
-            // Choose from opponents they haven't faced yet
             opponent =
               unplayedOpponents[
                 Math.floor(Math.random() * unplayedOpponents.length)
               ];
           } else if (availableOpponents.length > 0) {
-            // If all have been faced, choose the one faced least
             opponent = availableOpponents.reduce((best, current) => {
               const bestMatchupCount = this.getMatchupCount(
                 this.selectedPlayer!,
@@ -1291,22 +1240,9 @@ export class SelectMatchesComponent
               return currentMatchupCount < bestMatchupCount ? current : best;
             });
           } else {
-            // Fallback (shouldn't happen)
             opponent = "TBD";
           }
-
-          const match: Match = {
-            week: this.currentWeek,
-            player1: this.selectedPlayer!,
-            player2: opponent,
-            status: "scheduled",
-            played: false,
-          };
-          // Ensure UI updates under OnPush by running inside Angular zone
-          this.ngZone.run(() => {
-            this.lastMatch = match;
-            this.cdr.markForCheck();
-          });
+          this.selectedOpponent = opponent;
           // Show if this is a new matchup
           const matchupCount = this.getMatchupCount(
             this.selectedPlayer!,
@@ -1318,24 +1254,93 @@ export class SelectMatchesComponent
             : ` (${matchupCount + 1}${this.getOrdinalSuffix(
                 matchupCount + 1
               )} time)`;
-
-          this.wheelFeedback = `Selected: ${match.player1} vs ${match.player2}${matchupInfo}. Saving...`;
-          // Send to backend using data service only
-          this.dataService.addMatch(match).subscribe({
-            next: () => {
-              this.wheelFeedback = `Match saved: ${match.player1} vs ${match.player2}${matchupInfo}`;
-              this.cdr.markForCheck();
-              setTimeout(() => {
-                this.wheelFeedback = "";
-                this.cdr.markForCheck();
-              }, 2500);
-            },
-            error: () => {
-              this.wheelFeedback = "Error saving match to server.";
-              this.cdr.markForCheck();
-            },
-          });
+          this.wheelFeedback = `Selected: ${this.selectedPlayer} vs ${opponent}${matchupInfo}. Saving...`;
         }
+
+        // Animate highlight and bounce for 2 seconds before removing
+        const highlightStart = performance.now();
+        const highlightDuration = 2000;
+        const animateHighlight = () => {
+          const now = performance.now();
+          const elapsed = now - highlightStart;
+          this.drawWheel(wheelPlayers);
+          if (elapsed < highlightDuration) {
+            requestAnimationFrame(animateHighlight);
+          } else {
+            // Save match after highlight
+            if (this.selectedPlayer === "Bye") {
+              const availablePlayers = wheelPlayers.filter((p) => p !== "Bye");
+              const fairByePlayer = this.getFairByeFromAvailable(availablePlayers);
+              const match: Match = {
+                week: this.currentWeek,
+                player1: fairByePlayer,
+                player2: "Bye",
+                status: "scheduled",
+                played: false,
+                season: this.currentSeason?.id || undefined,
+              };
+              this.ngZone.run(() => {
+                this.lastMatch = match;
+                this.cdr.markForCheck();
+                this.dataService.addMatch(match).subscribe({
+                  next: () => {
+                    this.wheelFeedback = `Bye week saved for ${fairByePlayer}.`;
+                    this.cdr.markForCheck();
+                    setTimeout(() => {
+                      this.wheelFeedback = "";
+                      this.cdr.markForCheck();
+                    }, 2500);
+                  },
+                  error: () => {
+                    this.wheelFeedback = "Error saving bye week to server.";
+                    this.cdr.markForCheck();
+                  },
+                });
+              });
+            } else {
+              const match: Match = {
+                week: this.currentWeek,
+                player1: this.selectedPlayer!,
+                player2: this.selectedOpponent!,
+                status: "scheduled",
+                played: false,
+                season: this.currentSeason?.id || undefined,
+              };
+              this.ngZone.run(() => {
+                this.lastMatch = match;
+                this.cdr.markForCheck();
+              });
+              const matchupCount = this.getMatchupCount(
+                this.selectedPlayer!,
+                this.selectedOpponent!
+              );
+              const isNewMatchup = matchupCount === 0;
+              const matchupInfo = isNewMatchup
+                ? " (NEW MATCHUP!)"
+                : ` (${matchupCount + 1}${this.getOrdinalSuffix(
+                    matchupCount + 1
+                  )} time)`;
+              this.wheelFeedback = `Selected: ${match.player1} vs ${match.player2}${matchupInfo}. Saving...`;
+              this.dataService.addMatch(match).subscribe({
+                next: () => {
+                  this.wheelFeedback = `Match saved: ${match.player1} vs ${match.player2}${matchupInfo}`;
+                  this.cdr.markForCheck();
+                  setTimeout(() => {
+                    this.wheelFeedback = "";
+                    this.cdr.markForCheck();
+                  }, 2500);
+                },
+                error: () => {
+                  this.wheelFeedback = "Error saving match to server.";
+                  this.cdr.markForCheck();
+                },
+              });
+            }
+            // Remove selected players from wheel after highlight
+            this.removeSelectedFromWheel();
+          }
+        };
+        animateHighlight();
       }
     };
     requestAnimationFrame(animate);
@@ -1358,6 +1363,7 @@ export class SelectMatchesComponent
           player2: pair[1],
           status: "scheduled",
           played: false,
+          season: this.currentSeason?.id || undefined,
         });
       }
     } else {
@@ -1375,6 +1381,7 @@ export class SelectMatchesComponent
         player2: "Bye",
         status: "scheduled",
         played: false,
+        season: this.currentSeason?.id || undefined,
       });
 
       // Create regular matches with optimal opponent selection
@@ -1385,6 +1392,7 @@ export class SelectMatchesComponent
           player2: pair[1],
           status: "scheduled",
           played: false,
+          season: this.currentSeason?.id || undefined,
         });
       }
     }
@@ -1773,5 +1781,19 @@ export class SelectMatchesComponent
         }
       }
     });
+  }
+
+  removeSelectedFromWheel() {
+    if (Array.isArray(this.players)) {
+      if (this.selectedPlayer) {
+        this.players = this.players.filter((p) => p !== this.selectedPlayer);
+      }
+      if (this.selectedOpponent) {
+        this.players = this.players.filter((p) => p !== this.selectedOpponent);
+      }
+    }
+    this.selectedPlayer = null;
+    this.selectedOpponent = null;
+    this.drawWheel(this.players);
   }
 }

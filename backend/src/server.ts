@@ -41,9 +41,10 @@ app.use(helmet({
       frameAncestors: ["'self'"],
       imgSrc: ["'self'", 'data:'],
       objectSrc: ["'none'"],
-      scriptSrc: ["'self'"],
-      scriptSrcAttr: ["'none'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+      scriptSrcAttr: ["'self'", "'unsafe-inline'"],
       styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
+      connectSrc: ["'self'"],
       // Only add upgrade-insecure-requests when explicitly enabled (i.e., after TLS is working)
       ...(enableHttpsUpgrade ? { upgradeInsecureRequests: [] } : {})
     }
@@ -79,7 +80,11 @@ const limiter = rateLimit({
   legacyHeaders: false
 });
 
-app.use('/api/', limiter);
+// Only apply rate limiting in production and when not disabled
+const disableRateLimit = process.env.DISABLE_RATE_LIMITING === 'true';
+if (isProd && !disableRateLimit) {
+  app.use('/api/', limiter);
+}
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -131,17 +136,41 @@ app.get('/health', (req: Request, res: Response): void => {
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/content', contentRoutes);
-// Lightweight write-guard for tournaments API using auth cookie/header
+import adminRoutes from './routes/admin';
+app.use('/api/admin', adminRoutes);
+// Lightweight write-guard for tournaments API using auth cookie/header or basic auth
 const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
   // Allow GETs without auth
   if (req.method === 'GET') return next();
+  
   const cookieVal = (req as any).cookies?.['ed_auth'] as string | undefined;
   const authHeader = req.headers.authorization;
-  const ok = Boolean(
+  
+  // Check token-based auth first
+  const tokenAuth = Boolean(
     (cookieVal && cookieVal.startsWith('edwards_auth_')) ||
     (authHeader && authHeader.startsWith('Bearer edwards_auth_'))
   );
-  if (!ok) {
+  
+  // Check basic auth as fallback
+  let basicAuth = false;
+  if (authHeader && authHeader.startsWith('Basic ')) {
+    try {
+      const base64Credentials = authHeader.split(' ')[1];
+      const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+      const [username, password] = credentials.split(':');
+      
+      const clean = (v: string | undefined) => (v ?? '').replace(/\r/g, '').trim();
+      const envUser = clean(process.env.ADMIN_USERNAME);
+      const envPass = clean(process.env.ADMIN_PASSWORD);
+      
+      basicAuth = (username === envUser && password === envPass);
+    } catch (e) {
+      // Invalid basic auth format
+    }
+  }
+  
+  if (!tokenAuth && !basicAuth) {
     return res.status(401).json({ success: false, message: 'Unauthorized' });
   }
   next();
@@ -150,31 +179,36 @@ const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
 app.use('/api/tournaments', requireAdmin, tournamentsApi);
 
 // 404 handler for Edwards Web Development API
-app.use('/api/*', (req: Request, res: Response): void => {
-  res.status(404).json({
-    error: 'API endpoint not found',
-    service: 'Edwards Web Development API',
-    path: req.path,
-    method: req.method,
-    availableEndpoints: [
-      'POST /api/auth/login',
-      'POST /api/auth/logout', 
-      'GET /api/auth/status',
-      'POST /api/contact',
-      'GET /health'
-    ]
-  });
+app.use((req: Request, res: Response, next: NextFunction): void => {
+  // Only handle unmatched API routes
+  if (req.path.startsWith('/api/')) {
+    res.status(404).json({
+      error: 'API endpoint not found',
+      service: 'Edwards Web Development API',
+      path: req.path,
+      method: req.method,
+      availableEndpoints: [
+        'POST /api/auth/login',
+        'POST /api/auth/logout', 
+        'GET /api/auth/status',
+        'POST /api/contact',
+        'GET /health'
+      ]
+    });
+  } else {
+    next();
+  }
 });
 
 // Serve Angular app for all non-API routes (SPA routing)
 if (isProd) {
   // Tournament SPA fallback for its client-side routes
-  app.get('/tournaments/*', (req: Request, res: Response): void => {
+  app.get(/^\/tournaments\/.*/, (req: Request, res: Response): void => {
     res.sendFile(path.join(tournamentsPath, 'index.html'));
   });
 
   // Main site fallback
-  app.get('*', (req: Request, res: Response): void => {
+  app.get(/^(?!\/api).*/, (req: Request, res: Response): void => {
     res.sendFile(path.join(publicPath, 'index.html'));
   });
 }

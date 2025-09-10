@@ -11,9 +11,6 @@ import { AuthService } from './auth.service';
     <header class="app-header">
       <div class="header-container">
         <div class="logo">
-          <!-- Use onerror to fallback to a generic logo if asset missing -->
-          <img [src]="logoSrc" alt="Tournament Logo" class="header-logo"
-            (error)="onLogoError($event)">
           <span class="tagline">Tournament Management</span>
         </div>
         <nav class="nav-tabs">
@@ -68,13 +65,8 @@ import { AuthService } from './auth.service';
     }
     
     .header-logo {
-      height: 45px; /* Much smaller, appropriate for header */
+      height: 50px;
       width: auto;
-      max-width: 120px; /* Prevent extreme widths */
-  border-radius: 8px;
-  box-shadow: none; /* remove glow/border */
-  border: none;      /* ensure no border is shown */
-      object-fit: contain; /* Maintain aspect ratio */
     }
     
     .tagline {

@@ -59,8 +59,16 @@ if [ -f "$ENV_FILE" ]; then
   PORT="${PORT:-3000}"
 fi
 
+echo "[deploy] DEBUG: Listing $BACKEND_DIR before data dir fix:"
+ls -la "$BACKEND_DIR"
 echo "[deploy] Ensuring data dir exists..."
+if [ -L "$BACKEND_DIR/data" ] || [ -e "$BACKEND_DIR/data" ]; then
+  echo "[deploy] DEBUG: Removing $BACKEND_DIR/data"
+  rm -rf "$BACKEND_DIR/data"
+fi
+echo "[deploy] DEBUG: Creating $BACKEND_DIR/data"
 mkdir -p "$BACKEND_DIR/data"
+ls -la "$BACKEND_DIR"
 
 # Ensure production mode for static SPA hosting and optimized middleware
 if [ -z "${NODE_ENV:-}" ]; then
@@ -69,15 +77,16 @@ fi
 export NODE_ENV=$(printf "%s" "$NODE_ENV" | tr -d '\r')
 echo "[deploy] Using NODE_ENV=${NODE_ENV}"
 
-echo "[deploy] Starting (or restarting) with PM2 (name=$PM2_NAME, port=$PORT)..."
+echo "[deploy] Starting (or restarting) with PM2 using ecosystem file..."
 if pm2 describe "$PM2_NAME" >/dev/null 2>&1; then
-  pm2 restart "$PM2_NAME" --update-env
-else
-  pm2 start dist/server.js \
-    --name "$PM2_NAME" \
-    --cwd "$BACKEND_DIR" \
-    --update-env
+  echo "[deploy] Stopping existing PM2 process..."
+  pm2 stop "$PM2_NAME"
+  pm2 delete "$PM2_NAME"
 fi
+
+echo "[deploy] Starting with ecosystem configuration..."
+cd "$APP_DIR"
+pm2 start ecosystem.config.js
 
 echo "[deploy] Saving PM2 process list..."
 pm2 save

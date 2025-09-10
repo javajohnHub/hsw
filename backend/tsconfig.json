@@ -33,8 +33,7 @@
     "exactOptionalPropertyTypes": false
   },
   "include": [
-    "src/**/*",
-    "dist/**/*",
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

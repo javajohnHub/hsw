@@ -1,0 +1,247 @@
+<div class="rnd-bg public-page">
+  <div *ngIf="isAdmin" class="admin-banner">
+    <span class="admin-pill">Admin</span>
+    You are logged in. <a routerLink="/admin">Go to Admin</a>
+    <button class="banner-logout" (click)="logout()">Logout</button>
+  </div>
+  <!-- Debug overlay removed for mobile styles -->
+  <div class="rnd-title-card" [class.empty-wheel]="players.length === 0">
+    <div class="banner-frame">
+      <img
+        src="assets/AddText_08-12-04.51.33.png"
+        alt="Tournament Banner"
+        class="rnd-img animate"
+      />
+    </div>
+  </div>
+  <div class="tab-container">
+    <div class="tab-nav">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'matchups'"
+        (click)="setActiveTab('matchups')"
+      >
+        This Week
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'standings'"
+        (click)="setActiveTab('standings')"
+      >
+        Standings
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'schedule'"
+        (click)="setActiveTab('schedule')"
+      >
+        Full Schedule
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Current Week Matchups Tab -->
+      <div *ngIf="activeTab === 'matchups'" class="tab-panel">
+        <div class="week-header">
+          <div class="week-navigation">
+            <h2 class="week-title">
+              Week {{ currentWeek }} Matchups
+              <span
+                *ngIf="getGameForWeek(currentWeek)"
+                class="game-name highlight-game"
+              >
+                - {{ getGameForWeek(currentWeek)?.name }}
+              </span>
+            </h2>
+          </div>
+        </div>
+        <div *ngIf="!playersLoaded || !matchesLoaded" class="no-matches">
+          Loading matchups...
+        </div>
+        <div *ngIf="playersLoaded && matchesLoaded">
+          <div
+            class="matchup-grid"
+            *ngIf="getMatchupGrid().length > 0; else noMatchups"
+          >
+            <div
+              *ngFor="let matchup of getMatchupGrid()"
+              class="matchup-card"
+            >
+              <div class="player-slot">
+                <span class="player-name">{{
+                  matchup.player1 || "TBD"
+                }}</span>
+              </div>
+              <div class="vs-divider" style="color: black;">VS</div>
+              <div class="player-slot">
+                <span class="player-name">{{
+                  matchup.player2 || "TBD"
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <ng-template #noMatchups>
+            <div class="no-matches">
+              No matchups scheduled for this week.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <!-- Player Standings Tab -->
+      <div *ngIf="activeTab === 'standings'" class="tab-panel">
+        <h2
+          class="section-title"
+          style="display: flex; align-items: center; justify-content: center; gap: 10px;"
+        >
+          Player Standings
+          <span class="standings-info-icon" tabindex="0">
+            <img src="assets/info.svg" alt="Info" width="22" height="22" />
+            <span class="standings-tooltip app-help-tooltip">
+              Standings are ranked by points. Hover over a player name for
+              detailed stats.
+            </span>
+          </span>
+        </h2>
+        <div class="table-container">
+          <table class="rnd-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Not Played</th>
+                <th>Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let player of getSortedPlayers(); let i = index">
+                <td class="rank" data-label="Rank">{{ i + 1 }}</td>
+                <td class="player-name-cell" data-label="Name">
+                  <div
+                    class="player-help"
+                    tabindex="0"
+                    (mouseenter)="showPlayerTooltip($event, player.name)"
+                    (mouseleave)="hidePlayerTooltip()"
+                    (focusin)="showPlayerTooltip($event, player.name)"
+                    (focusout)="hidePlayerTooltip()"
+                  >
+                    <span
+                      (click)="openStatsModal(player.name)"
+                      class="stats-link player-name"
+                      >{{ player.name }}</span
+                    >
+                  </div>
+                </td>
+                <td data-label="Wins">{{ player.wins }}</td>
+                <td data-label="Losses">{{ player.losses }}</td>
+                <td data-label="Not Played">{{ player.notPlayed }}</td>
+                <td class="points" data-label="Points">
+                  {{ player.points }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Player Stats Modal -->
+        <div
+          class="stats-modal-backdrop"
+          *ngIf="showStatsModal"
+          (click)="closeStatsModal()"
+        >
+          <div class="stats-modal" (click)="$event.stopPropagation()">
+            <button
+              class="close-modal"
+              (click)="closeStatsModal()"
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <div class="stats-modal-content">
+              <h3>Player Matchup Stats</h3>
+              <pre>{{ selectedPlayerStats }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Schedule Tab -->
+      <div *ngIf="activeTab === 'schedule'" class="tab-panel">
+        <h2 class="section-title">Tournament Schedule</h2>
+        <div
+          class="schedule-container"
+          [class.force-schedule-column]="isMobile"
+        >
+          <div
+            *ngFor="let week of getWeeksWithMatches()"
+            class="week-block"
+          >
+            <h3 class="week-block-title">
+              Week {{ week.number }}
+              <span
+                *ngIf="getGameForWeek(week.number)"
+                [ngClass]="{
+                  'game-name': true,
+                  'highlight-game': week.number === currentWeek
+                }"
+              >
+                - {{ getGameForWeek(week.number)?.name }}
+              </span>
+              <span
+                *ngIf="week.number === currentWeek"
+                class="current-week-badge"
+                >CURRENT</span
+              >
+            </h3>
+            <div class="week-matches">
+              <div
+                *ngFor="let match of week.matches"
+                class="schedule-match"
+              >
+                <div class="match-players">
+                  <span class="player1">
+                    {{ match.player1 }}
+                    <span
+                      *ngIf="
+                        match.status === 'completed' &&
+                        match.winner === match.player1
+                      "
+                      class="win-badge"
+                      title="Winner"
+                      >🏆</span
+                    >
+                  </span>
+                  <span class="vs">VS</span>
+                  <span class="player2">
+                    {{ match.player2 }}
+                    <span
+                      *ngIf="
+                        match.status === 'completed' &&
+                        match.winner === match.player2
+                      "
+                      class="win-badge"
+                      title="Winner"
+                      >🏆</span
+                    >
+                  </span>
+                </div>
+                <div *ngIf="match.player2 === 'Bye'" class="bye-indicator">
+                  BYE WEEK
+                </div>
+              </div>
+              <div
+                *ngIf="week.matches.length === 0"
+                class="no-matches-week"
+              >
+                No matches scheduled
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

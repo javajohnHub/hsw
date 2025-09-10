@@ -22,6 +22,7 @@ interface Player {
   losses: number;
   notPlayed: number;
   points: number;
+  imageUrl: string;
 }
 
 interface Match {
@@ -114,6 +115,17 @@ interface Game {
           >
             Clear All Data
           </button>
+          <button
+            (click)="downloadDataZip()"
+            class="action-btn download-btn"
+            title="Download all tournament data as a zip archive."
+          >
+            Download Data
+          </button>
+          <form (submit)="restoreDataZip($event)" class="restore-form" enctype="multipart/form-data">
+            <input type="file" accept=".zip" (change)="onZipFileSelected($event)" />
+            <button type="submit" class="action-btn restore-btn" [disabled]="!selectedZipFile">Restore Data</button>
+          </form>
         </div>
 
         <div class="overview-stats">
@@ -240,11 +252,15 @@ interface Game {
         <div class="players-display">
           <div *ngFor="let player of players" class="player-item">
             <div *ngIf="editingPlayer?.id !== player.id" class="player-info">
-              <span class="player-name">{{ player.name }}</span>
-              <span class="player-stats"
-                >W: {{ player.wins }} | L: {{ player.losses }} | P:
-                {{ player.points }}</span
-              >
+              <div class="admin-player-display">
+                <div class="admin-player-details">
+                  <span class="player-name">{{ player.name }}</span>
+                  <span class="player-stats"
+                    >W: {{ player.wins }} | L: {{ player.losses }} | P:
+                    {{ player.points }}</span
+                  >
+                </div>
+              </div>
             </div>
             <div *ngIf="editingPlayer?.id !== player.id" class="player-actions">
               <button (click)="startEditPlayer(player)" class="edit-btn">
@@ -301,6 +317,7 @@ interface Game {
               type="number"
               placeholder="Not Played"
             />
+            <input [(ngModel)]="newPlayerImageUrl" placeholder="Image URL (optional)" />
             <button (click)="addPlayer()">Add Player</button>
           </div>
           <div class="admin-actions">
@@ -994,6 +1011,28 @@ interface Game {
         gap: 16px;
         flex: 1;
       }
+      .admin-player-display {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+      }
+      .admin-player-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 2px solid #53fc19;
+        object-fit: cover;
+        box-shadow: 0 2px 8px rgba(83, 252, 25, 0.3);
+        flex-shrink: 0;
+      }
+      .admin-player-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 0;
+      }
       .player-actions {
         display: flex;
         gap: 8px;
@@ -1061,7 +1100,7 @@ interface Game {
       }
       .add-player {
         display: grid;
-        grid-template-columns: 3fr 80px 80px 80px auto;
+        grid-template-columns: 2fr 80px 80px 80px 2fr auto;
         gap: 12px;
         margin-top: 16px;
         padding: 16px;
@@ -1933,6 +1972,42 @@ interface Game {
   ],
 })
 export class AdminPageComponent implements OnInit {
+  selectedZipFile: File | null = null;
+  // Download the data folder as a zip
+  downloadDataZip() {
+    window.open(`${this.apiBaseUrl}/admin/data/download`, '_blank');
+  }
+
+  // Handle zip file selection for restore
+  onZipFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedZipFile = input.files[0];
+    } else {
+      this.selectedZipFile = null;
+    }
+  }
+
+  // Restore data from uploaded zip
+  restoreDataZip(event: Event) {
+    event.preventDefault();
+    if (!this.selectedZipFile) return;
+    const formData = new FormData();
+    formData.append('zip', this.selectedZipFile);
+    this.http.post(`${this.apiBaseUrl}/admin/data/restore`, formData, { withCredentials: true }).subscribe({
+      next: () => {
+        alert('Data restored successfully.');
+        this.selectedZipFile = null;
+        this.loadPlayers();
+        this.loadMatches();
+        this.loadSeasons();
+        this.loadGames();
+      },
+      error: () => {
+        alert('Failed to restore data.');
+      }
+    });
+  }
   // Tab management
   activeTab: string = "overview";
   // Confirmation modal state (styled)
@@ -1946,6 +2021,7 @@ export class AdminPageComponent implements OnInit {
   newPlayerWins: number = 0;
   newPlayerLosses: number = 0;
   newPlayerNotPlayed: number = 0;
+  newPlayerImageUrl: string = "";
   seasons: Season[] = [];
   currentSeason: Season | null = null;
   newSeasonName: string = "";
@@ -2054,6 +2130,7 @@ export class AdminPageComponent implements OnInit {
         losses: 0,
         notPlayed: 0,
         points: 0,
+        imageUrl: "/assets/images/players/bye-week.jpg"
       });
     } else if (nonByeCount % 2 === 0 && hasBye) {
       // remove client-side Bye if present
@@ -2218,6 +2295,7 @@ export class AdminPageComponent implements OnInit {
   }
 
   addPlayer() {
+    const defaultImageUrl = `/assets/images/players/${this.newPlayerName.toLowerCase().replace(/[^a-z0-9_]/g, '')}.jpg`;
     const newPlayer: Player = {
       id: 0,
       name: this.newPlayerName,
@@ -2225,6 +2303,7 @@ export class AdminPageComponent implements OnInit {
       losses: this.newPlayerLosses,
       notPlayed: this.newPlayerNotPlayed,
       points: 0,
+      imageUrl: this.newPlayerImageUrl || defaultImageUrl
     };
     this.http
       .post<Player>(`${environment.apiBaseUrl}/players`, newPlayer, { withCredentials: true })
@@ -2234,6 +2313,7 @@ export class AdminPageComponent implements OnInit {
         this.newPlayerWins = 0;
         this.newPlayerLosses = 0;
         this.newPlayerNotPlayed = 0;
+        this.newPlayerImageUrl = "";
         // ensure Bye Week presence updated after addition
 
         setTimeout(() => this.ensureByePlayer(), 150);
@@ -2544,7 +2624,7 @@ export class AdminPageComponent implements OnInit {
           // No points for skipped matches
           break;
         case "dq":
-          player.losses++; // DQ counts as a loss
+          player.notPlayed++; // DQ counts as not played, not a loss
           // DQ gets 0 points (no points added)
           break;
       }
@@ -2572,7 +2652,7 @@ export class AdminPageComponent implements OnInit {
           // No points to revert for skipped matches
           break;
         case "dq":
-          player.losses = Math.max(0, player.losses - 1);
+          player.notPlayed = Math.max(0, player.notPlayed - 1);
           // No points to revert for DQ (they got 0 points)
           break;
       }
@@ -2812,6 +2892,11 @@ export class AdminPageComponent implements OnInit {
   // Tab management methods
   setActiveTab(tab: string): void {
     this.activeTab = tab;
+    
+    // When switching to matches tab, sync Add Match week with the current week filter
+    if (tab === 'matches' && this.selectedWeekFilter !== null && this.selectedWeekFilter !== undefined) {
+      this.manualMatchWeek = this.selectedWeekFilter;
+    }
   }
 
   // Show a styled confirmation dialog and return a Promise<boolean>
@@ -2940,6 +3025,12 @@ export class AdminPageComponent implements OnInit {
         ? null
         : Number(week);
     this.selectedWeekFilter = Number.isNaN(val) ? null : val;
+    
+    // Sync the Add Match week dropdown with the week filter
+    if (this.selectedWeekFilter !== null && this.selectedWeekFilter !== undefined) {
+      this.manualMatchWeek = this.selectedWeekFilter;
+    }
+    
     // persist selection so navigation away and back retains filters
     localStorage.setItem(
       "admin_selectedWeekFilter",
@@ -3090,5 +3181,12 @@ export class AdminPageComponent implements OnInit {
           );
         },
       });
+  }
+
+  onImageError(event: any, playerName: string): void {
+    // Fallback to a default image or hide the image
+    event.target.src = '/assets/images/players/default-player.jpg';
+    // Alternative: hide the image and show just the name
+    // event.target.style.display = 'none';
   }
 }

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Backup Restore</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; }
+        .form-group { margin: 20px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="file"] { margin-bottom: 10px; }
+        button { padding: 10px 20px; font-size: 16px; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tournament Data Backup/Restore Test</h1>
+        
+        <div class="form-group">
+            <h2>Download Backup</h2>
+            <button onclick="downloadBackup()">Download Current Data</button>
+        </div>
+        
+        <div class="form-group">
+            <h2>Restore from Backup</h2>
+            <label for="zipFile">Select backup zip file:</label>
+            <input type="file" id="zipFile" accept=".zip" />
+            <br>
+            <button onclick="restoreBackup()">Restore Data</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const username = 'admin';
+        const password = 'admin123';
+        const auth = btoa(username + ':' + password);
+
+        function showResult(message, isError = false) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = 'result ' + (isError ? 'error' : 'success');
+        }
+
+        async function downloadBackup() {
+            try {
+                const response = await fetch('/api/tournaments/admin/data/download', {
+                    headers: {
+                        'Authorization': 'Basic ' + auth
+                    }
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'tournament-backup.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    showResult('Backup downloaded successfully!');
+                } else {
+                    showResult('Download failed: ' + response.status + ' ' + response.statusText, true);
+                }
+            } catch (error) {
+                showResult('Download error: ' + error.message, true);
+            }
+        }
+
+        async function restoreBackup() {
+            const fileInput = document.getElementById('zipFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showResult('Please select a zip file first', true);
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('zip', file);
+
+            try {
+                showResult('Uploading and restoring data...');
+                
+                const response = await fetch('/api/tournaments/admin/data/restore', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Basic ' + auth
+                    },
+                    body: formData
+                });
+
+                const result = await response.text();
+                
+                if (response.ok) {
+                    showResult('Restore completed successfully! ' + result);
+                } else {
+                    showResult('Restore failed: ' + response.status + ' ' + response.statusText + ' - ' + result, true);
+                }
+            } catch (error) {
+                showResult('Restore error: ' + error.message, true);
+            }
+        }
+    </script>
+</body>
+</html>

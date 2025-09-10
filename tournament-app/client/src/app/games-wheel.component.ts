@@ -9,6 +9,7 @@ interface Game {
   name: string;
   category?: string;
   isChosen?: boolean;
+  assignedWeek?: number | null;
 }
 
 @Component({
@@ -434,7 +435,7 @@ export class GamesWheelComponent implements AfterViewInit, OnInit {
   }
 
   updateGameLists() {
-    this.availableGames = this.games.filter(g => !g.isChosen);
+    this.availableGames = this.games.filter(g => !g.isChosen && !g.assignedWeek);
     this.chosenGames = this.games.filter(g => g.isChosen);
   }
 

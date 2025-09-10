@@ -27,7 +27,7 @@ const authLimiter = rateLimit({
  * Edwards Web Development admin authentication
  */
 router.post('/login', 
-  authLimiter,
+  (process.env.NODE_ENV === 'production' && process.env.DISABLE_RATE_LIMITING !== 'true') ? authLimiter : (req: any, res: any, next: any) => next(), // Rate limit only in production and when not disabled
   [
     body('username')
       .notEmpty()

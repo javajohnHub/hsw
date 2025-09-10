@@ -19,6 +19,7 @@ export interface Player {
   losses: number;
   notPlayed: number;
   points: number;
+  imageUrl: string;
 }
 
 export interface Match {

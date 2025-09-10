@@ -124,7 +124,7 @@ interface Game {
             </thead>
             <tbody>
               <tr *ngFor="let player of getSortedPlayers(); let i = index">
-                <td class="rank" data-label="Rank">{{ i + 1 }}</td>
+                <td class="rank" data-label="Rank">{{ player.rank }}</td>
                 <td class="player-name-cell" data-label="Name">
                   <div class="player-help" tabindex="0"
                        (mouseenter)="showPlayerTooltip($event, player.name)"
@@ -1587,13 +1587,57 @@ export class PublicPageComponent implements OnInit, OnDestroy {
     this.activeTab = tab;
   }
 
-  getSortedPlayers() {
-    return [...this.players]
-      .sort((a, b) => (b.points || 0) - (a.points || 0))
-      .map((player, index) => ({
+  getSortedPlayersWithTieHandling() {
+    console.log('=== RANKING DEBUG START ===');
+    console.log('Raw players data:', this.players);
+    
+    const sortedPlayers = [...this.players]
+      .sort((a, b) => (b.points || 0) - (a.points || 0));
+    
+    console.log('Sorted players by points:', sortedPlayers.map(p => ({name: p.name, points: p.points})));
+    
+    const result = [];
+    let currentRank = 1;
+    
+    for (let i = 0; i < sortedPlayers.length; i++) {
+      const player = sortedPlayers[i];
+      const currentPoints = player.points || 0;
+      
+      console.log(`Processing player ${i}: ${player.name}, points: ${currentPoints} (type: ${typeof currentPoints})`);
+      
+      // If this is not the first player, check if points are different from previous
+      if (i > 0) {
+        const previousPoints = sortedPlayers[i - 1].points || 0;
+        console.log(`  Comparing with previous: ${previousPoints} (type: ${typeof previousPoints})`);
+        console.log(`  Points equal? ${currentPoints === previousPoints}`);
+        console.log(`  Points NOT equal? ${currentPoints !== previousPoints}`);
+        
+        if (currentPoints !== previousPoints) {
+          console.log(`  RANK CHANGE: ${currentRank} -> ${i + 1}`);
+          currentRank = i + 1;
+        } else {
+          console.log(`  RANK STAYS: ${currentRank}`);
+        }
+      }
+      
+      const playerWithRank = {
         ...player,
-        rank: index + 1,
-      }));
+        rank: currentRank
+      };
+      
+      console.log(`  Final: ${player.name} gets rank ${currentRank}`);
+      result.push(playerWithRank);
+    }
+    
+    console.log('Final result:', result.map(p => ({name: p.name, points: p.points, rank: p.rank})));
+    console.log('=== RANKING DEBUG END ===');
+    
+    return result;
+  }
+
+  // Keep old method for compatibility but make it call the new one
+  getSortedPlayers() {
+    return this.getSortedPlayersWithTieHandling();
   }
 
   getWeeksWithMatches() {

@@ -1,3 +1,25 @@
+/* Win badge for standings */
+.win-badge {
+  margin-left: 8px;
+  background: #53fc19;
+  color: #181a1b;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 1.1em;
+  font-weight: bold;
+  box-shadow: 0 0 6px #53fc19;
+  vertical-align: middle;
+}
+/* Highlight for chosen game in schedule/week */
+.highlight-game {
+  background: linear-gradient(90deg, #53fc19 40%, #181a1b 100%);
+  color: #181a1b !important;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-weight: 700;
+  box-shadow: 0 0 8px #53fc19;
+  transition: background 0.3s, color 0.3s;
+}
 .rnd-bg {
   min-height: 100vh;
   background: linear-gradient(135deg, #181a1b 0%, #53fc19 100%);

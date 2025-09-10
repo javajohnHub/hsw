@@ -1,12 +1,103 @@
 [
   {
     "id": 1,
-    "name": "poop or die 2: return of the poop",
-    "isChosen": false
+    "name": "Cobra Triangle",
+    "isChosen": false,
+    "assignedWeek": null,
+    "assignedSeason": null
   },
   {
     "id": 2,
-    "name": "poop or die 1: the poop off",
+    "name": "Lode Runner",
     "isChosen": false
+  },
+  {
+    "id": 3,
+    "name": "Batman",
+    "isChosen": false
+  },
+  {
+    "id": 4,
+    "name": "Battletoads",
+    "isChosen": false
+  },
+  {
+    "id": 5,
+    "name": "Castlevania",
+    "isChosen": false
+  },
+  {
+    "id": 6,
+    "name": "Double Dragon 2",
+    "isChosen": false
+  },
+  {
+    "id": 7,
+    "name": "Ducktales",
+    "isChosen": false
+  },
+  {
+    "id": 8,
+    "name": "Gradius",
+    "isChosen": false
+  },
+  {
+    "id": 9,
+    "name": "Megaman",
+    "isChosen": false
+  },
+  {
+    "id": 10,
+    "name": "Metroid",
+    "isChosen": false
+  },
+  {
+    "id": 11,
+    "name": "Ring King",
+    "isChosen": false
+  },
+  {
+    "id": 12,
+    "name": "Burgertime",
+    "isChosen": false
+  },
+  {
+    "id": 13,
+    "name": "River City Ransom",
+    "isChosen": false
+  },
+  {
+    "id": 14,
+    "name": "Section Z",
+    "isChosen": false
+  },
+  {
+    "id": 15,
+    "name": "Stinger",
+    "isChosen": false
+  },
+  {
+    "id": 16,
+    "name": "TMNT 2",
+    "isChosen": false
+  },
+  {
+    "id": 17,
+    "name": "Zombie Nation",
+    "isChosen": false
+  },
+  {
+    "id": 18,
+    "name": "Street Fighter 2010",
+    "isChosen": false,
+    "assignedWeek": 1,
+    "assignedSeason": 1756477185284
+  },
+  {
+    "id": 19,
+    "name": "Donkey Kong",
+    "isChosen": false,
+    "assignedWeek": 2,
+    "assignedSeason": 1756477185284
   }
 ]
