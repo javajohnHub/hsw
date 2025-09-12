@@ -111,16 +111,108 @@ router.put('/players/:id', (req: Request, res: Response) => {
     res.status(404).json({ error: 'Player not found' });
     return;
   }
+  
+  const oldName = players[idx].name;
+  const newName = req.body.name;
+  
+  console.log(`[Player Update] ID: ${id}, Old name: "${oldName}", New name: "${newName}"`);
+  
+  // Update the player
   players[idx] = { ...players[idx], ...req.body };
   writeJson('players', players);
+  
+  // If the name changed, update all matches that reference this player
+  if (oldName && newName && oldName !== newName) {
+    console.log(`[Name Change Detected] Updating matches from "${oldName}" to "${newName}"`);
+    let matchesUpdated = false;
+    let updateCount = 0;
+    
+    matches = matches.map(match => {
+      const updatedMatch = { ...match };
+      
+      // Update player1 and player2 fields
+      if (updatedMatch.player1 === oldName) {
+        updatedMatch.player1 = newName;
+        matchesUpdated = true;
+        updateCount++;
+      }
+      if (updatedMatch.player2 === oldName) {
+        updatedMatch.player2 = newName;
+        matchesUpdated = true;
+        updateCount++;
+      }
+      
+      // Update winner and loser fields if they exist
+      if (updatedMatch.winner === oldName) {
+        updatedMatch.winner = newName;
+        matchesUpdated = true;
+        updateCount++;
+      }
+      if (updatedMatch.loser === oldName) {
+        updatedMatch.loser = newName;
+        matchesUpdated = true;
+        updateCount++;
+      }
+      
+      // Update dqPlayer field if it exists
+      if (updatedMatch.dqPlayer === oldName) {
+        updatedMatch.dqPlayer = newName;
+        matchesUpdated = true;
+        updateCount++;
+      }
+      
+      return updatedMatch;
+    });
+    
+    console.log(`[Match Updates] Updated ${updateCount} field references across ${matches.length} matches`);
+    
+    // Save matches if any were updated
+    if (matchesUpdated) {
+      writeJson('matches', matches);
+      console.log(`[Matches Saved] Successfully saved updated matches to file`);
+    } else {
+      console.log(`[No Updates] No matches found with name "${oldName}"`);
+    }
+  } else {
+    console.log(`[No Name Change] Names are the same, no cascade needed`);
+  }
+  
   res.json(players[idx]);
 });
 
 router.delete('/players/:id', (req: Request, res: Response) => {
   const id = parseInt(req.params.id, 10);
+  const playerToDelete = players.find(p => p.id === id);
+  if (!playerToDelete) {
+    res.status(404).json({ error: 'Player not found' });
+    return;
+  }
+  
+  const playerName = playerToDelete.name;
+  console.log(`[Player Delete] Deleting player: "${playerName}" (ID: ${id})`);
+  
+  // Remove player from players array
   players = players.filter(p => p.id !== id);
   writeJson('players', players);
-  res.json({ success: true });
+  
+  // Delete all matches involving this player
+  const initialMatchCount = matches.length;
+  matches = matches.filter(match => 
+    match.player1 !== playerName && 
+    match.player2 !== playerName
+  );
+  const deletedMatchCount = initialMatchCount - matches.length;
+  
+  if (deletedMatchCount > 0) {
+    writeJson('matches', matches);
+    console.log(`[Matches Deleted] Removed ${deletedMatchCount} matches involving "${playerName}"`);
+  }
+  
+  res.json({ 
+    success: true, 
+    deletedMatches: deletedMatchCount,
+    message: `Player "${playerName}" and ${deletedMatchCount} associated matches deleted`
+  });
 });
 
 // Games

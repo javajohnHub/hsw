@@ -100,7 +100,7 @@ const tournamentsPath = path.join(publicPath, 'tournaments');
 import fs from 'fs';
 const rawFrontendUrl = process.env.FRONTEND_URL;
 console.log('FRONTEND_URL env value:', rawFrontendUrl);
-if (isProd) {
+if (isProd || true) { // Enable static serving in development too
   if (fs.existsSync(publicPath)) {
     // Serve the main site at root
     app.use('/', express.static(publicPath));
@@ -201,7 +201,7 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
 });
 
 // Serve Angular app for all non-API routes (SPA routing)
-if (isProd) {
+if (isProd || true) { // Enable SPA routing in development too
   // Tournament SPA fallback for its client-side routes
   app.get(/^\/tournaments\/.*/, (req: Request, res: Response): void => {
     res.sendFile(path.join(tournamentsPath, 'index.html'));

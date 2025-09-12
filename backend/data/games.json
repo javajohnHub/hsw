@@ -52,13 +52,6 @@
     "isChosen": false
   },
   {
-    "id": 11,
-    "name": "Ring King",
-    "isChosen": false,
-    "assignedWeek": 3,
-    "assignedSeason": 1756477185284
-  },
-  {
     "id": 12,
     "name": "Burgertime",
     "isChosen": false
@@ -76,7 +69,9 @@
   {
     "id": 15,
     "name": "Stinger",
-    "isChosen": false
+    "isChosen": false,
+    "assignedWeek": 3,
+    "assignedSeason": 1756477185284
   },
   {
     "id": 16,
