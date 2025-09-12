@@ -10,10 +10,11 @@
     "start:ui": "ng serve --port 4300 --host 0.0.0.0",
     "start:ui:fast": "ng serve --configuration=development --port 4300 --host 0.0.0.0 --poll=2000 --live-reload=false --hmr=false",
     "start:server": "cross-env NODE_ENV=development node ../server/index.js",
-  "build": "ng build --configuration production --base-href /tournaments/ --deploy-url /tournaments/",
+    "build": "ng build --configuration production --base-href /tournaments/ --deploy-url /tournaments/",
+    "build:ci": "ng build --configuration production --base-href /tournaments/ --deploy-url /tournaments/",
     "build:dev": "ng build --configuration development",
-  "serve:prod": "ng build --configuration production && node ../server/index.js"
-    
+    "serve:prod": "ng build --configuration production && node ../server/index.js",
+    "serve:built": "node ../server/index.js"
   },
   "dependencies": {
     "@angular/common": "^19.0.0",
@@ -29,9 +30,8 @@
     "@angular/compiler": "^19.2.14",
     "@angular/compiler-cli": "^19.2.14",
     "@angular/localize": "^19.2.14",
-  "concurrently": "^8.0.0",
+    "concurrently": "^8.0.0",
     "cross-env": "^7.0.3",
-    
     "npm-run-all": "^4.1.5",
     "rimraf": "^5.0.0",
     "typescript": "^5.0.0",

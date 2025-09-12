@@ -37,13 +37,15 @@
 }
 /* Flattened .rnd-bg styles to avoid nested CSS (browsers ignore nested rules) */
 .rnd-bg {
-  min-height: 100vh;
+  height: 100vh;
   background: #181a1b;
   padding: 20px;
   font-family: "Orbitron", "Arial Black", Arial, sans-serif;
   color: #ddd;
   margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 .rnd-bg .stats-link {
   color: #ddd;
@@ -293,6 +295,7 @@
   overflow: hidden;
   width: 100%;
   padding: 0 12px;
+  height: auto;
 }
 .tab-nav {
   display: flex;
@@ -302,6 +305,7 @@
   padding: 0;
   position: relative;
   z-index: 50; /* keep tab navigation above other content/overlays */
+  flex-shrink: 0;
 }
 .tab-btn {
   flex: 1;
@@ -334,9 +338,12 @@
   text-shadow: 0 0 8px #53fc19;
 }
 .tab-content {
-  padding: 24px;
-  min-height: 400px;
+  padding: 16px;
   width: 100%;
+  overflow-y: visible;
+  overflow-x: hidden;
+  min-height: auto;
+  height: auto;
 }
 .tab-panel {
   animation: fadeIn 0.3s ease-in-out;
@@ -364,7 +371,7 @@
   margin-bottom: 16px;
 }
 .week-title {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   color: #ddd;
   margin: 0;
   text-shadow: 0 0 8px #181a1b;
@@ -401,7 +408,7 @@
 
 /* Section Titles */
 .section-title {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   color: #ddd;
   margin-bottom: 24px;
   text-align: center;
@@ -411,8 +418,8 @@
 /* Matchup Grid */
 .matchup-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
   margin-bottom: 24px;
   width: 100%;
   max-width: 100%;
@@ -422,16 +429,16 @@
   background: rgba(83, 252, 25, 0.1);
   border: 2px solid #53fc19;
   border-radius: 12px;
-  padding: 16px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   width: 100%;
   align-items: center;
-  justify-content: space-between;
-  min-height: 100px;
+  justify-content: center;
+  min-height: 160px;
   transition: all 0.3s ease;
   box-sizing: border-box;
-  gap: 8px;
+  gap: 3px;
 }
 .matchup-card:hover {
   transform: translateY(-2px);
@@ -440,23 +447,66 @@
 .player-slot {
   flex: 1;
   text-align: center;
-  padding: 8px;
+  padding: 0;
   min-width: 0;
   overflow: hidden;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
 }
-.player-name {
-  font-size: 1.1rem;
+.player-image {
+  width: 100%;
+  height: 100px;
+  border-radius: 8px;
+  border: none;
+  object-fit: cover;
+  object-position: center center;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  margin-top: -75px;
+  margin-bottom: -75px;
+  max-width: 100%;
+}
+.player-image:hover {
+  transform: scale(1.05);
+  box-shadow: none;
+}
+.fallback-text {
+  font-size: 1.6rem;
   font-weight: bold;
   color: #ddd;
   text-shadow: 0 0 4px #181a1b;
-  line-height: 1.2;
+  line-height: 1.1;
   hyphens: auto;
   white-space: normal;
   text-align: center;
   max-width: 100%;
-  display: block;
-  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  margin: 0;
+  height: 100px;
+}
+.player-name {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #ddd;
+  text-shadow: 0 0 4px #181a1b;
+  line-height: 1.1;
+  hyphens: auto;
+  white-space: normal;
+  text-align: center;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  margin: 0;
+  height: 100px;
 }
 .matchup-player {
   display: flex;
@@ -501,16 +551,16 @@
   box-shadow: 0 4px 12px rgba(83, 252, 25, 0.5);
 }
 .vs-divider {
-  font-size: 1.1rem;
+  font-size: 0.8rem;
   font-weight: bold;
   background: #53fc19;
   color: #ddd;
-  padding: 10px 14px;
+  padding: 2px 6px;
   border-radius: 50%;
   box-shadow: 0 0 8px #53fc19;
   flex-shrink: 0;
-  margin: 0 8px;
-  min-width: 40px;
+  margin: 0 1px;
+  min-width: 24px;
   text-align: center;
 }
 
@@ -537,7 +587,7 @@
 .rnd-table th {
   background: #53fc19;
   color: #181a1b;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
   letter-spacing: 1px;
 }
@@ -547,7 +597,7 @@
 .rank {
   font-weight: bold;
   color: #ddd;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 .player-name-cell {
   font-weight: bold;

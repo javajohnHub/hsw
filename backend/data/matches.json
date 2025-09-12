@@ -63,7 +63,8 @@
     "played": true,
     "id": 6,
     "winner": "Xtremepot420",
-    "loser": "MoMoneyGaming"
+    "loser": "MoMoneyGaming",
+    "dqPlayer": "MoMoneyGaming"
   },
   {
     "week": 2,
@@ -95,8 +96,8 @@
   {
     "week": 2,
     "season": 1756477185284,
-    "player1": "Dab_a_dab0711",
-    "player2": "EeyoreDad",
+    "player1": "EeyoreDad",
+    "player2": "Dab_a_dab0711",
     "status": "scheduled",
     "played": false,
     "id": 10
@@ -118,5 +119,653 @@
     "status": "scheduled",
     "played": false,
     "id": 12
+  },
+  {
+    "week": 3,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "BWhizzle817",
+    "status": "scheduled",
+    "played": false,
+    "id": 13
+  },
+  {
+    "week": 3,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "Crownjo",
+    "status": "scheduled",
+    "played": false,
+    "id": 14
+  },
+  {
+    "week": 3,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "FOOCHcade",
+    "status": "scheduled",
+    "played": false,
+    "id": 15
+  },
+  {
+    "week": 3,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 16
+  },
+  {
+    "week": 3,
+    "season": 1756477185284,
+    "player1": "aztek138",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 17
+  },
+  {
+    "week": 3,
+    "season": 1756477185284,
+    "player1": "Xtremepot420",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 18
+  },
+  {
+    "week": 4,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 19
+  },
+  {
+    "week": 4,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "FOOCHcade",
+    "status": "scheduled",
+    "played": false,
+    "id": 20
+  },
+  {
+    "week": 4,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 21
+  },
+  {
+    "week": 4,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "Crownjo",
+    "status": "scheduled",
+    "played": false,
+    "id": 22
+  },
+  {
+    "week": 4,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 23
+  },
+  {
+    "week": 4,
+    "season": 1756477185284,
+    "player1": "Dab_a_dab0711",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 24
+  },
+  {
+    "week": 5,
+    "season": 1756477185284,
+    "player1": "Dab_a_dab0711",
+    "player2": "FOOCHcade",
+    "status": "scheduled",
+    "played": false,
+    "id": 25
+  },
+  {
+    "week": 5,
+    "season": 1756477185284,
+    "player1": "Xtremepot420",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 26
+  },
+  {
+    "week": 5,
+    "season": 1756477185284,
+    "player1": "Crownjo",
+    "player2": "BWhizzle817",
+    "status": "scheduled",
+    "played": false,
+    "id": 27
+  },
+  {
+    "week": 5,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "HighScoreWins",
+    "status": "scheduled",
+    "played": false,
+    "id": 28
+  },
+  {
+    "week": 5,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 29
+  },
+  {
+    "week": 5,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 30
+  },
+  {
+    "week": 6,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "BWhizzle817",
+    "status": "scheduled",
+    "played": false,
+    "id": 31
+  },
+  {
+    "week": 6,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 32
+  },
+  {
+    "week": 6,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 33
+  },
+  {
+    "week": 6,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 34
+  },
+  {
+    "week": 6,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "Crownjo",
+    "status": "scheduled",
+    "played": false,
+    "id": 35
+  },
+  {
+    "week": 6,
+    "season": 1756477185284,
+    "player1": "MoMoneyGaming",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 36
+  },
+  {
+    "week": 7,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 37
+  },
+  {
+    "week": 7,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "Crownjo",
+    "status": "scheduled",
+    "played": false,
+    "id": 38
+  },
+  {
+    "week": 7,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "BWhizzle817",
+    "status": "scheduled",
+    "played": false,
+    "id": 39
+  },
+  {
+    "week": 7,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "Jammin247",
+    "status": "scheduled",
+    "played": false,
+    "id": 40
+  },
+  {
+    "week": 7,
+    "season": 1756477185284,
+    "player1": "Xtremepot420",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 41
+  },
+  {
+    "week": 7,
+    "season": 1756477185284,
+    "player1": "Fizikzbound",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 42
+  },
+  {
+    "week": 8,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 43
+  },
+  {
+    "week": 8,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 44
+  },
+  {
+    "week": 8,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "Jammin247",
+    "status": "scheduled",
+    "played": false,
+    "id": 45
+  },
+  {
+    "week": 8,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 46
+  },
+  {
+    "week": 8,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 47
+  },
+  {
+    "week": 8,
+    "season": 1756477185284,
+    "player1": "Crownjo",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 48
+  },
+  {
+    "week": 9,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "FOOCHcade",
+    "status": "scheduled",
+    "played": false,
+    "id": 49
+  },
+  {
+    "week": 9,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "BWhizzle817",
+    "status": "scheduled",
+    "played": false,
+    "id": 50
+  },
+  {
+    "week": 9,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 51
+  },
+  {
+    "week": 9,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 52
+  },
+  {
+    "week": 9,
+    "season": 1756477185284,
+    "player1": "Crownjo",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 53
+  },
+  {
+    "week": 9,
+    "season": 1756477185284,
+    "player1": "Xtremepot420",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 54
+  },
+  {
+    "week": 10,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "Crownjo",
+    "status": "scheduled",
+    "played": false,
+    "id": 56
+  },
+  {
+    "week": 10,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 57
+  },
+  {
+    "week": 10,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 58
+  },
+  {
+    "week": 10,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "Apollofish_Games",
+    "status": "scheduled",
+    "played": false,
+    "id": 59
+  },
+  {
+    "week": 10,
+    "season": 1756477185284,
+    "player1": "aztek138",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 60
+  },
+  {
+    "week": 10,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 62
+  },
+  {
+    "week": 11,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "Apollofish_Games",
+    "status": "scheduled",
+    "played": false,
+    "id": 61
+  },
+  {
+    "week": 11,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 62
+  },
+  {
+    "week": 11,
+    "season": 1756477185284,
+    "player1": "Fizikzbound",
+    "player2": "EeyoreDad",
+    "status": "scheduled",
+    "played": false,
+    "id": 63
+  },
+  {
+    "week": 11,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "Jammin247",
+    "status": "scheduled",
+    "played": false,
+    "id": 64
+  },
+  {
+    "week": 11,
+    "season": 1756477185284,
+    "player1": "Crownjo",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 65
+  },
+  {
+    "week": 11,
+    "season": 1756477185284,
+    "player1": "aztek138",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 66
+  },
+  {
+    "week": 12,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 67
+  },
+  {
+    "week": 12,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 68
+  },
+  {
+    "week": 12,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "EeyoreDad",
+    "status": "scheduled",
+    "played": false,
+    "id": 69
+  },
+  {
+    "week": 12,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "Jammin247",
+    "status": "scheduled",
+    "played": false,
+    "id": 70
+  },
+  {
+    "week": 12,
+    "season": 1756477185284,
+    "player1": "Crownjo",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 71
+  },
+  {
+    "week": 12,
+    "season": 1756477185284,
+    "player1": "aztek138",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 72
+  },
+  {
+    "week": 13,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "EeyoreDad",
+    "status": "scheduled",
+    "played": false,
+    "id": 73
+  },
+  {
+    "week": 13,
+    "season": 1756477185284,
+    "player1": "Apollofish_Games",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 74
+  },
+  {
+    "week": 13,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 75
+  },
+  {
+    "week": 13,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "Xtremepot420",
+    "status": "scheduled",
+    "played": false,
+    "id": 76
+  },
+  {
+    "week": 13,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 77
+  },
+  {
+    "week": 13,
+    "season": 1756477185284,
+    "player1": "Crownjo",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 78
+  },
+  {
+    "week": 14,
+    "season": 1756477185284,
+    "player1": "HighScoreWins",
+    "player2": "Crownjo",
+    "status": "scheduled",
+    "played": false,
+    "id": 79
+  },
+  {
+    "week": 14,
+    "season": 1756477185284,
+    "player1": "EeyoreDad",
+    "player2": "Apollofish_Games",
+    "status": "scheduled",
+    "played": false,
+    "id": 80
+  },
+  {
+    "week": 14,
+    "season": 1756477185284,
+    "player1": "BWhizzle817",
+    "player2": "aztek138",
+    "status": "scheduled",
+    "played": false,
+    "id": 81
+  },
+  {
+    "week": 14,
+    "season": 1756477185284,
+    "player1": "FOOCHcade",
+    "player2": "Fizikzbound",
+    "status": "scheduled",
+    "played": false,
+    "id": 82
+  },
+  {
+    "week": 14,
+    "season": 1756477185284,
+    "player1": "Jammin247",
+    "player2": "Dab_a_dab0711",
+    "status": "scheduled",
+    "played": false,
+    "id": 83
+  },
+  {
+    "week": 14,
+    "season": 1756477185284,
+    "player1": "Xtremepot420",
+    "player2": "MoMoneyGaming",
+    "status": "scheduled",
+    "played": false,
+    "id": 85
   }
 ]

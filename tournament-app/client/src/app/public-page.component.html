@@ -69,13 +69,33 @@
               class="matchup-card"
             >
               <div class="player-slot">
-                <span class="player-name">{{
+                <img 
+                  *ngIf="matchup.player1 && matchup.player1 !== 'TBD' && !isImageError(matchup.player1)" 
+                  [src]="'assets/players/' + matchup.player1.toLowerCase() + '.webp'"
+                  [alt]="matchup.player1"
+                  class="player-image"
+                  (error)="onImageError(matchup.player1)"
+                />
+                <span 
+                  class="player-name fallback-text"
+                  *ngIf="!matchup.player1 || matchup.player1 === 'TBD' || isImageError(matchup.player1)"
+                >{{
                   matchup.player1 || "TBD"
                 }}</span>
               </div>
               <div class="vs-divider" style="color: black;">VS</div>
               <div class="player-slot">
-                <span class="player-name">{{
+                <img 
+                  *ngIf="matchup.player2 && matchup.player2 !== 'TBD' && !isImageError(matchup.player2)" 
+                  [src]="'assets/players/' + matchup.player2.toLowerCase() + '.webp'"
+                  [alt]="matchup.player2"
+                  class="player-image"
+                  (error)="onImageError(matchup.player2)"
+                />
+                <span 
+                  class="player-name fallback-text"
+                  *ngIf="!matchup.player2 || matchup.player2 === 'TBD' || isImageError(matchup.player2)"
+                >{{
                   matchup.player2 || "TBD"
                 }}</span>
               </div>
