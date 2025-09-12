@@ -138,7 +138,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let player of getSortedPlayers(); let i = index">
-                <td class="rank" data-label="Rank">{{ i + 1 }}</td>
+                <td class="rank" data-label="Rank">{{ getPlayerRank(player) }}</td>
                 <td class="player-name-cell" data-label="Name">
                   <div
                     class="player-help"
@@ -153,6 +153,11 @@
                       class="stats-link player-name"
                       >{{ player.name }}</span
                     >
+                    <div 
+                      *ngIf="currentTooltip.visible && currentTooltip.playerName === player.name"
+                      class="player-tooltip"
+                      [innerHTML]="currentTooltip.content">
+                    </div>
                   </div>
                 </td>
                 <td data-label="Wins">{{ player.wins }}</td>

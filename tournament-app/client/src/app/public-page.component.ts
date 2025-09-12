@@ -57,6 +57,13 @@ export class PublicPageComponent implements OnInit, OnDestroy {
   // Track players whose images failed to load
   private imageErrors = new Set<string>();
   
+  // Tooltip state
+  currentTooltip = {
+    visible: false,
+    playerName: '',
+    content: ''
+  };
+  
   private authSubscription?: Subscription;
   private weekCheckSubscription?: Subscription;
 
@@ -163,8 +170,34 @@ export class PublicPageComponent implements OnInit, OnDestroy {
     return [...this.players].sort((a, b) => {
       if (b.points !== a.points) return b.points - a.points;
       if (b.wins !== a.wins) return b.wins - a.wins;
-      return a.losses - b.losses;
+      if (a.losses !== b.losses) return a.losses - b.losses;
+      return a.name.localeCompare(b.name); // Alphabetical sort for ties
     });
+  }
+
+  getPlayerRank(player: Player): number {
+    const sortedPlayers = this.getSortedPlayers();
+    let rank = 1;
+    
+    for (let i = 0; i < sortedPlayers.length; i++) {
+      if (i > 0) {
+        const current = sortedPlayers[i];
+        const previous = sortedPlayers[i - 1];
+        
+        // If current player doesn't have same stats as previous, update rank
+        if (current.points !== previous.points || 
+            current.wins !== previous.wins || 
+            current.losses !== previous.losses) {
+          rank = i + 1;
+        }
+      }
+      
+      if (sortedPlayers[i] === player) {
+        return rank;
+      }
+    }
+    
+    return rank;
   }
 
   getWeeksWithMatches(): ScheduleWeek[] {
@@ -226,11 +259,20 @@ export class PublicPageComponent implements OnInit, OnDestroy {
   }
 
   showPlayerTooltip(event: any, playerName: string) {
-    // Implementation for player tooltip
+    const stats = this.getPlayerMatchStats(playerName);
+    this.currentTooltip = {
+      visible: true,
+      playerName: playerName,
+      content: stats.replace(/\n/g, '<br>')
+    };
   }
 
   hidePlayerTooltip() {
-    // Implementation for hiding tooltip
+    this.currentTooltip = {
+      visible: false,
+      playerName: '',
+      content: ''
+    };
   }
 
   logout() {
