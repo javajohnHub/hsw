@@ -52,11 +52,6 @@
     "isChosen": false
   },
   {
-    "id": 11,
-    "name": "Ring King",
-    "isChosen": false
-  },
-  {
     "id": 12,
     "name": "Burgertime",
     "isChosen": false
@@ -74,7 +69,9 @@
   {
     "id": 15,
     "name": "Stinger",
-    "isChosen": false
+    "isChosen": false,
+    "assignedWeek": 3,
+    "assignedSeason": 1756477185284
   },
   {
     "id": 16,
@@ -98,6 +95,20 @@
     "name": "Donkey Kong",
     "isChosen": false,
     "assignedWeek": 2,
+    "assignedSeason": 1756477185284
+  },
+  {
+    "id": 20,
+    "name": "Ninja Gaiden",
+    "isChosen": false,
+    "assignedWeek": 4,
+    "assignedSeason": 1756477185284
+  },
+  {
+    "id": 21,
+    "name": "Mario 3",
+    "isChosen": false,
+    "assignedWeek": 5,
     "assignedSeason": 1756477185284
   }
 ]

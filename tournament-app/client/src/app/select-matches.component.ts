@@ -1184,7 +1184,6 @@ export class SelectMatchesComponent
     this.spinning = true;
     this.wheelFeedback = "Spinning the wheel...";
     const idx = Math.floor(Math.random() * wheelPlayers.length);
-    // Calculate the angle so the selected player lands at the top (arrow points up)
     const segmentAngle = (2 * Math.PI) / wheelPlayers.length;
     const finalAngle =
       (3 * Math.PI) / 2 - (segmentAngle * idx + segmentAngle / 2);
@@ -1206,7 +1205,7 @@ export class SelectMatchesComponent
         this.selectedPlayer = wheelPlayers[idx];
         this.spinning = false;
 
-        // Find opponent if not a bye
+        // Find opponent if not a bye (UPDATED fairness logic)
         let opponent: string | null = null;
         if (this.selectedPlayer === "Bye") {
           const availablePlayers = wheelPlayers.filter((p) => p !== "Bye");
@@ -1214,36 +1213,51 @@ export class SelectMatchesComponent
           this.selectedOpponent = null;
           this.wheelFeedback = `Selected: ${this.getFairByeFromAvailable(availablePlayers)} gets bye week!`;
         } else {
-          const availableOpponents = wheelPlayers.filter(
+          const baseOpponents = wheelPlayers.filter(
             (p) => p !== this.selectedPlayer && p !== "Bye"
           );
-          // Use smart opponent selection
+          let fairnessOpponents = baseOpponents.filter((p) =>
+            this.canPairPlayers(this.selectedPlayer!, p)
+          );
+          if (fairnessOpponents.length === 0) fairnessOpponents = baseOpponents; // fallback
+
           const unplayedOpponents = this.getUnplayedOpponents(
             this.selectedPlayer!,
-            availableOpponents
+            fairnessOpponents
           );
-          if (unplayedOpponents.length > 0) {
-            opponent =
-              unplayedOpponents[
-                Math.floor(Math.random() * unplayedOpponents.length)
-              ];
-          } else if (availableOpponents.length > 0) {
-            opponent = availableOpponents.reduce((best, current) => {
-              const bestMatchupCount = this.getMatchupCount(
-                this.selectedPlayer!,
-                best
-              );
-              const currentMatchupCount = this.getMatchupCount(
-                this.selectedPlayer!,
-                current
-              );
-              return currentMatchupCount < bestMatchupCount ? current : best;
-            });
-          } else {
-            opponent = "TBD";
-          }
+
+            if (unplayedOpponents.length > 0) {
+              opponent =
+                unplayedOpponents[
+                  Math.floor(Math.random() * unplayedOpponents.length)
+                ];
+            } else if (fairnessOpponents.length > 0) {
+              opponent = fairnessOpponents.reduce((best, current) => {
+                const bestMatchupCount = this.getMatchupCount(
+                  this.selectedPlayer!,
+                  best
+                );
+                const currentMatchupCount = this.getMatchupCount(
+                  this.selectedPlayer!,
+                  current
+                );
+                if (currentMatchupCount === bestMatchupCount) {
+                  const bestStreak = this.getConsecutiveWeeksPlayed(
+                    this.selectedPlayer!,
+                    best
+                  );
+                  const currStreak = this.getConsecutiveWeeksPlayed(
+                    this.selectedPlayer!,
+                    current
+                  );
+                  return currStreak < bestStreak ? current : best;
+                }
+                return currentMatchupCount < bestMatchupCount ? current : best;
+              });
+            } else {
+              opponent = "TBD";
+            }
           this.selectedOpponent = opponent;
-          // Show if this is a new matchup
           const matchupCount = this.getMatchupCount(
             this.selectedPlayer!,
             opponent
@@ -1251,10 +1265,12 @@ export class SelectMatchesComponent
           const isNewMatchup = matchupCount === 0;
           const matchupInfo = isNewMatchup
             ? " (NEW MATCHUP!)"
-            : ` (${matchupCount + 1}${this.getOrdinalSuffix(
-                matchupCount + 1
-              )} time)`;
-          this.wheelFeedback = `Selected: ${this.selectedPlayer} vs ${opponent}${matchupInfo}. Saving...`;
+            : ` (${matchupCount + 1}${this.getOrdinalSuffix(matchupCount + 1)} time)`;
+          const fairnessNote =
+            baseOpponents.length > 0 && fairnessOpponents.length === 0
+              ? " (fairness override)"
+              : "";
+          this.wheelFeedback = `Selected: ${this.selectedPlayer} vs ${opponent}${matchupInfo}${fairnessNote}. Saving...`;
         }
 
         // Animate highlight and bounce for 2 seconds before removing
@@ -1480,12 +1496,37 @@ export class SelectMatchesComponent
     ).length;
   }
 
-  // NEW: Generate optimal matchups prioritizing unplayed opponents
+  // FAIRNESS: Count consecutive prior weeks these two players met leading into currentWeek
+  getConsecutiveWeeksPlayed(player1: string, player2: string): number {
+    let streak = 0;
+    for (let w = this.currentWeek - 1; w >= 1; w--) {
+      const played = this.roundRobinMatches.some(
+        (m) =>
+          m.week === w &&
+          ((m.player1 === player1 && m.player2 === player2) ||
+            (m.player1 === player2 && m.player2 === player1))
+      );
+      if (played) {
+        streak++;
+        if (streak >= 2) return streak; // early exit once we know it's blocked
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  // FAIRNESS: Disallow pairing if they already played the last 2 consecutive weeks (prevents 3 in a row)
+  canPairPlayers(player1: string, player2: string): boolean {
+    return this.getConsecutiveWeeksPlayed(player1, player2) < 2;
+  }
+
+  // NEW: Generate optimal matchups prioritizing unplayed opponents (updated with fairness)
   generateOptimalMatchups(players: string[]): string[][] {
     const pairs: string[][] = [];
     const availablePlayers = [...players];
 
-    // Sort players by how many different opponents they've faced (fewer = higher priority)
+    // Sort players by diversity of opponents first (fewer unique opponents -> higher priority)
     availablePlayers.sort((a, b) => {
       const aOpponents = this.getPlayerMatchHistory(a).length;
       const bOpponents = this.getPlayerMatchHistory(b).length;
@@ -1495,35 +1536,33 @@ export class SelectMatchesComponent
     while (availablePlayers.length >= 2) {
       const player1 = availablePlayers.shift()!;
 
-      // Find the best opponent for player1
-      const unplayedOpponents = this.getUnplayedOpponents(
-        player1,
-        availablePlayers
+      // Candidate opponents filtered by consecutive-week fairness rule
+      let candidateOpponents = availablePlayers.filter((p) =>
+        this.canPairPlayers(player1, p)
       );
-
-      let opponent: string;
-
-      if (unplayedOpponents.length > 0) {
-        // Prioritize opponents they haven't faced
-        // Among unplayed, choose the one with fewest total matches
-        opponent = unplayedOpponents.reduce((best, current) => {
-          const bestMatchCount = this.getPlayerMatchHistory(best).length;
-          const currentMatchCount = this.getPlayerMatchHistory(current).length;
-          return currentMatchCount < bestMatchCount ? current : best;
-        });
-      } else {
-        // If all available players have been faced, choose the one faced least
-        opponent = availablePlayers.reduce((best, current) => {
-          const bestMatchupCount = this.getMatchupCount(player1, best);
-          const currentMatchupCount = this.getMatchupCount(player1, current);
-          return currentMatchupCount < bestMatchupCount ? current : best;
-        });
+      if (candidateOpponents.length === 0) {
+        // Fairness filter too strict (late season) - relax to all to avoid deadlock
+        candidateOpponents = [...availablePlayers];
       }
 
-      // Remove the chosen opponent from available players
-      const opponentIndex = availablePlayers.indexOf(opponent);
-      availablePlayers.splice(opponentIndex, 1);
+      const unplayed = this.getUnplayedOpponents(player1, candidateOpponents);
+      const pool = unplayed.length > 0 ? unplayed : candidateOpponents;
 
+      // Scoring heuristic: lower is better
+      // timesPlayed weight 10, consecutiveStreak weight 25, opponent total matches weight 2
+      const opponent = pool
+        .map((opp) => {
+          const timesPlayed = this.getMatchupCount(player1, opp);
+          const consecutive = this.getConsecutiveWeeksPlayed(player1, opp);
+          const oppTotal = this.getPlayerMatchHistory(opp).length;
+          const score = timesPlayed * 10 + consecutive * 25 + oppTotal * 2;
+          return { opp, score };
+        })
+        .sort((a, b) => a.score - b.score)[0].opp;
+
+      // Remove chosen opponent
+      const idx = availablePlayers.indexOf(opponent);
+      if (idx >= 0) availablePlayers.splice(idx, 1);
       pairs.push([player1, opponent]);
     }
 

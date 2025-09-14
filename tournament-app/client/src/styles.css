@@ -106,3 +106,9 @@ html, body {
   right: 12px !important;
   left: auto !important;
 }
+
+/* --- Global quick override for tournament game images (ensures visibility even if component SCSS not bundled) --- */
+.game-images-header { margin-top: 4px !important; margin-bottom: -16px !important; }
+.game-cover-image, .game-cart-image { width:160px !important; height:auto !important; border-radius:10px !important; box-shadow:0 6px 16px rgba(0,0,0,0.4) !important; transition:transform .3s ease, box-shadow .3s ease; }
+.game-cover-image:hover, .game-cart-image:hover { transform:translateY(-4px) scale(1.04); box-shadow:0 10px 22px rgba(0,0,0,.55) !important; }
+/* --- End override --- */

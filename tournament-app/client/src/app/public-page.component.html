@@ -1,4 +1,10 @@
+<div id="hover-preview-portal" class="global-hover-portal"></div>
 <div class="rnd-bg public-page">
+  <!-- DEBUG OVERLAY (temporary) -->
+  <div style="position:fixed;top:4px;right:4px;z-index:9999;font-size:11px;background:rgba(0,0,0,0.55);color:#bdfcb9;padding:6px 8px;border:1px solid #53fc19;border-radius:6px;font-family:monospace" *ngIf="true">
+    P: {{ players?.length || 0 }} | M: {{ matches?.length || 0 }} | G: {{ games?.length || 0 }} | week: {{ currentWeek }}<br>
+    loaded: P{{ playersLoaded? '✓':'×' }} M{{ matchesLoaded? '✓':'×' }} G{{ gamesLoaded? '✓':'×' }}
+  </div>
   <div *ngIf="isAdmin" class="admin-banner">
     <span class="admin-pill">Admin</span>
     You are logged in. <a routerLink="/admin">Go to Admin</a>
@@ -42,20 +48,54 @@
     <!-- Tab Content -->
     <div class="tab-content">
       <!-- Current Week Matchups Tab -->
-      <div *ngIf="activeTab === 'matchups'" class="tab-panel">
-        <div class="week-header">
-          <div class="week-navigation">
+      <div *ngIf="activeTab === 'matchups'" class="tab-panel game-cover-bg"
+           [ngStyle]="currentGameImages ? {'background-image': 'linear-gradient(rgba(15, 17, 17, 0.85), rgba(15, 17, 17, 0.92)), url(' + currentGameImages.cover + ')'} : {}">
+        <div class="week-header week-header-inline" *ngIf="currentGame && currentGameImages as gi; else basicWeekHeader">
+          <div class="wh-image left game-image-container">
+            <img
+              [src]="gi.cover + '?v=' + currentWeek"
+              [alt]="currentGame.name + ' Cover'"
+              class="game-cover-image"
+            />
+            <img
+              [src]="gi.cover + '?v=' + currentWeek"
+              [alt]="currentGame.name + ' Cover Large Preview'"
+              class="game-image-hover-preview hover-preview-cover"
+              aria-hidden="true"
+              loading="lazy"
+            />
+          </div>
+          <div class="wh-title-center">
             <h2 class="week-title">
               Week {{ currentWeek }} Matchups
-              <span
-                *ngIf="getGameForWeek(currentWeek)"
-                class="game-name highlight-game"
-              >
-                - {{ getGameForWeek(currentWeek)?.name }}
-              </span>
+              <span *ngIf="currentGame" class="game-name highlight-game">- {{ currentGame?.name }}</span>
             </h2>
           </div>
+          <div class="wh-image right game-image-container">
+            <ng-container *ngIf="!isCartMissing(currentGame.name)">
+              <img
+                [src]="gi.cart + '?v=' + currentWeek"
+                (error)="onCartImageError($event, currentGame.name)"
+                [alt]="currentGame.name + ' Cartridge'"
+                class="game-cart-image"
+              />
+              <img
+                [src]="gi.cart + '?v=' + currentWeek"
+                [alt]="currentGame.name + ' Cartridge Large Preview'"
+                class="game-image-hover-preview hover-preview-cart"
+                aria-hidden="true"
+                loading="lazy"
+              />
+            </ng-container>
+          </div>
         </div>
+        <ng-template #basicWeekHeader>
+          <div class="week-header">
+            <h2 class="week-title">Week {{ currentWeek }} Matchups
+              <span *ngIf="currentGame" class="game-name highlight-game">- {{ currentGame?.name }}</span>
+            </h2>
+          </div>
+        </ng-template>
         <div *ngIf="!playersLoaded || !matchesLoaded" class="no-matches">
           Loading matchups...
         </div>
@@ -69,35 +109,55 @@
               class="matchup-card"
             >
               <div class="player-slot">
-                <img 
-                  *ngIf="matchup.player1 && matchup.player1 !== 'TBD' && !isImageError(matchup.player1)" 
+                <img
+                  *ngIf="
+                    matchup.player1 &&
+                    matchup.player1 !== 'TBD' &&
+                    !isImageError(matchup.player1)
+                  "
                   [src]="'assets/players/' + matchup.player1.toLowerCase() + '.webp'"
                   [alt]="matchup.player1"
                   class="player-image"
                   (error)="onImageError(matchup.player1)"
                 />
-                <span 
+                <span
                   class="player-name fallback-text"
-                  *ngIf="!matchup.player1 || matchup.player1 === 'TBD' || isImageError(matchup.player1)"
-                >{{
-                  matchup.player1 || "TBD"
-                }}</span>
+                  *ngIf="
+                    !matchup.player1 ||
+                    matchup.player1 === 'TBD' ||
+                    isImageError(matchup.player1)
+                  "
+                >
+                  {{
+                    matchup.player1 || "TBD"
+                  }}
+                </span>
               </div>
               <div class="vs-divider" style="color: black;">VS</div>
               <div class="player-slot">
-                <img 
-                  *ngIf="matchup.player2 && matchup.player2 !== 'TBD' && !isImageError(matchup.player2)" 
+                <img
+                  *ngIf="
+                    matchup.player2 &&
+                    matchup.player2 !== 'TBD' &&
+                    !isImageError(matchup.player2)
+                  "
                   [src]="'assets/players/' + matchup.player2.toLowerCase() + '.webp'"
                   [alt]="matchup.player2"
                   class="player-image"
                   (error)="onImageError(matchup.player2)"
                 />
-                <span 
+                <span
                   class="player-name fallback-text"
-                  *ngIf="!matchup.player2 || matchup.player2 === 'TBD' || isImageError(matchup.player2)"
-                >{{
-                  matchup.player2 || "TBD"
-                }}</span>
+                  *ngIf="
+                    !matchup.player2 ||
+                    matchup.player2 === 'TBD' ||
+                    isImageError(matchup.player2)
+                  "
+                >
+                  {{
+                    matchup.player2 || "TBD"
+                  }}
+                </span>
               </div>
             </div>
           </div>
@@ -153,11 +213,11 @@
                       class="stats-link player-name"
                       >{{ player.name }}</span
                     >
-                    <div 
+                    <div
                       *ngIf="currentTooltip.visible && currentTooltip.playerName === player.name"
                       class="player-tooltip"
-                      [innerHTML]="currentTooltip.content">
-                    </div>
+                      [innerHTML]="currentTooltip.content"
+                    ></div>
                   </div>
                 </td>
                 <td data-label="Wins">{{ player.wins }}</td>
@@ -200,27 +260,26 @@
           class="schedule-container"
           [class.force-schedule-column]="isMobile"
         >
-          <div
-            *ngFor="let week of getWeeksWithMatches()"
-            class="week-block"
-          >
+          <div *ngFor="let week of getWeeksWithMatches()" class="week-block">
             <h3 class="week-block-title">
               Week {{ week.number }}
-              <span
-                *ngIf="getGameForWeek(week.number)"
-                [ngClass]="{
-                  'game-name': true,
-                  'highlight-game': week.number === currentWeek
-                }"
-              >
-                - {{ getGameForWeek(week.number)?.name }}
-              </span>
+              <span *ngIf="week.game" [ngClass]="{'game-name': true, 'highlight-game': week.number === currentWeek}">- {{ week.game?.name }}</span>
               <span
                 *ngIf="week.number === currentWeek"
                 class="current-week-badge"
                 >CURRENT</span
               >
             </h3>
+            <div *ngIf="week.game && getGameImages(week.game.name) as wig" class="game-images-schedule">
+              <div class="game-image-small schedule-game-image-container">
+                <img [src]="wig.cover" [alt]="week.game.name + ' Cover'" class="schedule-game-image" />
+                <img [src]="wig.cover" [alt]="week.game.name + ' Cover Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
+              </div>
+              <div class="game-image-small schedule-game-image-container" *ngIf="!isCartMissing(week.game.name)">
+                <img [src]="wig.cart" (error)="onCartImageError($event, week.game.name)" [alt]="week.game.name + ' Cartridge'" class="schedule-game-image" />
+                <img [src]="wig.cart" [alt]="week.game.name + ' Cartridge Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
+              </div>
+            </div>
             <div class="week-matches">
               <div
                 *ngFor="let match of week.matches"
@@ -268,5 +327,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="hover-lift-root">
+    <!-- added wrapper for elevated hover previews -->
   </div>
 </div>

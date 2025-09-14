@@ -39,14 +39,15 @@
 /* Global styles to prevent scrollbars */
 :host {
   display: block;
-  overflow-x: hidden; /* Only hide horizontal scrollbar */
-  height: 100vh;
-  width: 100vw;
-  max-width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
+  overflow-x: hidden;
+  /* allow natural document scrolling; remove fixed full-viewport constraint */
+  position: static;
+  width: 100%;
+  height: auto;
 }
+
+/* Adjustable layout offsets */
+:root { --public-header-offset: 170px; }
 
 /* Prevent any child elements from causing overflow */
 * {
@@ -55,7 +56,7 @@
 
 /* Flattened .rnd-bg styles to avoid nested CSS (browsers ignore nested rules) */
 .rnd-bg {
-  height: 85vh;
+  min-height: 85vh;
   background: #181a1b;
   padding: 10px;
   font-family: "Orbitron", "Arial Black", Arial, sans-serif;
@@ -65,7 +66,10 @@
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden; /* Prevent page-level scrolling */
+  overflow: visible; /* allow child overflow (previews) and page scroll */
+  /* Create a stacking context so child hover previews can out-rank the sticky header (z-index:1000) */
+  position: relative;
+  z-index: 1; /* base layer below explicit preview layers */
 }
 .rnd-bg .stats-link {
   color: #ddd;
@@ -312,13 +316,14 @@
   background: rgba(24, 26, 27, 0.95);
   border-radius: 18px;
   box-shadow: 0 0 24px #53fc19, 0 0 32px #181a1b inset;
-  overflow: hidden;
+  overflow: visible; /* allow image hover previews to escape */
   width: 100%;
   padding: 0 12px;
   height: auto;
   flex: 1; /* Take remaining space */
   display: flex;
   flex-direction: column;
+  position: relative; /* stacking context anchor */
 }
 .tab-nav {
   display: flex;
@@ -327,7 +332,8 @@
   margin: 0;
   padding: 0;
   position: relative;
-  z-index: 50; /* keep tab navigation above other content/overlays */
+  /* Lowered from 50 so large hover previews can float above */
+  z-index: 10;
   flex-shrink: 0;
 }
 .tab-btn {
@@ -363,13 +369,17 @@
 .tab-content {
   padding: 16px;
   width: 100%;
-  flex: 1; /* Take remaining space in tab container */
-  overflow-y: auto; /* Allow vertical scrolling */
-  overflow-x: hidden; /* Prevent horizontal scroll */
-  height: 0; /* Force flexbox to constrain height */
+  /* Allow natural height so absolutely positioned hover previews are not clipped */
+  flex: 0 1 auto;
+  overflow: visible; /* Let hover previews extend beyond */
+  height: auto;
 }
+/* restore default panel animation only */
+.tab-panel { animation: fadeIn 0.3s ease-in-out; }
 .tab-panel {
   animation: fadeIn 0.3s ease-in-out;
+  /* Ensure no clipping for nested hover previews */
+  overflow: visible;
 }
 @keyframes fadeIn {
   from {
@@ -385,6 +395,58 @@
 /* Week Header */
 .week-header {
   margin-bottom: 24px;
+}
+.week-header-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 42px;
+  margin-bottom: 18px;
+  flex-wrap: nowrap;
+}
+.week-header-inline .wh-title-center {
+  flex: 0 1 auto;
+  text-align: center;
+  max-width: 60%;
+}
+.week-header-inline .wh-image img.game-cover-image,
+.week-header-inline .wh-image img.game-cart-image { 
+  width:140px; 
+}
+.week-header-inline .wh-image { 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  position:relative; 
+}
+/* Keep hover preview above other content */
+.week-header-inline .game-image-hover-preview { 
+  width:340px; 
+}
+
+@media (max-width: 980px){
+  .week-header-inline { gap:28px; }
+  .week-header-inline .wh-image img.game-cover-image,
+  .week-header-inline .wh-image img.game-cart-image { width:120px; }
+  .week-header-inline .game-image-hover-preview { width:300px; }
+}
+@media (max-width: 780px){
+  .week-header-inline { gap:18px; }
+  .week-header-inline .wh-image img.game-cover-image,
+  .week-header-inline .wh-image img.game-cart-image { width:100px; }
+  .week-header-inline .game-image-hover-preview { width:260px; }
+}
+@media (max-width: 620px){
+  .week-header-inline { gap:12px; }
+  .week-header-inline .wh-image img.game-cover-image,
+  .week-header-inline .wh-image img.game-cart-image { width:85px; }
+  .week-header-inline .game-image-hover-preview { width:220px; }
+  .week-header-inline .wh-title-center { max-width: 54%; }
+}
+@media (max-width: 520px){
+  .week-header-inline { flex-wrap:wrap; }
+  .week-header-inline .wh-title-center { order:3; flex-basis:100%; max-width:100%; }
+  .week-header-inline .wh-image { flex:1 1 45%; }
 }
 .week-navigation {
   display: flex;
@@ -429,6 +491,175 @@
   cursor: not-allowed;
 }
 
+/* Game Images */
+.game-images-header {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 8px; // tightened to accommodate larger images
+  margin-bottom: -12px; // pull matchups closer after enlargement
+}
+
+.game-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.game-cover-image,
+.game-cart-image {
+  width: 160px; // increased from 120px
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover enlarged preview setup */
+.game-image-container {
+  position: relative;
+}
+
+/* Hover preview for cover & cart images
+   We intentionally raise z-index above the sticky header (1000) so previews never tuck behind it. */
+.game-image-hover-preview {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.001); /* hidden by near-zero scale */
+  width: 360px;
+  max-width: none;
+  height: auto;
+  z-index: 4000; /* Above header & tabs but below tooltips */
+  pointer-events: none;
+  border-radius: 14px;
+  box-shadow: 0 12px 34px rgba(0,0,0,0.65), 0 0 0 2px rgba(83,252,25,0.5);
+  opacity: 0;
+  transition: opacity .25s ease, transform .28s cubic-bezier(.34,1.56,.64,1);
+  image-rendering: auto;
+  backdrop-filter: none;
+}
+
+/* Force higher layer */
+.public-page { position:relative; z-index: 0; }
+.public-page .hover-layer-root { position:relative; z-index: 2500; }
+body .global-hover-portal { position: fixed; inset:0; pointer-events:none; z-index: 3000; }
+
+/* Differentiate stacking so previews don't overlap incorrectly */
+/* Slight separation so cover/cart don't fight for same layer if overlapping */
+.hover-preview-cover { z-index: 4001; }
+.hover-preview-cart { z-index: 4002; }
+
+.game-image-container:hover > .game-image-hover-preview,
+.game-image-container:focus-within > .game-image-hover-preview {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Optional subtle grow on base image when preview active */
+.game-image-container:hover > .game-cover-image,
+.game-image-container:hover > .game-cart-image {
+  filter: brightness(.9) saturate(1.05);
+}
+
+.game-cover-image:hover,
+.game-cart-image:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55);
+}
+
+.image-label {
+  color: #ccc;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-shadow: 0 0 4px #181a1b;
+}
+
+.game-images-schedule {
+  display: flex;
+  gap: 12px;
+  margin: 8px 0 12px 0;
+  justify-content: flex-start;
+}
+
+.game-image-small {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Background cover applied to tab panel when viewing matchups */
+.game-cover-bg {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  border-radius: 12px;
+  /* allow hover previews to extend */
+  overflow: visible;
+}
+.game-cover-bg .week-header {
+  position: relative;
+  z-index: 2;
+}
+.game-cover-bg:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* reduce blur to keep content crisp */
+  backdrop-filter: blur(.5px);
+  z-index: 1;
+}
+
+.schedule-game-image {
+  width: 60px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.schedule-game-image:hover {
+  transform: scale(1.05);
+}
+
+/* Schedule image hover enlarged preview */
+.schedule-game-image-container { position:relative; }
+/* Full schedule thumbnail hover enlarged preview (also above header) */
+.schedule-hover-preview {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%) scale(.001);
+  width:280px;
+  max-width:none;
+  height:auto;
+  z-index:4000; /* same elevated layer */
+  pointer-events:none;
+  border-radius:12px;
+  box-shadow:0 10px 28px rgba(0,0,0,0.65), 0 0 0 2px rgba(83,252,25,0.45);
+  opacity:0;
+  transition:opacity .25s ease, transform .28s cubic-bezier(.34,1.56,.64,1);
+}
+/* Add stronger override in case parent stacking contexts interfere */
+.public-page .game-image-hover-preview,
+.public-page .schedule-hover-preview { z-index: 2500; }
+.public-page header, .public-page app-header { z-index: 1000; }
+
+.schedule-game-image-container:hover > .schedule-hover-preview,
+.schedule-game-image-container:focus-within > .schedule-hover-preview {
+  opacity:1;
+  transform:translate(-50%, -50%) scale(1);
+}
+
+@media (max-width: 780px){
+  .schedule-hover-preview { width:220px; }
+}
+@media (max-width: 520px){
+  .schedule-hover-preview { width:180px; }
+}
+
 /* Section Titles */
 .section-title {
   font-size: 1.2rem;
@@ -450,8 +681,8 @@
 }
 .matchup-card {
   background: rgba(83, 252, 25, 0.1);
-  border: 2px solid #53fc19;
-  border-radius: 12px;
+  border: 1px solid #53fc19;
+  border-radius: 6px;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -785,8 +1016,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-top: 20px;
-  height: 100%; /* Use full height of tab content */
-  overflow-y: auto;
+  height: auto;
+  overflow: visible; /* allow schedule hover previews to extend */
   padding-right: 8px; /* Account for scrollbar */
 }
 .week-block {
@@ -1029,7 +1260,6 @@
   max-width: 100% !important;
   margin: 0 !important;
 }
-/* Duplicate matchup-grid/styles removed to preserve the earlier 2-column layout */
 .week-navigation {
   display: flex;
   justify-content: center;
@@ -1231,6 +1461,44 @@
     color: #fff !important;
   }
 }
+
+/* Mobile styles for game images */
+@media (max-width: 768px) {
+  .game-images-header {
+    gap: 16px;
+  }
+  
+  .game-cover-image,
+  .game-cart-image {
+    width: 80px;
+  }
+  
+  .image-label {
+    font-size: 0.8rem;
+  }
+  
+  .schedule-game-image {
+    width: 40px;
+  }
+  
+  .game-images-schedule {
+    gap: 8px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-images-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .game-cover-image,
+  .game-cart-image {
+    width: 100px;
+  }
+}
+
 /* Immediately hide any wheel/game UI that may be injected into the public page.
    These stronger overrides ensure the public page never shows the admin 'wheel'
    UI even if a cached bundle or global stylesheet attempts to render it. Keep
@@ -1296,3 +1564,25 @@
   transform: none !important;
   border-radius: 0 !important;
 }
+.week-game-art { 
+  display:flex; 
+  justify-content:center; 
+  gap:28px; 
+  margin:12px 0 8px; 
+}
+.week-game-art img { 
+  max-height:140px; 
+  width:auto; 
+  border-radius:10px; 
+  box-shadow:0 4px 14px rgba(0,0,0,0.45); 
+  border:1px solid rgba(83,252,25,0.35); 
+}
+@media (max-width: 780px){
+  .week-game-art { gap:14px; }
+  .week-game-art img { max-height:90px; }
+}
+@media (max-width: 520px){
+  .week-game-art { flex-direction:column; }
+  .week-game-art img { max-height:120px; }
+}
+

@@ -2,121 +2,97 @@
   {
     "id": 1,
     "name": "HighScoreWins",
-    "rank": 12,
     "wins": 0,
     "losses": 1,
     "notPlayed": 0,
-    "points": 1,
-    "imageUrl": "assets/players/highscorewins.webp"
+    "points": 1
   },
   {
     "id": 2,
-    "name": "Apollofish_Games",
-    "rank": 11,
+    "name": "tbd",
     "wins": 0,
     "losses": 1,
     "notPlayed": 0,
-    "points": 1,
-    "imageUrl": "assets/players/apollofish_games.webp"
+    "points": 1
   },
   {
     "id": 3,
     "name": "EeyoreDad",
-    "rank": 10,
     "wins": 1,
     "losses": 0,
     "notPlayed": 0,
-    "points": 2,
-    "imageUrl": "assets/players/eeyoredad.webp"
+    "points": 2
   },
   {
     "id": 4,
     "name": "FOOCHcade",
-    "rank": 9,
     "wins": 0,
     "losses": 1,
     "notPlayed": 0,
-    "points": 1,
-    "imageUrl": "assets/players/foochcade.webp"
+    "points": 1
   },
   {
     "id": 5,
     "name": "Dab_a_dab0711",
-    "rank": 8,
     "wins": 0,
     "losses": 1,
     "notPlayed": 0,
-    "points": 1,
-    "imageUrl": "assets/players/dab_a_dab0711.webp"
+    "points": 1
   },
   {
     "id": 6,
     "name": "Crownjo",
-    "rank": 7,
     "wins": 1,
     "losses": 0,
     "notPlayed": 0,
-    "points": 2,
-    "imageUrl": "assets/players/crownjo.webp"
+    "points": 2
   },
   {
     "id": 7,
     "name": "Fizikzbound",
-    "rank": 6,
     "wins": 1,
     "losses": 0,
     "notPlayed": 0,
-    "points": 2,
-    "imageUrl": "assets/players/fizikzbound.webp"
+    "points": 2
   },
   {
     "id": 8,
     "name": "aztek138",
-    "rank": 5,
     "wins": 1,
     "losses": 0,
     "notPlayed": 0,
-    "points": 2,
-    "imageUrl": "assets/players/aztek138.webp"
+    "points": 2
   },
   {
     "id": 9,
     "name": "Jammin247",
-    "rank": 4,
     "wins": 0,
     "losses": 1,
     "notPlayed": 0,
-    "points": 1,
-    "imageUrl": "assets/players/jammin247.webp"
+    "points": 1
   },
   {
     "id": 10,
     "name": "MoMoneyGaming",
-    "rank": 3,
     "wins": 0,
     "losses": 0,
-    "notPlayed": 1,
-    "points": 0,
-    "imageUrl": "assets/players/momoneygaming.webp"
+    "notPlayed": 0,
+    "points": 0
   },
   {
     "id": 11,
     "name": "Xtremepot420",
-    "rank": 2,
     "wins": 1,
     "losses": 0,
     "notPlayed": 0,
-    "points": 2,
-    "imageUrl": "assets/players/xtremepot420.webp"
+    "points": 2
   },
   {
     "id": 12,
     "name": "BWhizzle817",
-    "rank": 1,
     "wins": 1,
     "losses": 0,
     "notPlayed": 0,
-    "points": 2,
-    "imageUrl": "assets/players/bwhizzle817.webp"
+    "points": 2
   }
 ]
