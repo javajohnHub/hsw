@@ -1586,3 +1586,28 @@ body .global-hover-portal { position: fixed; inset:0; pointer-events:none; z-ind
   .week-game-art img { max-height:120px; }
 }
 
+/* Kick profile link styles (matchups + standings) */
+.kick-player-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  position: relative;
+}
+.kick-player-link .player-image { transition: transform .25s ease, filter .25s ease; }
+.kick-player-link:hover .player-image { transform: translateY(-4px) scale(1.05); filter: saturate(1.15); }
+.kick-player-link .player-name { text-decoration: underline; }
+
+.player-name-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.kick-link.inline { font-size: .55rem; padding: 3px 8px 4px; }
+.kick-link.inline { background: linear-gradient(90deg,#23c441,#2fe05a); color:#06230e; border-radius:999px; font-weight:700; letter-spacing:.5px; text-decoration:none; box-shadow:0 2px 5px -2px rgba(35,196,65,.5),0 0 0 1px rgba(0,0,0,.55) inset; transition: top .25s ease, box-shadow .3s ease, transform .3s ease; position: relative; top:0; }
+.kick-link.inline:hover { top:-2px; box-shadow:0 6px 12px -4px rgba(35,196,65,.65),0 0 0 1px rgba(0,0,0,.7) inset; transform:translateY(-1px); }
+/* Kick icon: using SVG path as background for crisp scaling */
+/* Icon removed; keep pill text centered */
+
+@media (prefers-reduced-motion: reduce){
+  .kick-link.inline { transition:none; }
+  .kick-link.inline:hover { top:0; transform:none; }
+  .kick-player-link:hover .player-image { transform:none; filter:none; }
+}
+

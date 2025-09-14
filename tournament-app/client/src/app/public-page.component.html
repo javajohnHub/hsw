@@ -104,60 +104,77 @@
             class="matchup-grid"
             *ngIf="getMatchupGrid().length > 0; else noMatchups"
           >
-            <div
-              *ngFor="let matchup of getMatchupGrid()"
-              class="matchup-card"
-            >
+            <div *ngFor="let matchup of getMatchupGrid()" class="matchup-card">
               <div class="player-slot">
-                <img
-                  *ngIf="
-                    matchup.player1 &&
-                    matchup.player1 !== 'TBD' &&
-                    !isImageError(matchup.player1)
-                  "
-                  [src]="'assets/players/' + matchup.player1.toLowerCase() + '.webp'"
-                  [alt]="matchup.player1"
-                  class="player-image"
-                  (error)="onImageError(matchup.player1)"
-                />
-                <span
-                  class="player-name fallback-text"
-                  *ngIf="
-                    !matchup.player1 ||
-                    matchup.player1 === 'TBD' ||
-                    isImageError(matchup.player1)
-                  "
+                <a
+                  *ngIf="matchup.player1 && matchup.player1 !== 'TBD'"
+                  class="kick-player-link"
+                  [href]="getKickProfileUrl(matchup.player1)"
+                  target="_blank" rel="noopener"
+                  title="Open Kick profile"
                 >
-                  {{
-                    matchup.player1 || "TBD"
-                  }}
-                </span>
+                  <img
+                    *ngIf="
+                      matchup.player1 &&
+                      matchup.player1 !== 'TBD' &&
+                      !isImageError(matchup.player1)
+                    "
+                    [src]="'assets/players/' + matchup.player1.toLowerCase() + '.webp'"
+                    [alt]="matchup.player1"
+                    class="player-image"
+                    (error)="onImageError(matchup.player1)"
+                  />
+                  <span
+                    class="player-name fallback-text"
+                    *ngIf="
+                      !matchup.player1 ||
+                      matchup.player1 === 'TBD' ||
+                      isImageError(matchup.player1)
+                    "
+                  >
+                    {{ matchup.player1 || 'TBD' }}
+                  </span>
+                </a>
+                <span
+                  *ngIf="!matchup.player1 || matchup.player1 === 'TBD'"
+                  class="player-name fallback-text"
+                >{{ matchup.player1 || 'TBD' }}</span>
               </div>
               <div class="vs-divider" style="color: black;">VS</div>
               <div class="player-slot">
-                <img
-                  *ngIf="
-                    matchup.player2 &&
-                    matchup.player2 !== 'TBD' &&
-                    !isImageError(matchup.player2)
-                  "
-                  [src]="'assets/players/' + matchup.player2.toLowerCase() + '.webp'"
-                  [alt]="matchup.player2"
-                  class="player-image"
-                  (error)="onImageError(matchup.player2)"
-                />
-                <span
-                  class="player-name fallback-text"
-                  *ngIf="
-                    !matchup.player2 ||
-                    matchup.player2 === 'TBD' ||
-                    isImageError(matchup.player2)
-                  "
+                <a
+                  *ngIf="matchup.player2 && matchup.player2 !== 'TBD'"
+                  class="kick-player-link"
+                  [href]="getKickProfileUrl(matchup.player2)"
+                  target="_blank" rel="noopener"
+                  title="Open Kick profile"
                 >
-                  {{
-                    matchup.player2 || "TBD"
-                  }}
-                </span>
+                  <img
+                    *ngIf="
+                      matchup.player2 &&
+                      matchup.player2 !== 'TBD' &&
+                      !isImageError(matchup.player2)
+                    "
+                    [src]="'assets/players/' + matchup.player2.toLowerCase() + '.webp'"
+                    [alt]="matchup.player2"
+                    class="player-image"
+                    (error)="onImageError(matchup.player2)"
+                  />
+                  <span
+                    class="player-name fallback-text"
+                    *ngIf="
+                      !matchup.player2 ||
+                      matchup.player2 === 'TBD' ||
+                      isImageError(matchup.player2)
+                    "
+                  >
+                    {{ matchup.player2 || 'TBD' }}
+                  </span>
+                </a>
+                <span
+                  *ngIf="!matchup.player2 || matchup.player2 === 'TBD'"
+                  class="player-name fallback-text"
+                >{{ matchup.player2 || 'TBD' }}</span>
               </div>
             </div>
           </div>
@@ -200,24 +217,33 @@
               <tr *ngFor="let player of getSortedPlayers(); let i = index">
                 <td class="rank" data-label="Rank">{{ getPlayerRank(player) }}</td>
                 <td class="player-name-cell" data-label="Name">
-                  <div
-                    class="player-help"
-                    tabindex="0"
-                    (mouseenter)="showPlayerTooltip($event, player.name)"
-                    (mouseleave)="hidePlayerTooltip()"
-                    (focusin)="showPlayerTooltip($event, player.name)"
-                    (focusout)="hidePlayerTooltip()"
-                  >
-                    <span
-                      (click)="openStatsModal(player.name)"
-                      class="stats-link player-name"
-                      >{{ player.name }}</span
-                    >
+                  <div class="player-name-stack">
                     <div
-                      *ngIf="currentTooltip.visible && currentTooltip.playerName === player.name"
-                      class="player-tooltip"
-                      [innerHTML]="currentTooltip.content"
-                    ></div>
+                      class="player-help"
+                      tabindex="0"
+                      (mouseenter)="showPlayerTooltip($event, player.name)"
+                      (mouseleave)="hidePlayerTooltip()"
+                      (focusin)="showPlayerTooltip($event, player.name)"
+                      (focusout)="hidePlayerTooltip()"
+                    >
+                      <span
+                        (click)="openStatsModal(player.name)"
+                        class="stats-link player-name"
+                        >{{ player.name }}</span
+                      >
+                      <div
+                        *ngIf="currentTooltip.visible && currentTooltip.playerName === player.name"
+                        class="player-tooltip"
+                        [innerHTML]="currentTooltip.content"
+                      ></div>
+                    </div>
+                    <a
+                      class="kick-link inline"
+                      [href]="getKickProfileUrl(player.name)"
+                      target="_blank"
+                      rel="noopener"
+                      title="Open Kick profile"
+                    >Kick</a>
                   </div>
                 </td>
                 <td data-label="Wins">{{ player.wins }}</td>

@@ -394,6 +394,13 @@ export class PublicPageComponent implements OnInit, OnDestroy {
     return this.fairnessCache[playerName]?.uniqueOppPct ?? 0;
   }
 
+  // Build Kick profile URL from player name (underscores -> hyphens, lowercase)
+  getKickProfileUrl(playerName: string): string {
+    if (!playerName) return 'https://kick.com';
+    const slug = playerName.trim().toLowerCase().replace(/_/g, '-');
+    return `https://kick.com/${slug}`;
+  }
+
   // Win percentage helper
   getPlayerWinPct(player: Player): number {
     const total = player.wins + player.losses;
