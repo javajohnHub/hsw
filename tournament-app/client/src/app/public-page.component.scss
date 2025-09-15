@@ -419,6 +419,27 @@
   justify-content:center; 
   position:relative; 
 }
+.week-header-inline .multi-image-group { 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  gap:18px; 
+  position:relative; 
+}
+.week-header-inline .multi-image-group .game-image-container { 
+  position:relative; 
+}
+.week-header-inline .multi-image-group .game-cart-image { 
+  width:140px; 
+}
+@media (max-width: 780px){
+  .week-header-inline .multi-image-group { gap:14px; }
+  .week-header-inline .multi-image-group .game-cart-image { width:100px; }
+}
+@media (max-width: 520px){
+  .week-header-inline .multi-image-group { gap:10px; flex-wrap:wrap; }
+  .week-header-inline .multi-image-group .game-cart-image { width:85px; }
+}
 /* Keep hover preview above other content */
 .week-header-inline .game-image-hover-preview { 
   width:340px; 
@@ -551,6 +572,17 @@ body .global-hover-portal { position: fixed; inset:0; pointer-events:none; z-ind
 .hover-preview-cover { z-index: 4001; }
 .hover-preview-cart { z-index: 4002; }
 
+/* Allow larger size for rules sheets (portal clones inherit alt, sizing set inline) */
+img[alt*="Rules"].game-image-hover-preview,
+img[alt*="Rules"].schedule-hover-preview {
+  /* base size still starts tiny; portal clone will upscale width inline */
+  max-width: 520px;
+}
+@media (max-width: 620px){
+  img[alt*="Rules"].game-image-hover-preview,
+  img[alt*="Rules"].schedule-hover-preview { max-width: 400px; }
+}
+
 .game-image-container:hover > .game-image-hover-preview,
 .game-image-container:focus-within > .game-image-hover-preview {
   opacity: 1;
@@ -580,7 +612,8 @@ body .global-hover-portal { position: fixed; inset:0; pointer-events:none; z-ind
   display: flex;
   gap: 12px;
   margin: 8px 0 12px 0;
-  justify-content: flex-start;
+  justify-content: center; /* center images in full schedule */
+  align-items: center;
 }
 
 .game-image-small {
@@ -1026,6 +1059,29 @@ body .global-hover-portal { position: fixed; inset:0; pointer-events:none; z-ind
   border-radius: 12px;
   padding: 16px;
   transition: all 0.3s ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dark overlay for readability when a cover image exists */
+.week-block[ngstyle]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.85));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.week-block > * { position: relative; z-index: 1; }
+
+/* Slight lift effect retained */
+.week-block:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.55), 0 0 0 1px rgba(83,252,25,0.35);
 }
 .week-block:hover {
   transform: translateY(-2px);

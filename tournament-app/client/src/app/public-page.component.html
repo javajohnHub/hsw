@@ -71,22 +71,76 @@
               <span *ngIf="currentGame" class="game-name highlight-game">- {{ currentGame?.name }}</span>
             </h2>
           </div>
-          <div class="wh-image right game-image-container">
-            <ng-container *ngIf="!isCartMissing(currentGame.name)">
-              <img
-                [src]="gi.cart + '?v=' + currentWeek"
-                (error)="onCartImageError($event, currentGame.name)"
-                [alt]="currentGame.name + ' Cartridge'"
-                class="game-cart-image"
-              />
-              <img
-                [src]="gi.cart + '?v=' + currentWeek"
-                [alt]="currentGame.name + ' Cartridge Large Preview'"
-                class="game-image-hover-preview hover-preview-cart"
-                aria-hidden="true"
-                loading="lazy"
-              />
+          <div class="wh-image right multi-image-group">
+            <!-- Week 3: rules replaces cart entirely -->
+            <ng-container *ngIf="currentWeek === 3; else normalWeeks">
+              <div class="game-image-container">
+                <img
+                  src="assets/week-3-rules.webp?v={{currentWeek}}"
+                  alt="Week 3 Rules"
+                  class="game-cart-image"
+                />
+                <img
+                  src="assets/week-3-rules.webp?v={{currentWeek}}"
+                  alt="Week 3 Rules Large Preview"
+                  class="game-image-hover-preview hover-preview-cart"
+                  aria-hidden="true"
+                  loading="lazy"
+                />
+              </div>
             </ng-container>
+            <ng-template #normalWeeks>
+              <!-- Weeks 1 & 2: show cart + rules side-by-side (if cart not missing) -->
+              <ng-container *ngIf="currentWeek === 1 || currentWeek === 2; else defaultCartOnly">
+                <div class="game-image-container" *ngIf="!isCartMissing(currentGame.name) && currentGameImages">
+                  <img
+                    [src]="currentGameImages.cart + '?v=' + currentWeek"
+                    (error)="onCartImageError($event, currentGame.name)"
+                    [alt]="currentGame.name + ' Cartridge'"
+                    class="game-cart-image"
+                  />
+                  <img
+                    [src]="currentGameImages.cart + '?v=' + currentWeek"
+                    [alt]="currentGame.name + ' Cartridge Large Preview'"
+                    class="game-image-hover-preview hover-preview-cart"
+                    aria-hidden="true"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="game-image-container" *ngIf="getWeekRulesImage(currentWeek) as rulesImg">
+                  <img
+                    [src]="rulesImg.src + '?v=' + currentWeek"
+                    (error)="onRulesImageError($event, currentWeek)"
+                    [alt]="rulesImg.alt"
+                    class="game-cart-image"
+                  />
+                  <img
+                    [src]="rulesImg.src + '?v=' + currentWeek"
+                    [alt]="rulesImg.alt + ' Large Preview'"
+                    class="game-image-hover-preview hover-preview-cart"
+                    aria-hidden="true"
+                    loading="lazy"
+                  />
+                </div>
+              </ng-container>
+              <ng-template #defaultCartOnly>
+                <div class="game-image-container" *ngIf="!isCartMissing(currentGame.name) && currentGameImages">
+                  <img
+                    [src]="currentGameImages.cart + '?v=' + currentWeek"
+                    (error)="onCartImageError($event, currentGame.name)"
+                    [alt]="currentGame.name + ' Cartridge'"
+                    class="game-cart-image"
+                  />
+                  <img
+                    [src]="currentGameImages.cart + '?v=' + currentWeek"
+                    [alt]="currentGame.name + ' Cartridge Large Preview'"
+                    class="game-image-hover-preview hover-preview-cart"
+                    aria-hidden="true"
+                    loading="lazy"
+                  />
+                </div>
+              </ng-template>
+            </ng-template>
           </div>
         </div>
         <ng-template #basicWeekHeader>
@@ -286,7 +340,7 @@
           class="schedule-container"
           [class.force-schedule-column]="isMobile"
         >
-          <div *ngFor="let week of getWeeksWithMatches()" class="week-block">
+          <div *ngFor="let week of getWeeksWithMatches()" class="week-block" [ngStyle]="getWeekBackgroundStyle(week)">
             <h3 class="week-block-title">
               Week {{ week.number }}
               <span *ngIf="week.game" [ngClass]="{'game-name': true, 'highlight-game': week.number === currentWeek}">- {{ week.game?.name }}</span>
@@ -301,9 +355,25 @@
                 <img [src]="wig.cover" [alt]="week.game.name + ' Cover'" class="schedule-game-image" />
                 <img [src]="wig.cover" [alt]="week.game.name + ' Cover Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
               </div>
-              <div class="game-image-small schedule-game-image-container" *ngIf="!isCartMissing(week.game.name)">
-                <img [src]="wig.cart" (error)="onCartImageError($event, week.game.name)" [alt]="week.game.name + ' Cartridge'" class="schedule-game-image" />
-                <img [src]="wig.cart" [alt]="week.game.name + ' Cartridge Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
+              <div class="game-image-small schedule-game-image-container" *ngIf="getSecondaryWeekImage(week.number, week.game.name) as sec2">
+                <img
+                  [src]="sec2.src"
+                  *ngIf="sec2.kind === 'rules' || !isCartMissing(week.game.name)"
+                  (error)="sec2.kind === 'cart' ? onCartImageError($event, week.game.name) : null"
+                  [alt]="sec2.alt"
+                  class="schedule-game-image"
+                />
+                <img [src]="sec2.src" [alt]="sec2.alt + ' Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
+              </div>
+              <!-- Explicit rules image for weeks 1 & 2 when both cart and rules should show -->
+              <div class="game-image-small schedule-game-image-container" *ngIf="(week.number === 1 || week.number === 2) && getWeekRulesImage(week.number) as rImg">
+                <img
+                  [src]="rImg.src"
+                  (error)="onRulesImageError($event, week.number)"
+                  [alt]="rImg.alt"
+                  class="schedule-game-image"
+                />
+                <img [src]="rImg.src" [alt]="rImg.alt + ' Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
               </div>
             </div>
             <div class="week-matches">

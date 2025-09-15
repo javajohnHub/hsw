@@ -32,6 +32,8 @@ interface ScheduleWeek {
   number: number;
   matches: Match[];
   game?: Game | undefined;
+  // Pre-resolved cover image url for bg (optional)
+  coverUrl?: string;
 }
 
 @Component({
@@ -69,6 +71,8 @@ export class PublicPageComponent implements OnInit, OnDestroy {
   private missingCartGames = new Set<string>();
   // Track which cart images have already attempted png fallback
   private cartTriedPng = new Set<string>();
+  // Track rules images that attempted png fallback
+  private rulesTriedPng = new Set<number>();
   
   // Tooltip state
   currentTooltip = {
@@ -259,6 +263,32 @@ export class PublicPageComponent implements OnInit, OnDestroy {
 
   getWeeksWithMatches(): ScheduleWeek[] {
     return this.weeksCache;
+  }
+
+  // Style helper for schedule week background (Full Schedule tab)
+  getWeekBackgroundStyle(week: ScheduleWeek) {
+    if (!week.coverUrl) return {};
+    return {
+      'background-image': `linear-gradient(rgba(15,17,17,0.78), rgba(15,17,17,0.9)), url(${week.coverUrl})`
+    } as const;
+  }
+
+  // Secondary (cart/rules) image override: for week 3 show rules sheet
+  getSecondaryWeekImage(weekNumber: number, gameName?: string): { src: string; alt: string; kind: 'rules' | 'cart'; } | null {
+    if (weekNumber === 3) {
+      return { src: 'assets/week-3-rules.webp', alt: 'Week 3 Rules', kind: 'rules' };
+    }
+    if (!gameName) return null;
+    const imgs = this.getGameImages(gameName);
+    if (!imgs) return null;
+    return { src: imgs.cart, alt: `${gameName} Cartridge`, kind: 'cart' };
+  }
+
+  // Dedicated rules image accessor for weeks that have both cart + rules (weeks 1 & 2 for now)
+  getWeekRulesImage(weekNumber: number): { src: string; alt: string } | null {
+    if (weekNumber === 1) return { src: 'assets/week-1-rules.webp', alt: 'Week 1 Rules' };
+    if (weekNumber === 2) return { src: 'assets/week-2-rules.webp', alt: 'Week 2 Rules' };
+    return null;
   }
 
   setActiveTab(tab: string) {
@@ -497,6 +527,17 @@ export class PublicPageComponent implements OnInit, OnDestroy {
     this.missingCartGames.add(lower);
   }
 
+  onRulesImageError(event: Event, weekNumber: number) {
+    const img = event.target as HTMLImageElement;
+    if (img.src.endsWith('.webp') && !this.rulesTriedPng.has(weekNumber)) {
+      this.rulesTriedPng.add(weekNumber);
+      img.src = img.src.replace(/\.webp($|\?)/, '.png$1');
+      return;
+    }
+    // give up – hide image to avoid broken icon
+    img.style.display = 'none';
+  }
+
   // Get game image paths based on game name
   getGameImages(gameName: string): { cover: string, cart: string } | null {
     const gameImageMap: { [key: string]: string } = {
@@ -592,7 +633,13 @@ export class PublicPageComponent implements OnInit, OnDestroy {
       const clone = this.portalClones.find(c => c.alt === original.alt);
       if (!clone) return;
       const baseRect = target.getBoundingClientRect();
-      const targetWidth = original.classList.contains('hover-preview-cart') ? 360 : 360;
+      let targetWidth = 360;
+      // Enlarge rules sheets further for readability
+      if (original.alt.toLowerCase().includes('rules')) {
+        // Larger width; adjust if viewport small
+        const vw = Math.min(window.innerWidth, window.innerHeight);
+        targetWidth = vw < 600 ? 380 : vw < 900 ? 440 : 500;
+      }
       const centerX = baseRect.left + baseRect.width / 2;
       const centerY = baseRect.top + baseRect.height / 2;
       clone.style.left = centerX + 'px';
@@ -659,7 +706,12 @@ export class PublicPageComponent implements OnInit, OnDestroy {
     for (let i = 1; i <= this.maxWeeks; i++) {
       const weekMatches = this.matches.filter(m => m.week === i);
       const game = this.getGameForWeek(i);
-      weeks.push({ number: i, matches: weekMatches, game });
+      let coverUrl: string | undefined;
+      if (game) {
+        const imgs = this.getGameImages(game.name);
+        if (imgs?.cover) coverUrl = imgs.cover;
+      }
+      weeks.push({ number: i, matches: weekMatches, game, coverUrl });
     }
     this.weeksCache = weeks;
   }
