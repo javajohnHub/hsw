@@ -66,88 +66,48 @@
             />
           </div>
           <div class="wh-title-center">
-            <h2 class="week-title">
-              Week {{ currentWeek }} Matchups
-              <span *ngIf="currentGame" class="game-name highlight-game">- {{ currentGame?.name }}</span>
-            </h2>
+            <h2 class="week-title">Week {{ currentWeek }} Matchups</h2>
           </div>
           <div class="wh-image right multi-image-group">
-            <!-- Week 3: rules replaces cart entirely -->
-            <ng-container *ngIf="currentWeek === 3; else normalWeeks">
+            <!-- Current week: only show rules sheet if available (weeks 1-3) -->
+            <ng-container *ngIf="getWeekRulesImage(currentWeek) as rulesImg">
               <div class="game-image-container">
                 <img
-                  src="assets/week-3-rules.webp?v={{currentWeek}}"
-                  alt="Week 3 Rules"
+                  [src]="rulesImg.src + '?v=' + currentWeek"
+                  (error)="onRulesImageError($event, currentWeek)"
+                  [alt]="rulesImg.alt"
                   class="game-cart-image"
                 />
                 <img
-                  src="assets/week-3-rules.webp?v={{currentWeek}}"
-                  alt="Week 3 Rules Large Preview"
+                  [src]="rulesImg.src + '?v=' + currentWeek"
+                  [alt]="rulesImg.alt + ' Large Preview'"
                   class="game-image-hover-preview hover-preview-cart"
                   aria-hidden="true"
                   loading="lazy"
                 />
               </div>
             </ng-container>
-            <ng-template #normalWeeks>
-              <!-- Weeks 1 & 2: show cart + rules side-by-side (if cart not missing) -->
-              <ng-container *ngIf="currentWeek === 1 || currentWeek === 2; else defaultCartOnly">
-                <div class="game-image-container" *ngIf="!isCartMissing(currentGame.name) && currentGameImages">
-                  <img
-                    [src]="currentGameImages.cart + '?v=' + currentWeek"
-                    (error)="onCartImageError($event, currentGame.name)"
-                    [alt]="currentGame.name + ' Cartridge'"
-                    class="game-cart-image"
-                  />
-                  <img
-                    [src]="currentGameImages.cart + '?v=' + currentWeek"
-                    [alt]="currentGame.name + ' Cartridge Large Preview'"
-                    class="game-image-hover-preview hover-preview-cart"
-                    aria-hidden="true"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="game-image-container" *ngIf="getWeekRulesImage(currentWeek) as rulesImg">
-                  <img
-                    [src]="rulesImg.src + '?v=' + currentWeek"
-                    (error)="onRulesImageError($event, currentWeek)"
-                    [alt]="rulesImg.alt"
-                    class="game-cart-image"
-                  />
-                  <img
-                    [src]="rulesImg.src + '?v=' + currentWeek"
-                    [alt]="rulesImg.alt + ' Large Preview'"
-                    class="game-image-hover-preview hover-preview-cart"
-                    aria-hidden="true"
-                    loading="lazy"
-                  />
-                </div>
-              </ng-container>
-              <ng-template #defaultCartOnly>
-                <div class="game-image-container" *ngIf="!isCartMissing(currentGame.name) && currentGameImages">
-                  <img
-                    [src]="currentGameImages.cart + '?v=' + currentWeek"
-                    (error)="onCartImageError($event, currentGame.name)"
-                    [alt]="currentGame.name + ' Cartridge'"
-                    class="game-cart-image"
-                  />
-                  <img
-                    [src]="currentGameImages.cart + '?v=' + currentWeek"
-                    [alt]="currentGame.name + ' Cartridge Large Preview'"
-                    class="game-image-hover-preview hover-preview-cart"
-                    aria-hidden="true"
-                    loading="lazy"
-                  />
-                </div>
-              </ng-template>
-            </ng-template>
+            <!-- If no rules image for this week (weeks 4+) show cart -->
+            <div class="game-image-container" *ngIf="!getWeekRulesImage(currentWeek) && currentGameImages && shouldShowCart(currentWeek, currentGame.name)">
+              <img
+                [src]="currentGameImages.cart + '?v=' + currentWeek"
+                (error)="onCartImageError($event, currentGame.name)"
+                [alt]="currentGame.name + ' Cartridge'"
+                class="game-cart-image"
+              />
+              <img
+                [src]="currentGameImages.cart + '?v=' + currentWeek"
+                [alt]="currentGame.name + ' Cartridge Large Preview'"
+                class="game-image-hover-preview hover-preview-cart"
+                aria-hidden="true"
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
         <ng-template #basicWeekHeader>
           <div class="week-header">
-            <h2 class="week-title">Week {{ currentWeek }} Matchups
-              <span *ngIf="currentGame" class="game-name highlight-game">- {{ currentGame?.name }}</span>
-            </h2>
+            <h2 class="week-title">Week {{ currentWeek }} Matchups</h2>
           </div>
         </ng-template>
         <div *ngIf="!playersLoaded || !matchesLoaded" class="no-matches">
@@ -343,37 +303,32 @@
           <div *ngFor="let week of getWeeksWithMatches()" class="week-block" [ngStyle]="getWeekBackgroundStyle(week)">
             <h3 class="week-block-title">
               Week {{ week.number }}
-              <span *ngIf="week.game" [ngClass]="{'game-name': true, 'highlight-game': week.number === currentWeek}">- {{ week.game?.name }}</span>
-              <span
-                *ngIf="week.number === currentWeek"
-                class="current-week-badge"
-                >CURRENT</span
-              >
+              <span *ngIf="week.number === currentWeek" class="current-week-badge">CURRENT</span>
             </h3>
             <div *ngIf="week.game && getGameImages(week.game.name) as wig" class="game-images-schedule">
               <div class="game-image-small schedule-game-image-container">
                 <img [src]="wig.cover" [alt]="week.game.name + ' Cover'" class="schedule-game-image" />
                 <img [src]="wig.cover" [alt]="week.game.name + ' Cover Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
               </div>
-              <div class="game-image-small schedule-game-image-container" *ngIf="getSecondaryWeekImage(week.number, week.game.name) as sec2">
+              <!-- Rules image if present -->
+              <div class="game-image-small schedule-game-image-container" *ngIf="getWeekRulesImage(week.number) as rulesImg2">
                 <img
-                  [src]="sec2.src"
-                  *ngIf="sec2.kind === 'rules' || !isCartMissing(week.game.name)"
-                  (error)="sec2.kind === 'cart' ? onCartImageError($event, week.game.name) : null"
-                  [alt]="sec2.alt"
-                  class="schedule-game-image"
-                />
-                <img [src]="sec2.src" [alt]="sec2.alt + ' Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
-              </div>
-              <!-- Explicit rules image for weeks 1 & 2 when both cart and rules should show -->
-              <div class="game-image-small schedule-game-image-container" *ngIf="(week.number === 1 || week.number === 2) && getWeekRulesImage(week.number) as rImg">
-                <img
-                  [src]="rImg.src"
+                  [src]="rulesImg2.src"
                   (error)="onRulesImageError($event, week.number)"
-                  [alt]="rImg.alt"
+                  [alt]="rulesImg2.alt"
                   class="schedule-game-image"
                 />
-                <img [src]="rImg.src" [alt]="rImg.alt + ' Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
+                <img [src]="rulesImg2.src" [alt]="rulesImg2.alt + ' Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
+              </div>
+              <!-- Cart logic in schedule: show with rules for weeks 1-2, hide for week 3, show alone otherwise -->
+              <div class="game-image-small schedule-game-image-container" *ngIf="shouldShowCartInSchedule(week.number, week.game.name)">
+                <img
+                  [src]="getGameImages(week.game.name)?.cart || ''"
+                  (error)="onCartImageError($event, week.game.name)"
+                  [alt]="week.game.name + ' Cartridge'"
+                  class="schedule-game-image"
+                />
+                <img [src]="getGameImages(week.game.name)?.cart || ''" [alt]="week.game.name + ' Cartridge Large Preview'" class="schedule-hover-preview" aria-hidden="true" loading="lazy" />
               </div>
             </div>
             <div class="week-matches">
@@ -386,26 +341,36 @@
                     {{ match.player1 }}
                     <span
                       *ngIf="
-                        match.status === 'completed' &&
+                        (match.status === 'completed' || match.status === 'dq') &&
                         match.winner === match.player1
                       "
                       class="win-badge"
                       title="Winner"
                       >🏆</span
                     >
+                    <span
+                      *ngIf="match.status === 'dq' && match.dqPlayer === match.player1"
+                      class="dq-badge"
+                      title="Disqualified"
+                      >DQ</span>
                   </span>
                   <span class="vs">VS</span>
                   <span class="player2">
                     {{ match.player2 }}
                     <span
                       *ngIf="
-                        match.status === 'completed' &&
+                        (match.status === 'completed' || match.status === 'dq') &&
                         match.winner === match.player2
                       "
                       class="win-badge"
                       title="Winner"
                       >🏆</span
                     >
+                    <span
+                      *ngIf="match.status === 'dq' && match.dqPlayer === match.player2"
+                      class="dq-badge"
+                      title="Disqualified"
+                      >DQ</span>
                   </span>
                 </div>
                 <div *ngIf="match.player2 === 'Bye'" class="bye-indicator">

@@ -288,7 +288,27 @@ export class PublicPageComponent implements OnInit, OnDestroy {
   getWeekRulesImage(weekNumber: number): { src: string; alt: string } | null {
     if (weekNumber === 1) return { src: 'assets/week-1-rules.webp', alt: 'Week 1 Rules' };
     if (weekNumber === 2) return { src: 'assets/week-2-rules.webp', alt: 'Week 2 Rules' };
+    if (weekNumber === 3) return { src: 'assets/week-3-rules.webp', alt: 'Week 3 Rules' };
     return null;
+  }
+
+  // Determine if cart should be shown (hide cart for the active week if rules exist or if week 3 where rules replace cart)
+  shouldShowCart(weekNumber: number, gameName?: string): boolean {
+    if (!gameName) return false;
+    // Hide for current week if we have a rules image (weeks 1-2) or week 3 special case
+    if (weekNumber === this.currentWeek && (weekNumber === 1 || weekNumber === 2 || weekNumber === 3)) {
+      return false;
+    }
+    return !this.isCartMissing(gameName);
+  }
+
+  // Schedule-specific logic: show cart alongside rules for weeks 1-2 (not active week constraint), hide cart when week === 3 (rules replace cart), otherwise show cart if not missing
+  shouldShowCartInSchedule(weekNumber: number, gameName?: string): boolean {
+    if (!gameName) return false;
+    if (weekNumber === 3) return false; // rules only
+    // weeks 1 & 2: show cart (even though header hides it for current week)
+    if (weekNumber === 1 || weekNumber === 2) return !this.isCartMissing(gameName);
+    return !this.isCartMissing(gameName);
   }
 
   setActiveTab(tab: string) {

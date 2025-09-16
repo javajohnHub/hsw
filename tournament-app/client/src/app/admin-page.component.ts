@@ -2569,10 +2569,9 @@ export class AdminPageComponent implements OnInit {
     match.status = "dq";
     match.dqPlayer = dqPlayer;
     match.winner = match.player1 === dqPlayer ? match.player2 : match.player1;
-    match.loser = dqPlayer;
     match.played = true;
 
-    // Winner gets 2 points, DQ player gets 0 points
+    // Winner gets 2 points, DQ player gets 0 points. We DO NOT assign match.loser for a DQ so it does not count as a loss.
     this.updatePlayerStats(match.winner, "win");
     this.updatePlayerStats(dqPlayer, "dq");
 

@@ -39,7 +39,9 @@
   {
     "id": 8,
     "name": "Gradius",
-    "isChosen": false
+    "isChosen": false,
+    "assignedWeek": null,
+    "assignedSeason": null
   },
   {
     "id": 9,

@@ -1151,6 +1151,24 @@ img[alt*="Rules"].schedule-hover-preview {
   box-sizing: border-box;
   word-break: break-word;
 }
+.win-badge {
+  margin-left: 6px;
+  font-size: 0.9rem;
+  filter: drop-shadow(0 0 4px #53fc19);
+}
+.dq-badge {
+  margin-left: 6px;
+  background: #ff2e2e;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 6px rgba(255, 46, 46, 0.6);
+  position: relative;
+  top: -1px;
+}
 .vs {
   background: #53fc19;
   color: #181a1b;
