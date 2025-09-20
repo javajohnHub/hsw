@@ -423,8 +423,8 @@ export class LoginComponent {
       const body: AuthResponse = await response.json();
       console.log("body", body)
       if (body?.["success"]) {
-        // Force full navigation (and replace history) so tournaments SPA bootstraps
-        window.location.replace('/tournaments/admin');
+        // Navigate to embedded admin route so it appears under the header
+        this.router.navigate(['/admin']);
       } else {
         this.errorMessage = body.error || 'Access denied. Admin privileges required.';
         this.cdr.markForCheck();

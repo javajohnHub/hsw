@@ -1,7 +1,7 @@
 {
-  "name": "edwards-webdev-frontend",
+  "name": "highscorewins-frontend",
   "version": "1.0.0",
-  "description": "Angular frontend for John Edwards Web Development Business",
+  "description": "Angular frontend for highscorewins streamer site",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

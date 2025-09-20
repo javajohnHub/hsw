@@ -9,24 +9,22 @@ import { filter } from 'rxjs/operators';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, CommonModule],
   template: `
-    <header class="header">
-      <div class="container">
-        <nav class="nav">
-          <div class="logo">
-            <a routerLink="/home" class="logo-link">
-              <img src="assets/edwards.png" alt="Edwards Web Development" class="logo-image">
+    <header class="hsw-header" role="banner">
+      <div class="hsw-container">
+        <nav class="hsw-nav" role="navigation" aria-label="Main navigation">
+          <div class="hsw-brand">
+            <a href="/tournaments" class="hsw-logo" (click)="closeMenu()">
+              <span class="hsw-site">highscorewins.com</span>
             </a>
           </div>
-          
-          <div class="nav-links" [class.active]="isMenuOpen">
-            <a routerLink="/home" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Home</a>
-            <a routerLink="/about" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">About</a>
-            <a routerLink="/services" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Services</a>
-            <a routerLink="/contact" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Contact</a>
-            <a routerLink="/projects" routerLinkActive="active" class="nav-link nav-underline" (click)="closeMenu()">Projects</a>
+
+          <div class="hsw-links" [class.active]="isMenuOpen">
+            <a routerLink="/home" routerLinkActive="active" class="hsw-link" (click)="closeMenu()">Home</a>
+            <a routerLink="/eggnog" routerLinkActive="active" class="hsw-link" (click)="closeMenu()">Eggnog Challenge</a>
+            <a routerLink="/tournaments-embed" routerLinkActive="active" class="hsw-link" (click)="closeMenu()">Tournaments</a>
           </div>
-          
-          <button class="menu-toggle" (click)="toggleMenu()">
+
+          <button class="hsw-toggle" (click)="toggleMenu()" aria-label="Toggle navigation">
             <span></span>
             <span></span>
             <span></span>

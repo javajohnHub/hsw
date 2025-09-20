@@ -11,10 +11,7 @@ bootstrapApplication(AppComponent, {
       [
         {
           path: "",
-          loadComponent: () =>
-            import("./app/pages/home/home.component").then(
-              (m) => m.HomeComponent
-            ),
+          redirectTo: "/tournaments-embed",
           pathMatch: "full",
         },
         {
@@ -25,24 +22,24 @@ bootstrapApplication(AppComponent, {
             ),
         },
         {
+          path: "eggnog",
+          loadComponent: () =>
+            import("./app/pages/eggnog/eggnog.component").then(
+              (m) => m.EggnogComponent
+            ),
+        },
+        {
+          path: "home",
+          loadComponent: () =>
+            import("./app/pages/home/home.component").then(
+              (m) => m.HomeComponent
+            ),
+        },
+        {
           path: "services",
           loadComponent: () =>
             import("./app/pages/services/services.component").then(
               (m) => m.ServicesComponent
-            ),
-        },
-        {
-          path: "projects",
-          loadComponent: () =>
-            import("./app/pages/projects/projects.component").then(
-              (m) => m.ProjectsComponent
-            ),
-        },
-        {
-          path: "contact",
-          loadComponent: () =>
-            import("./app/pages/contact/contact.component").then(
-              (m) => m.ContactComponent
             ),
         },
         {
@@ -53,13 +50,44 @@ bootstrapApplication(AppComponent, {
             ),
         },
         {
+          path: "admin",
+          loadComponent: () =>
+            import("./app/pages/admin/admin.component").then(
+              (m) => m.AdminComponent
+            ),
+        },
+        {
           path: "tournament",
-          redirectTo: "/tournaments",
-          pathMatch: "full",
+          loadComponent: () =>
+            import("./app/pages/tournament.component").then(
+              (m) => m.TournamentComponent
+            ),
+        },
+        {
+          path: "tournaments",
+          // keep an explicit route to allow full-page handoff if needed
+          loadComponent: () =>
+            import("./app/pages/tournament.component").then(
+              (m) => m.TournamentComponent
+            ),
+        },
+        {
+          path: "tournaments-embed",
+          loadComponent: () =>
+            import("./app/pages/tournaments-embed.component").then(
+              (m) => m.TournamentsEmbedComponent
+            ),
+        },
+        {
+          path: "tournaments/admin",
+          loadComponent: () =>
+            import("./app/pages/admin/admin.component").then(
+              (m) => m.AdminComponent
+            ),
         },
         {
           path: "**",
-          redirectTo: "",
+          redirectTo: "/tournaments",
         },
       ],
       withEnabledBlockingInitialNavigation()

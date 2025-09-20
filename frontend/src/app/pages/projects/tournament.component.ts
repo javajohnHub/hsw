@@ -4,11 +4,13 @@ import { Component } from '@angular/core';
   selector: 'app-tournament',
   standalone: true,
   template: `
-    <div style="width: 100%; height: 80vh; display: grid; place-items: center; text-align: center; padding: 2rem;">
-      <h2 style="margin-bottom: 1rem;">Retro Never Dies Tournament</h2>
-      <p style="margin-bottom: 1.5rem;">Open the tournaments app served from this site.</p>
-  <a href="/tournaments" style="display:inline-block;padding:.75rem 1.25rem;background:#0d6efd;color:#fff;border-radius:.5rem;text-decoration:none;">Go to /tournaments</a>
+    <div style="width:100%; height:60vh; display:flex; align-items:center; justify-content:center; padding:2rem;">
+      <div style="text-align:center;">
+        <h2>Retro Never Dies Tournament</h2>
+        <p>The tournaments application is served separately. Click below to open it.</p>
+        <a href="/tournaments" style="display:inline-block;padding:.75rem 1.25rem;background:#0d6efd;color:#fff;border-radius:.5rem;text-decoration:none;margin-top:1rem;">Open tournaments app</a>
+      </div>
     </div>
-  `
+  `,
 })
 export class TournamentComponent {}

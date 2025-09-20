@@ -9,9 +9,9 @@ export const environment = {
     businessHours: 'Monday - Friday: 9:00 AM - 6:00 PM EST'
   },
   business: {
-    name: 'Edwards Web Development',
-    tagline: 'Professional Web Development Services',
-    description: 'Expert web development solutions for businesses of all sizes',
+  name: 'highscorewins',
+  tagline: 'Streamer & Community Events',
+  description: 'highscorewins - streamer focused on retro gaming, speedruns, and community tournaments',
     founded: '2024',
     specialties: [
       'Custom Website Development',

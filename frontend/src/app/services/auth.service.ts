@@ -35,12 +35,12 @@ export class AuthService {
   }
 
   /**
-   * Edwards Web Development admin login
+   * highscorewins admin login
    */
   login(credentials: LoginCredentials): Observable<AuthResponse> {
     const loginEndpoint = `${this.apiBaseUrl}/auth/login`;
     
-    console.log('🔐 Edwards Web Development - Attempting login to:', loginEndpoint);
+  console.log('🔐 highscorewins - Attempting login to:', loginEndpoint);
     
     return this.http.post<AuthResponse>(loginEndpoint, credentials, {
       headers: {
@@ -53,7 +53,7 @@ export class AuthService {
         if (response.success && response.token) {
           this.setAuthToken(response.token);
           this.isAuthenticatedSubject.next(true);
-          console.log('✅ Edwards Web Development - Authentication successful');
+          console.log('✅ highscorewins - Authentication successful');
         }
       }),
       catchError(this.handleAuthError.bind(this))
@@ -61,7 +61,7 @@ export class AuthService {
   }
 
   /**
-   * Edwards Web Development admin logout
+   * highscorewins admin logout
    */
   logout(): Observable<AuthResponse> {
     const logoutEndpoint = `${this.apiBaseUrl}/auth/logout`;
@@ -73,16 +73,16 @@ export class AuthService {
       withCredentials: true
     }).pipe(
       tap(() => {
-        this.clearAuthToken();
-        this.isAuthenticatedSubject.next(false);
-        console.log('👋 Edwards Web Development - Logout successful');
+  this.clearAuthToken();
+  this.isAuthenticatedSubject.next(false);
+  console.log('👋 highscorewins - Logout successful');
       }),
       catchError(this.handleAuthError.bind(this))
     );
   }
 
   /**
-   * Check Edwards Web Development admin authentication status
+   * Check highscorewins admin authentication status
    */
   checkAuthStatus(): Observable<AuthResponse> {
     const statusEndpoint = `${this.apiBaseUrl}/auth/status`;
@@ -146,7 +146,7 @@ export class AuthService {
    * Get stored auth token
    */
   getAuthToken(): string | null {
-    return localStorage.getItem('edwards_webdev_auth_token');
+    return localStorage.getItem('highscorewins_auth_token');
   }
 
   /**
@@ -158,11 +158,11 @@ export class AuthService {
       return null;
     }
     
-    // Return Edwards Web Development admin user for development
+    // Return highscorewins admin user for development
     return {
       id: '1',
-      email: 'admin@edwardswebdevelopment.com',
-      name: 'Edwards Web Development Admin',
+      email: 'admin@highscorewins.com',
+      name: 'highscorewins Admin',
       role: 'administrator'
     };
   }
@@ -175,10 +175,10 @@ export class AuthService {
     if (token) {
       this.checkAuthStatus().subscribe({
         next: (response) => {
-          console.log('🔍 Edwards Web Development - Initial auth check:', response.success);
+          console.log('🔍 highscorewins - Initial auth check:', response.success);
         },
         error: (error) => {
-          console.warn('⚠️ Edwards Web Development - Initial auth check failed:', error);
+          console.warn('⚠️ highscorewins - Initial auth check failed:', error);
           this.clearAuthToken();
         }
       });
@@ -189,14 +189,14 @@ export class AuthService {
    * Store auth token securely
    */
   private setAuthToken(token: string): void {
-    localStorage.setItem('edwards_webdev_auth_token', token);
+  localStorage.setItem('highscorewins_auth_token', token);
   }
 
   /**
    * Clear stored auth token
    */
   private clearAuthToken(): void {
-    localStorage.removeItem('edwards_webdev_auth_token');
+  localStorage.removeItem('highscorewins_auth_token');
   }
 
   /**
@@ -205,7 +205,7 @@ export class AuthService {
   private handleAuthError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Authentication service unavailable';
     
-    console.error('🚨 Edwards Web Development Auth Error:', {
+  console.error('🚨 highscorewins Auth Error:', {
       status: error.status,
       message: error.message,
       url: error.url,
@@ -214,7 +214,7 @@ export class AuthService {
 
     if (error.error instanceof ErrorEvent) {
       // Client-side network error
-      errorMessage = 'Network Error: Unable to connect to Edwards Web Development authentication service. Please check your internet connection.';
+  errorMessage = 'Network Error: Unable to connect to highscorewins authentication service. Please check your internet connection.';
     } else {
       // Server-side error response
       switch (error.status) {
@@ -225,24 +225,24 @@ export class AuthService {
           errorMessage = error.error?.message || 'Invalid request data. Please check your input and try again.';
           break;
         case 401:
-          errorMessage = 'Invalid credentials. Please check your email and password for Edwards Web Development admin access.';
+          errorMessage = 'Invalid credentials. Please check your email and password for highscorewins admin access.';
           this.clearAuthToken();
           this.isAuthenticatedSubject.next(false);
           break;
         case 403:
-          errorMessage = 'Access denied. You do not have permission to access Edwards Web Development admin panel.';
+          errorMessage = 'Access denied. You do not have permission to access highscorewins admin panel.';
           break;
         case 404:
-          errorMessage = 'Authentication endpoint not found. Please contact Edwards Web Development support.';
+          errorMessage = 'Authentication endpoint not found. Please contact highscorewins support.';
           break;
         case 429:
           errorMessage = 'Too many login attempts. Please wait 15 minutes before trying again.';
           break;
         case 500:
-          errorMessage = 'Internal server error. Edwards Web Development authentication service is temporarily unavailable.';
+          errorMessage = 'Internal server error. highscorewins authentication service is temporarily unavailable.';
           break;
         default:
-          errorMessage = `Authentication Failed: Server Error ${error.status}. Please try again or contact Edwards Web Development support.`;
+          errorMessage = `Authentication Failed: Server Error ${error.status}. Please try again or contact highscorewins support.`;
       }
     }
 

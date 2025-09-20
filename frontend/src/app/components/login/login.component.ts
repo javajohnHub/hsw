@@ -13,7 +13,7 @@ import { AuthService, LoginCredentials } from '../../services/auth.service';
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
-          <h1>Edwards Web Development</h1>
+          <h1>highscorewins</h1>
           <p class="login-subtitle">Admin Portal</p>
         </div>
         
@@ -26,7 +26,7 @@ import { AuthService, LoginCredentials } from '../../services/auth.service';
               formControlName="email"
               class="form-input"
               [class.form-input--error]="isFieldInvalid('email')"
-              placeholder="admin@edwardswebdevelopment.com"
+              placeholder="admin@highscorewins.com"
               autocomplete="email">
             <div class="error-message" *ngIf="isFieldInvalid('email')">
               <span *ngIf="loginForm.get('email')?.errors?.['required']">Email address is required</span>
@@ -72,14 +72,14 @@ import { AuthService, LoginCredentials } from '../../services/auth.service';
         </form>
         
         <div class="login-footer">
-          <p class="footer-title">Edwards Web Development</p>
-          <p class="footer-subtitle">Professional Web Development Services</p>
-          <div class="dev-credentials" *ngIf="isDevelopment">
-            <p class="dev-note">Development Environment</p>
-            <p class="dev-creds">Email: admin@edwardswebdevelopment.com</p>
-            <p class="dev-creds">Password: Edwards2024!</p>
+            <p class="footer-title">highscorewins</p>
+            <p class="footer-subtitle">Streamer & Community Events</p>
+            <div class="dev-credentials" *ngIf="isDevelopment">
+              <p class="dev-note">Development Environment</p>
+              <p class="dev-creds">Email: admin@highscorewins.com</p>
+              <p class="dev-creds">Password: Highscore2024!</p>
+            </div>
           </div>
-        </div>
       </div>
     </div>
   `,
@@ -118,8 +118,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     // Pre-fill development credentials if in development mode
     if (this.isDevelopment) {
       this.loginForm.patchValue({
-        email: 'admin@edwardswebdevelopment.com',
-        password: 'Edwards2024!'
+          email: 'admin@highscorewins.com',
+          password: 'Highscore2024!'
       });
     }
   }
@@ -130,7 +130,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle form submission for Edwards Web Development admin login
+   * Handle form submission for highscorewins admin login
    */
   async onSubmit(): Promise<void> {
     if (this.loginForm.invalid) {
@@ -147,13 +147,13 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: this.loginForm.value.password
     };
 
-    console.log('🔐 Edwards Web Development - Submitting admin login credentials');
+  console.log('🔐 highscorewins - Submitting admin login credentials');
 
     this.authService.login(credentials)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          console.log('✅ Edwards Web Development - Login response:', response);
+          console.log('✅ highscorewins - Login response:', response);
           
           if (response.success) {
             this.successMessage = 'Authentication successful! Redirecting to admin dashboard...';
@@ -168,7 +168,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (error) => {
-          console.error('❌ Edwards Web Development - Login error:', error);
+          console.error('❌ highscorewins - Login error:', error);
           this.errorMessage = error.message || 'Authentication failed. Please check your credentials and try again.';
           this.isLoading = false;
         }

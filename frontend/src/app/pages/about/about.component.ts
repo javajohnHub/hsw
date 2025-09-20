@@ -9,10 +9,10 @@ import { RouterLink } from '@angular/router';
     <section class="hero-about">
       <div class="container">
         <div class="hero-content">
-          <h1>About Edwards Web Development</h1>
+          <h1>About highscorewins</h1>
           <p class="hero-subtitle">
-            Professional web development services with a focus on quality, 
-            innovation, and client satisfaction.
+            Streamer, speedrunner, and retro gaming enthusiast. Bringing community-driven
+            events, highscore challenges, and entertaining runs to the stream.
           </p>
         </div>
       </div>
@@ -22,24 +22,15 @@ import { RouterLink } from '@angular/router';
       <div class="container">
         <div class="about-grid">
           <div class="about-text">
-            <h2>Full-Stack Developer & Angular Expert</h2>
+            <h2>Streamer & Community Host</h2>
             <p>
-              I'm John Edwards, a seasoned full-stack developer with extensive experience in 
-              Angular development, real-time web applications, and bot development. Currently 
-              working as a Software Engineer 3, I specialize in Angular 
-              migrations, performance optimization, and modern web technologies.
+              I'm Highscore Wins — I stream retro games, speedruns, and community challenge events.
+              Expect a mix of highscore hunts, entertaining commentary, and community-run tournaments.
             </p>
             <p>
-              My expertise spans from upgrading legacy Angular applications to the latest versions, 
-              building real-time chat systems with WebSockets, to creating Discord bots and 
-              streaming tools for content creators. I have a proven track record of delivering 
-              high-quality solutions for both enterprise and independent clients.
-            </p>
-            <p>
-              With experience at companies like CI&T, NTERSOL, KUMANU, and BASF, I bring enterprise-level 
-              knowledge to every project. Whether you need to modernize an existing application, 
-              build a real-time web app, or create custom automation tools, I have the skills 
-              to deliver exceptional results.
+              The Eggnog Challenge and seasonal tournaments bring the community together to compete,
+              share highlights, and win prizes. Follow along on Twitch/Kick and join the Discord to
+              take part.
             </p>
           </div>
           
