@@ -16,6 +16,7 @@ DOMAIN=""
 INCLUDE_WWW=false
 EMAIL=""
 PRODUCTION=false
+STANDALONE=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -23,6 +24,7 @@ while [[ $# -gt 0 ]]; do
     -w|--with-www) INCLUDE_WWW=true; shift ;;
     -e|--email) EMAIL="$2"; shift 2 ;;
     --prod) PRODUCTION=true; shift ;;
+  --standalone) STANDALONE=true; shift ;;
     --backend-dir) BACKEND_DIR="$2"; shift 2 ;;
     -h|--help) echo "Usage: $0 -d DOMAIN [-w] [-e EMAIL] [--prod]"; exit 0 ;;
     *) echo "Unknown option $1"; exit 1 ;;
@@ -58,6 +60,10 @@ else
   if [[ "$PRODUCTION" != true ]]; then
     echo "[deploy] Running certbot in STAGING mode (use --prod to request production cert)"
     CMD+=( --staging )
+  fi
+  if [[ "$STANDALONE" == true ]]; then
+    echo "[deploy] Forwarding --standalone to setup-certbot.sh"
+    CMD+=( --standalone )
   fi
 
   echo "[deploy] Running: ${CMD[*]}"

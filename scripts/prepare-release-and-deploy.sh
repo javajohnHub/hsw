@@ -18,6 +18,7 @@ DOMAIN=""
 INCLUDE_WWW=false
 EMAIL=""
 PRODUCTION=false
+STANDALONE=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -25,6 +26,7 @@ while [[ $# -gt 0 ]]; do
     -w|--with-www) INCLUDE_WWW=true; shift ;;
     -e|--email) EMAIL="$2"; shift 2 ;;
     --prod) PRODUCTION=true; shift ;;
+  --standalone) STANDALONE=true; shift ;;
     --help|-h) echo "Usage: $0 -d DOMAIN [-w] [-e EMAIL] [--prod]"; exit 0 ;;
     *) echo "Unknown option $1"; exit 1 ;;
   esac
@@ -90,9 +92,9 @@ popd >/dev/null
 
 echo "[release] Calling ensure-cert-and-deploy.sh (staging by default)"
 if [[ "$PRODUCTION" == true ]]; then
-  sudo bash "$ROOT_DIR/scripts/ensure-cert-and-deploy.sh" -d "$DOMAIN" $( [[ "$INCLUDE_WWW" == true ]] && echo -w ) $( [[ -n "$EMAIL" ]] && echo -e "$EMAIL" ) --prod
+  sudo bash "$ROOT_DIR/scripts/ensure-cert-and-deploy.sh" -d "$DOMAIN" $( [[ "$INCLUDE_WWW" == true ]] && echo -w ) $( [[ -n "$EMAIL" ]] && echo -e "$EMAIL" ) --prod $( [[ "$STANDALONE" == true ]] && echo --standalone )
 else
-  sudo bash "$ROOT_DIR/scripts/ensure-cert-and-deploy.sh" -d "$DOMAIN" $( [[ "$INCLUDE_WWW" == true ]] && echo -w ) $( [[ -n "$EMAIL" ]] && echo -e "$EMAIL" )
+  sudo bash "$ROOT_DIR/scripts/ensure-cert-and-deploy.sh" -d "$DOMAIN" $( [[ "$INCLUDE_WWW" == true ]] && echo -w ) $( [[ -n "$EMAIL" ]] && echo -e "$EMAIL" ) $( [[ "$STANDALONE" == true ]] && echo --standalone )
 fi
 
 echo "[release] Done."
